@@ -2432,7 +2432,7 @@
 											"type": "DatasetReference",
 											"parameters": {
 												"file_name": {
-													"value": "@pipeline().parameters.P_SRC_TBL",
+													"value": "T_SALES_ACTUAL_TG",
 													"type": "Expression"
 												},
 												"path": {
@@ -5623,7 +5623,8 @@
 					"newClusterSparkEnvVars": {
 						"PYSPARK_PYTHON": "/databricks/python3/bin/python3"
 					},
-					"newClusterVersion": "7.0.x-scala2.12"
+					"newClusterVersion": "7.0.x-scala2.12",
+					"newClusterInitScripts": []
 				}
 			},
 			"dependsOn": []
