@@ -1,5 +1,5 @@
 {
-	"name": "STREAM_COMMON_copy1",
+	"name": "STREAM_COMMON_POC",
 	"properties": {
 		"activities": [
 			{
@@ -196,7 +196,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
-									"referenceName": "PCS_COMMON_1_copy1",
+									"referenceName": "Get_load_id",
 									"type": "PipelineReference"
 								},
 								"waitOnCompletion": true,
