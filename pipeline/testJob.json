@@ -1,0 +1,38 @@
+{
+	"name": "testJob",
+	"properties": {
+		"activities": [
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "PRCS_NM",
+					"value": {
+						"value": "@concat('Hello',pipeline().parameters.P_PCS_NM)",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"P_PCS_NM": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"PRCS_NM": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "COMMON JOB"
+		},
+		"annotations": []
+	}
+}
