@@ -356,7 +356,7 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "Execute testjob",
+						"activity": "Switch1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -407,7 +407,7 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "Execute testjob",
+						"activity": "Switch1",
 						"dependencyConditions": [
 							"Failed"
 						]
@@ -513,8 +513,53 @@
 				}
 			},
 			{
-				"name": "Execute testjob",
-				"type": "ExecutePipeline",
+				"name": "Switch1",
+				"type": "Switch",
+				"dependsOn": [
+					{
+						"activity": "Lookup_PRCS_TYPE",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"on": {
+						"value": "@activity('Lookup_PRCS_TYPE').output.PCS_TYPE ",
+						"type": "Expression"
+					},
+					"cases": [
+						{
+							"value": "1",
+							"activities": [
+								{
+									"name": "Execute testjob",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "testJob",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"P_PCS_NM": {
+												"value": "@pipeline().parameters.P_PCS_NM",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "Lookup_PRCS_TYPE",
+				"type": "Lookup",
 				"dependsOn": [
 					{
 						"activity": "CHECK DNDP",
@@ -523,18 +568,36 @@
 						]
 					}
 				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
-					"pipeline": {
-						"referenceName": "testJob",
-						"type": "PipelineReference"
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderStoredProcedureName": "[CNTL].[PROC_GET_BUS_DATE_LIST]",
+						"storedProcedureParameters": {
+							"P_AS_AT_DT": {
+								"type": "String"
+							},
+							"P_PCS_NM": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.P_PCS_NM",
+									"type": "Expression"
+								}
+							}
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
 					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"P_PCS_NM": {
-							"value": "@pipeline().parameters.P_PCS_NM",
-							"type": "Expression"
-						}
+					"dataset": {
+						"referenceName": "ControlTable",
+						"type": "DatasetReference"
 					}
 				}
 			}
