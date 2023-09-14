@@ -262,10 +262,6 @@
 											},
 											"partitionOption": "None",
 											"queryTimeout": "02:00:00"
-										},
-										"dataset": {
-											"referenceName": "OracleTable",
-											"type": "DatasetReference"
 										}
 									}
 								},
@@ -368,12 +364,6 @@
 										},
 										"enableStaging": false
 									},
-									"inputs": [
-										{
-											"referenceName": "OracleTable",
-											"type": "DatasetReference"
-										}
-									],
 									"outputs": [
 										{
 											"referenceName": "ParquetFile",
