@@ -160,7 +160,21 @@
 									"referenceName": "test_poc",
 									"type": "PipelineReference"
 								},
-								"waitOnCompletion": true
+								"waitOnCompletion": true,
+								"parameters": {
+									"P_PCS_NM": {
+										"value": "@pipeline().parameters.P_PROCESS_NM",
+										"type": "Expression"
+									},
+									"P_RUN_MODE": {
+										"value": "@pipeline().parameters.P_RUN_MODE",
+										"type": "Expression"
+									},
+									"P_LOAD_ID": {
+										"value": "@variables('V_LOAD_ID')",
+										"type": "Expression"
+									}
+								}
 							}
 						}
 					]
@@ -194,6 +208,9 @@
 				"type": "String"
 			},
 			"PRCS_NM": {
+				"type": "String"
+			},
+			"PRCS_TYPE": {
 				"type": "String"
 			}
 		},
