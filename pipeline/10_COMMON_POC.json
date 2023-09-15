@@ -432,7 +432,7 @@
 							"value": "1",
 							"activities": [
 								{
-									"name": "Execute testjob",
+									"name": "EXECUTE_PCS_TYPE1",
 									"type": "ExecutePipeline",
 									"dependsOn": [],
 									"userProperties": [],

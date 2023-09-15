@@ -151,7 +151,7 @@
 					],
 					"ifTrueActivities": [
 						{
-							"name": "RUN_PCS_2",
+							"name": "RUN_PCS_10_COMMON",
 							"type": "ExecutePipeline",
 							"dependsOn": [],
 							"userProperties": [],
