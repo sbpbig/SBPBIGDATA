@@ -38,7 +38,7 @@
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "ControlTable",
+						"referenceName": "controltable",
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
@@ -128,7 +128,7 @@
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "ControlTable",
+						"referenceName": "controltable",
 						"type": "DatasetReference"
 					}
 				}
@@ -273,7 +273,7 @@
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "ControlTable",
+						"referenceName": "controltable",
 						"type": "DatasetReference"
 					}
 				}

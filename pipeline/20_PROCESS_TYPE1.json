@@ -45,7 +45,7 @@
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "ControlTable",
+						"referenceName": "controltable",
 						"type": "DatasetReference"
 					}
 				}

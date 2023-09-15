@@ -1,5 +1,5 @@
 {
-	"name": "ControlTable",
+	"name": "controltable",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "SqlServer1",
