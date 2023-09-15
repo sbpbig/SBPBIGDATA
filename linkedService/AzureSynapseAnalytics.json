@@ -1,0 +1,16 @@
+{
+	"name": "AzureSynapseAnalytics",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDW",
+		"typeProperties": {
+			"connectionString": "integrated security=False;encrypt=True;connection timeout=30;data source=synapse-workspace-pov-tug.sql.azuresynapse.net;initial catalog=synapse_test;user id=Azureadmin",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI5NDUyOTZmMC01ZjM5LTQ3MjYtOGFjNi03MzdmMzgyYmUzY2MiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "integrationRuntime-ADFPOVTUGDEV",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
