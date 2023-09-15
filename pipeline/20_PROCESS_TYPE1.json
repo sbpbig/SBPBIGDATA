@@ -92,6 +92,13 @@
 							}
 						}
 					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "adls",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "raw/staging"
+					},
 					"compute": {
 						"coreCount": 8,
 						"computeType": "General"
