@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "ADFPOVTUGDEV"
+		},
+		"AzureSynapseAnalytics_connectionString": {
+			"value": ""
+		},
+		"SqlServer1_connectionString": {
+			"value": ""
+		},
+		"adls_accountKey": {
+			"value": ""
+		},
+		"adls_properties_typeProperties_url": {
+			"value": "https://stpovtug.dfs.core.windows.net/"
+		},
+		"integrationRuntime-ADFPOVTUGDEV_properties_typeProperties_linkedInfo_resourceId": {
+			"value": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourcegroups/POV_TUG/providers/Microsoft.DataFactory/factories/ADF-POV-TUG/integrationruntimes/integrationRuntime-POV-TUG"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
