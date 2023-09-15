@@ -1,0 +1,31 @@
+{
+	"name": "CSV_DATASET_DYNAMIC_tab_delimiter",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Filename": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@dataset().Filename",
+					"type": "Expression"
+				},
+				"fileSystem": "synapse-povtug"
+			},
+			"columnDelimiter": "\t",
+			"escapeChar": "~",
+			"firstRowAsHeader": true,
+			"quoteChar": ""
+		},
+		"schema": []
+	}
+}

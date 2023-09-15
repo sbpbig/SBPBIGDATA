@@ -1,5 +1,5 @@
 {
-	"name": "Get_load_id",
+	"name": "05_COMMON_POC",
 	"properties": {
 		"activities": [
 			{
@@ -157,7 +157,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
-									"referenceName": "test_poc",
+									"referenceName": "10_COMMON_POC",
 									"type": "PipelineReference"
 								},
 								"waitOnCompletion": true,
@@ -172,6 +172,10 @@
 									},
 									"P_LOAD_ID": {
 										"value": "@variables('V_LOAD_ID')",
+										"type": "Expression"
+									},
+									"P_AS_AT_DT": {
+										"value": "@pipeline().parameters.P_AS_AT_DT",
 										"type": "Expression"
 									}
 								}
@@ -193,6 +197,9 @@
 			"P_STREAM_SEQ_ID": {
 				"type": "string",
 				"defaultValue": "-999"
+			},
+			"P_AS_AT_DT": {
+				"type": "string"
 			}
 		},
 		"variables": {

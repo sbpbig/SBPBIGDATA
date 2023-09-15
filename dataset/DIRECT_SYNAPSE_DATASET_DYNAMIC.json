@@ -1,0 +1,30 @@
+{
+	"name": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSynapseAnalytics",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"SynapseTableName": {
+				"type": "string"
+			},
+			"SynapseSchema": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().SynapseSchema",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().SynapseTableName",
+				"type": "Expression"
+			}
+		}
+	}
+}

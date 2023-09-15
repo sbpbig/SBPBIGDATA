@@ -1,5 +1,5 @@
 {
-	"name": "test_poc",
+	"name": "10_COMMON_POC",
 	"properties": {
 		"activities": [
 			{
@@ -438,13 +438,17 @@
 									"userProperties": [],
 									"typeProperties": {
 										"pipeline": {
-											"referenceName": "testJob",
+											"referenceName": "20_PROCESS_TYPE1",
 											"type": "PipelineReference"
 										},
 										"waitOnCompletion": true,
 										"parameters": {
-											"P_PCS_NM": {
-												"value": "@pipeline().parameters.P_PCS_NM",
+											"P_Object": {
+												"value": "@activity('GET PROCESS INFORMATION').output.firstRow",
+												"type": "Expression"
+											},
+											"P_DataDT": {
+												"value": "@pipeline().parameters.P_AS_AT_DT",
 												"type": "Expression"
 											}
 										}
@@ -776,6 +780,9 @@
 				"type": "string"
 			},
 			"P_LOAD_ID": {
+				"type": "string"
+			},
+			"P_AS_AT_DT": {
 				"type": "string"
 			}
 		},
