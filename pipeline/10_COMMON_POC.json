@@ -438,7 +438,35 @@
 									"userProperties": [],
 									"typeProperties": {
 										"pipeline": {
-											"referenceName": "20_PROCESS_TYPE1",
+											"referenceName": "20_PROCESS_TYPE1_LOAD",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"P_Object": {
+												"value": "@activity('GET PROCESS INFORMATION').output.firstRow",
+												"type": "Expression"
+											},
+											"P_DataDT": {
+												"value": "@pipeline().parameters.P_AS_AT_DT",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						},
+						{
+							"value": "2",
+							"activities": [
+								{
+									"name": "EXECUTE_PCS_TYPE2",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "20_PROCESS_TYPE2_TRANS",
 											"type": "PipelineReference"
 										},
 										"waitOnCompletion": true,

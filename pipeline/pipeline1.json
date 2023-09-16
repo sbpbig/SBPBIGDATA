@@ -1,0 +1,65 @@
+{
+	"name": "pipeline1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "ParquetReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlDWSink",
+						"allowCopyCommand": true
+					},
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "adls",
+							"type": "LinkedServiceReference"
+						},
+						"path": "raw/staging"
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "PARQUET_DATASET_DYNAMIC",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": "KNA1_1"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
+						"type": "DatasetReference",
+						"parameters": {
+							"SynapseTableName": "KNA1",
+							"SynapseSchema": "dbo"
+						}
+					}
+				]
+			}
+		],
+		"annotations": []
+	}
+}

@@ -1,5 +1,5 @@
 {
-	"name": "20_PROCESS_TYPE1_LOAD",
+	"name": "20_PROCESS_TYPE2_TRANS",
 	"properties": {
 		"activities": [
 			{
@@ -51,8 +51,8 @@
 				}
 			},
 			{
-				"name": "DIRECT_DATA_FLOW_CSV_TO_SYNAPSE",
-				"type": "ExecuteDataFlow",
+				"name": "Transform Date and Time",
+				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
 						"activity": "Lookup",
@@ -70,34 +70,14 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"dataflow": {
-						"referenceName": "DIRECT_DATA_FLOW_CSV_TO_SYNAPSE",
-						"type": "DataFlowReference",
-						"datasetParameters": {
-							"sink1": {
-								"SynapseTableName": {
-									"value": "@pipeline().parameters.P_Object.TGT_TBL",
-									"type": "Expression"
-								},
-								"SynapseSchema": {
-									"value": "@pipeline().parameters.P_Object.TGT_SCHEMA_NM",
-									"type": "Expression"
-								}
-							}
-						}
-					},
-					"staging": {
-						"linkedService": {
-							"referenceName": "adls",
-							"type": "LinkedServiceReference"
-						},
-						"folderPath": "raw/staging"
-					},
-					"compute": {
-						"coreCount": 16,
-						"computeType": "General"
-					},
-					"traceLevel": "Fine"
+					"storedProcedureName": {
+						"value": "@concat('[dbo].[Transform_',pipeline().parameters.P_Object.TGT_TBL,']')",
+						"type": "Expression"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseAnalytics",
+					"type": "LinkedServiceReference"
 				}
 			}
 		],

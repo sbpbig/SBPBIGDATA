@@ -1,0 +1,36 @@
+{
+	"name": "CSV_TEST",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Filename": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@concat(dataset().Filename,'.csv')",
+					"type": "Expression"
+				},
+				"fileSystem": "synapse-povtug"
+			},
+			"columnDelimiter": "\t",
+			"escapeChar": "",
+			"firstRowAsHeader": true,
+			"quoteChar": ""
+		},
+		"schema": [
+			{
+				"name": "VBELN\tPOSNR\tETENR\tETTYP\tLFREL\tEDATU\tEZEIT\tWMENG\tBMENG\tVRKME\tLMENG\tMEINS\tBDDAT\tBDART\tPLART\tVBELE\tPOSNE\tETENE\tRSDAT\tIDNNR\tBANFN\tBSART\tBSTYP\tWEPOS\tREPOS\tLRGDT\tPRGRS\tTDDAT\tMBDAT\tLDDAT\tWADAT\tCMENG\tLIFSP\tGRSTR\tABART\tABRUF\tROMS1\tROMS2\tROMS3\tROMEI\tRFORM\tUMVKZ\tUMVKN\tVERFP\tBWART\tBNFPO\tETART\tAUFNR\tPLNUM\tSERNR\tAESKD\tABGES\tMBUHR\tTDUHR\tLDUHR\tWAUHR\tAULWE\tHANDOVERDATE\tHANDOVERTIME\tDLVQTY_BU\tDLVQTY_SU\tOCDQTY_BU\tOCDQTY_SU\tORDQTY_BU\tORDQTY_SU\tCREA_DLVDATE\tREQ_DLVDATE\tBEDAR\t_DATAAGING\tWAERK\tODN_AMOUNT\tDUMMY_SLSDOCSCHEDL_INCL_EEW_PS\tFSH_RALLOC_QTY\tFSH_OS_ID\tFSH_PQR_RC\tMBDAT_DRS",
+				"type": "String"
+			}
+		]
+	}
+}

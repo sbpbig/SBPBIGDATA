@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "CSV_DATASET_DYNAMIC_tab_delimiter",
+						"referenceName": "PARQUET_DATASET_DYNAMIC",
 						"type": "DatasetReference"
 					},
 					"name": "source1"
@@ -25,7 +25,8 @@
 			"scriptLines": [
 				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source1",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> source1",
 				"source1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
