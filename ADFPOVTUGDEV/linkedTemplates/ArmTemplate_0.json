@@ -114,6 +114,47 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/CSV_TEST')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"Filename": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@concat(dataset().Filename,'.csv')",
+							"type": "Expression"
+						},
+						"fileSystem": "synapse-povtug"
+					},
+					"columnDelimiter": "\t",
+					"escapeChar": "",
+					"firstRowAsHeader": true,
+					"quoteChar": ""
+				},
+				"schema": [
+					{
+						"name": "VBELN\tPOSNR\tETENR\tETTYP\tLFREL\tEDATU\tEZEIT\tWMENG\tBMENG\tVRKME\tLMENG\tMEINS\tBDDAT\tBDART\tPLART\tVBELE\tPOSNE\tETENE\tRSDAT\tIDNNR\tBANFN\tBSART\tBSTYP\tWEPOS\tREPOS\tLRGDT\tPRGRS\tTDDAT\tMBDAT\tLDDAT\tWADAT\tCMENG\tLIFSP\tGRSTR\tABART\tABRUF\tROMS1\tROMS2\tROMS3\tROMEI\tRFORM\tUMVKZ\tUMVKN\tVERFP\tBWART\tBNFPO\tETART\tAUFNR\tPLNUM\tSERNR\tAESKD\tABGES\tMBUHR\tTDUHR\tLDUHR\tWAUHR\tAULWE\tHANDOVERDATE\tHANDOVERTIME\tDLVQTY_BU\tDLVQTY_SU\tOCDQTY_BU\tOCDQTY_SU\tORDQTY_BU\tORDQTY_SU\tCREA_DLVDATE\tREQ_DLVDATE\tBEDAR\t_DATAAGING\tWAERK\tODN_AMOUNT\tDUMMY_SLSDOCSCHEDL_INCL_EEW_PS\tFSH_RALLOC_QTY\tFSH_OS_ID\tFSH_PQR_RC\tMBDAT_DRS",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/adls')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DIRECT_SYNAPSE_DATASET_DYNAMIC')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -146,6 +187,39 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureSynapseAnalytics')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PARQUET_DATASET_DYNAMIC')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"FileName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": {
+							"value": "@dataset().FileName",
+							"type": "Expression"
+						},
+						"fileSystem": "synapse-povtug"
+					},
+					"compressionCodec": "none"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/adls')]"
 			]
 		},
 		{
@@ -195,7 +269,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "CSV_DATASET_DYNAMIC_tab_delimiter",
+								"referenceName": "PARQUET_DATASET_DYNAMIC",
 								"type": "DatasetReference"
 							},
 							"name": "source1"
@@ -214,7 +288,8 @@
 					"scriptLines": [
 						"source(allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source1",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> source1",
 						"source1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     deletable:false,",
@@ -231,12 +306,12 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/CSV_DATASET_DYNAMIC_tab_delimiter')]",
+				"[concat(variables('factoryId'), '/datasets/PARQUET_DATASET_DYNAMIC')]",
 				"[concat(variables('factoryId'), '/datasets/DIRECT_SYNAPSE_DATASET_DYNAMIC')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/20_PROCESS_TYPE1')]",
+			"name": "[concat(parameters('factoryName'), '/20_PROCESS_TYPE1_LOAD')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -316,7 +391,7 @@
 								"parameters": {},
 								"datasetParameters": {
 									"source1": {
-										"Filename": {
+										"FileName": {
 											"value": "@activity('Lookup').output.firstRow.FI_NM",
 											"type": "Expression"
 										}
@@ -341,18 +416,97 @@
 								"folderPath": "raw/staging"
 							},
 							"compute": {
-								"coreCount": 8,
+								"coreCount": 16,
 								"computeType": "General"
 							},
 							"traceLevel": "Fine"
 						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"P_Object": {
+						"type": "object"
+					},
+					"P_DataDT": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "COMMON JOB"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/controltable')]",
+				"[concat(variables('factoryId'), '/dataflows/DIRECT_DATA_FLOW_CSV_TO_SYNAPSE')]",
+				"[concat(variables('factoryId'), '/linkedServices/adls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/20_PROCESS_TYPE2_TRANS')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderStoredProcedureName": "[[CNTL].[PROC_GET_FI]",
+								"storedProcedureParameters": {
+									"P_DATA_DT": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.P_DataDT",
+											"type": "Expression"
+										}
+									},
+									"P_FI_ID": {
+										"type": "Int32",
+										"value": {
+											"value": "@pipeline().parameters.P_Object.FI_ID",
+											"type": "Expression"
+										}
+									},
+									"P_PCS_NM": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.P_Object.PCS_NM",
+											"type": "Expression"
+										}
+									}
+								},
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "controltable",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
 					},
 					{
-						"name": "Stored procedure1",
+						"name": "Transform Date and Time",
 						"type": "SqlServerStoredProcedure",
 						"dependsOn": [
 							{
-								"activity": "DIRECT_DATA_FLOW_CSV_TO_SYNAPSE",
+								"activity": "Lookup",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -397,8 +551,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/controltable')]",
-				"[concat(variables('factoryId'), '/dataflows/DIRECT_DATA_FLOW_CSV_TO_SYNAPSE')]",
-				"[concat(variables('factoryId'), '/linkedServices/adls')]",
 				"[concat(variables('factoryId'), '/linkedServices/AzureSynapseAnalytics')]"
 			]
 		},
@@ -845,13 +997,41 @@
 									"value": "1",
 									"activities": [
 										{
-											"name": "Execute testjob",
+											"name": "EXECUTE_PCS_TYPE1",
 											"type": "ExecutePipeline",
 											"dependsOn": [],
 											"userProperties": [],
 											"typeProperties": {
 												"pipeline": {
-													"referenceName": "20_PROCESS_TYPE1",
+													"referenceName": "20_PROCESS_TYPE1_LOAD",
+													"type": "PipelineReference"
+												},
+												"waitOnCompletion": true,
+												"parameters": {
+													"P_Object": {
+														"value": "@activity('GET PROCESS INFORMATION').output.firstRow",
+														"type": "Expression"
+													},
+													"P_DataDT": {
+														"value": "@pipeline().parameters.P_AS_AT_DT",
+														"type": "Expression"
+													}
+												}
+											}
+										}
+									]
+								},
+								{
+									"value": "2",
+									"activities": [
+										{
+											"name": "EXECUTE_PCS_TYPE2",
+											"type": "ExecutePipeline",
+											"dependsOn": [],
+											"userProperties": [],
+											"typeProperties": {
+												"pipeline": {
+													"referenceName": "20_PROCESS_TYPE2_TRANS",
 													"type": "PipelineReference"
 												},
 												"waitOnCompletion": true,
@@ -1079,7 +1259,8 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/controltable')]",
 				"[concat(variables('factoryId'), '/linkedServices/SqlServer1')]",
-				"[concat(variables('factoryId'), '/pipelines/20_PROCESS_TYPE1')]"
+				"[concat(variables('factoryId'), '/pipelines/20_PROCESS_TYPE1_LOAD')]",
+				"[concat(variables('factoryId'), '/pipelines/20_PROCESS_TYPE2_TRANS')]"
 			]
 		},
 		{
@@ -1239,7 +1420,7 @@
 							],
 							"ifTrueActivities": [
 								{
-									"name": "RUN_PCS_2",
+									"name": "RUN_PCS_10_COMMON",
 									"type": "ExecutePipeline",
 									"dependsOn": [],
 									"userProperties": [],
@@ -1519,7 +1700,7 @@
 							"batchCount": 4,
 							"activities": [
 								{
-									"name": "RUN_PCS_1_copy1",
+									"name": "RUN_PCS_05_COMMON",
 									"type": "ExecutePipeline",
 									"dependsOn": [],
 									"userProperties": [],
@@ -1666,7 +1847,7 @@
 				"parameters": {
 					"P_STREAM_NM": {
 						"type": "string",
-						"defaultValue": "ORACLE"
+						"defaultValue": "STREAM_TUG_POV_1"
 					},
 					"P_RUN_MODE": {
 						"type": "string",
