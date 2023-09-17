@@ -224,8 +224,7 @@
 								"value": "@variables('V_PCS_NM_LIST')",
 								"type": "Expression"
 							},
-							"isSequential": false,
-							"batchCount": 3,
+							"isSequential": true,
 							"activities": [
 								{
 									"name": "RUN_PCS_05_COMMON",
