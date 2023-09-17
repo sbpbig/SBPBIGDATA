@@ -74,6 +74,12 @@
 						"referenceName": "DIRECT_DATA_FLOW_CSV_TO_SYNAPSE",
 						"type": "DataFlowReference",
 						"datasetParameters": {
+							"source1": {
+								"FileName": {
+									"value": "@pipeline().parameters.P_Object.FI_NM",
+									"type": "Expression"
+								}
+							},
 							"sink1": {
 								"SynapseTableName": {
 									"value": "@pipeline().parameters.P_Object.TGT_TBL",
