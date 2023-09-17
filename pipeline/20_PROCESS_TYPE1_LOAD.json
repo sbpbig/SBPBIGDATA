@@ -76,7 +76,7 @@
 						"datasetParameters": {
 							"source1": {
 								"FileName": {
-									"value": "@pipeline().parameters.P_Object.FI_NM",
+									"value": "@activity('Lookup').output.firstRow.FI_NM",
 									"type": "Expression"
 								}
 							},
