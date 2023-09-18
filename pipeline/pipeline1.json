@@ -3,8 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
-				"type": "Copy",
+				"name": "Data flow1",
+				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -15,51 +15,12 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"source": {
-						"type": "ParquetSource",
-						"storeSettings": {
-							"type": "AzureBlobFSReadSettings",
-							"recursive": true,
-							"wildcardFolderPath": "LIPS",
-							"wildcardFileName": "*",
-							"enablePartitionDiscovery": false
-						},
-						"formatSettings": {
-							"type": "ParquetReadSettings"
-						}
+					"compute": {
+						"coreCount": 16,
+						"computeType": "General"
 					},
-					"sink": {
-						"type": "SqlDWSink",
-						"allowCopyCommand": true
-					},
-					"enableStaging": true,
-					"stagingSettings": {
-						"linkedServiceName": {
-							"referenceName": "adls",
-							"type": "LinkedServiceReference"
-						},
-						"path": "raw/staging"
-					}
-				},
-				"inputs": [
-					{
-						"referenceName": "PARQUET_DATASET_DYNAMIC",
-						"type": "DatasetReference",
-						"parameters": {
-							"FileName": "LIPS"
-						}
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
-						"type": "DatasetReference",
-						"parameters": {
-							"SynapseTableName": "LIPS",
-							"SynapseSchema": "dbo"
-						}
-					}
-				]
+					"traceLevel": "Fine"
+				}
 			}
 		],
 		"folder": {
