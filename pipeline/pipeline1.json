@@ -15,6 +15,26 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"dataflow": {
+						"referenceName": "DIRECT_DATA_FLOW_CSV_TO_SYNAPSE",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"source1": {
+								"FileName": "BSEG_CDC"
+							},
+							"sink1": {
+								"SynapseTableName": "BSEG",
+								"SynapseSchema": "dbo"
+							}
+						}
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "adls",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "raw/staging"
+					},
 					"compute": {
 						"coreCount": 16,
 						"computeType": "General"
