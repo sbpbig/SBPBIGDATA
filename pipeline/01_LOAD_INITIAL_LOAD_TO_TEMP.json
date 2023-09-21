@@ -1,5 +1,5 @@
 {
-	"name": "01_LOAD_INITIAL_LOAD_TO_SCD2",
+	"name": "01_LOAD_INITIAL_LOAD_TO_TEMP",
 	"properties": {
 		"activities": [
 			{
