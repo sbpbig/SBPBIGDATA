@@ -69,7 +69,7 @@
 		"parameters": {
 			"FOLDER_NM": {
 				"type": "string",
-				"defaultValue": "BSEG_DELTA_CHANGES/*"
+				"defaultValue": "BSEG_DELTA_CHANGES"
 			},
 			"DB_NM": {
 				"type": "string",
