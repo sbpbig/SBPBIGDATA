@@ -13,6 +13,96 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/20_PROCESS_TYPE4_CDC_STREAM')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "CDC Snapshot",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "CDC_SNAP_CHANGE",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"CDC": {
+										"FOLDER_NM": {
+											"value": "@concat(pipeline().parameters.P_Object.TGT_TBL, '_DELTA_CHANGES')",
+											"type": "Expression"
+										}
+									},
+									"TMPCDC": {
+										"SynapseTableName": {
+											"value": "@concat('TMP_CDC_',pipeline().parameters.P_Object.TGT_TBL)",
+											"type": "Expression"
+										},
+										"SynapseSchema": {
+											"value": "@pipeline().parameters.P_Object.TGT_SCHEMA_NM",
+											"type": "Expression"
+										}
+									},
+									"CDCLOG": {
+										"SynapseTableName": {
+											"value": "@concat('LOG_CDC_',pipeline().parameters.P_Object.TGT_TBL)",
+											"type": "Expression"
+										},
+										"SynapseSchema": {
+											"value": "@pipeline().parameters.P_Object.TGT_SCHEMA_NM",
+											"type": "Expression"
+										}
+									}
+								},
+								"linkedServiceParameters": {}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "adls",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "synapse-povtug/TMP_STAGING"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine",
+							"continuationSettings": {
+								"customizedCheckpointKey": "55de936d-2a87-4248-8cdf-6fd70b2812c4"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"P_Object": {
+						"type": "object"
+					},
+					"P_DataDT": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "COMMON JOB"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/10_COMMON_POC')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -534,6 +624,34 @@
 											}
 										}
 									]
+								},
+								{
+									"value": "4",
+									"activities": [
+										{
+											"name": "EXECUTE_PCS_TYPE4",
+											"type": "ExecutePipeline",
+											"dependsOn": [],
+											"userProperties": [],
+											"typeProperties": {
+												"pipeline": {
+													"referenceName": "20_PROCESS_TYPE4_CDC_STREAM",
+													"type": "PipelineReference"
+												},
+												"waitOnCompletion": true,
+												"parameters": {
+													"P_Object": {
+														"value": "@activity('GET PROCESS INFORMATION').output.firstRow",
+														"type": "Expression"
+													},
+													"P_DataDT": {
+														"value": "@pipeline().parameters.P_AS_AT_DT",
+														"type": "Expression"
+													}
+												}
+											}
+										}
+									]
 								}
 							]
 						}
@@ -742,7 +860,9 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/20_PROCESS_TYPE4_CDC_STREAM')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/05_COMMON_POC')]",
