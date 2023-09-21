@@ -563,6 +563,91 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/02_CDC_SNAPSHOT_SCD')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "CDC Snapshot",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "CDC_SNAP_CHANGE",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"CDC": {
+										"FileName": {
+											"value": "@pipeline().parameters.FOLDER_NM",
+											"type": "Expression"
+										}
+									},
+									"TGT": {
+										"SynapseTableName": {
+											"value": "@pipeline().parameters.TGT_TBL_NM",
+											"type": "Expression"
+										},
+										"SynapseSchema": {
+											"value": "@pipeline().parameters.TGT_DB_NM",
+											"type": "Expression"
+										}
+									}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "adls",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "synapse-povtug/TMP_STAGING"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Coarse",
+							"continuationSettings": {
+								"customizedCheckpointKey": "55de936d-2a87-4248-8cdf-6fd70b2812c4"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"FOLDER_NM": {
+						"type": "string"
+					},
+					"TGT_DB_NM": {
+						"type": "string"
+					},
+					"TGT_TBL_NM": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "TEST"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/CDC_SNAP_CHANGE')]",
+				"[concat(variables('factoryId'), '/linkedServices/adls')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/05_COMMON_POC')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1297,6 +1382,34 @@
 											}
 										}
 									]
+								},
+								{
+									"value": "3",
+									"activities": [
+										{
+											"name": "EXECUTE_PCS_TYPE3",
+											"type": "ExecutePipeline",
+											"dependsOn": [],
+											"userProperties": [],
+											"typeProperties": {
+												"pipeline": {
+													"referenceName": "20_PROCESS_TYPE3_CDC_TEMP_TO_LOG",
+													"type": "PipelineReference"
+												},
+												"waitOnCompletion": true,
+												"parameters": {
+													"P_Object": {
+														"value": "@activity('GET PROCESS INFORMATION').output.firstRow",
+														"type": "Expression"
+													},
+													"P_DataDT": {
+														"value": "@pipeline().parameters.P_AS_AT_DT",
+														"type": "Expression"
+													}
+												}
+											}
+										}
+									]
 								}
 							]
 						}
@@ -1509,7 +1622,8 @@
 				"[concat(variables('factoryId'), '/datasets/controltable')]",
 				"[concat(variables('factoryId'), '/linkedServices/SqlServer1')]",
 				"[concat(variables('factoryId'), '/pipelines/20_PROCESS_TYPE1_LOAD')]",
-				"[concat(variables('factoryId'), '/pipelines/20_PROCESS_TYPE2_TRANS')]"
+				"[concat(variables('factoryId'), '/pipelines/20_PROCESS_TYPE2_TRANS')]",
+				"[concat(variables('factoryId'), '/pipelines/20_PROCESS_TYPE3_CDC_TEMP_TO_LOG')]"
 			]
 		},
 		{
@@ -1757,14 +1871,14 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"name": "[concat(parameters('factoryName'), '/20_PROCESS_TYPE3_CDC_TEMP_TO_LOG')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Data flow1",
-						"type": "ExecuteDataFlow",
+						"name": "Lookup",
+						"type": "Lookup",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
@@ -1775,32 +1889,97 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"dataflow": {
-								"referenceName": "DIRECT_DATA_FLOW_CSV_TO_SYNAPSE",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {
-										"FileName": "BSEG_CDC"
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderStoredProcedureName": "[[CNTL].[PROC_GET_FI]",
+								"storedProcedureParameters": {
+									"P_DATA_DT": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.P_DataDT",
+											"type": "Expression"
+										}
 									},
-									"sink1": {
-										"SynapseTableName": "BSEG",
-										"SynapseSchema": "dbo"
+									"P_FI_ID": {
+										"type": "Int32",
+										"value": {
+											"value": "@pipeline().parameters.P_Object.FI_ID",
+											"type": "Expression"
+										}
+									},
+									"P_PCS_NM": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.P_Object.PCS_NM",
+											"type": "Expression"
+										}
 									}
-								}
-							},
-							"staging": {
-								"linkedService": {
-									"referenceName": "adls",
-									"type": "LinkedServiceReference"
 								},
-								"folderPath": "raw/staging"
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
 							},
-							"compute": {
-								"coreCount": 16,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
+							"dataset": {
+								"referenceName": "controltable",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "Transform Date and Time",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Lookup",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[PROC_CDC_INSERT_LOG]",
+							"storedProcedureParameters": {
+								"SRC_SCHEMA_NM": {
+									"value": {
+										"value": "@pipeline().parameters.P_Object.SRC_SCHEMA_NM",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"SRC_TBL": {
+									"value": {
+										"value": "@pipeline().parameters.P_Object.SRC_TBL",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"TGT_SCHEMA_NM": {
+									"value": {
+										"value": "@pipeline().parameters.P_Object.TGT_SCHEMA_NM",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"TGT_TBL": {
+									"value": {
+										"value": "@pipeline().parameters.P_Object.TGT_TBL",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSynapseAnalytics",
+							"type": "LinkedServiceReference"
 						}
 					}
 				],
@@ -1808,14 +1987,22 @@
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
 				},
+				"parameters": {
+					"P_Object": {
+						"type": "object"
+					},
+					"P_DataDT": {
+						"type": "string"
+					}
+				},
 				"folder": {
 					"name": "COMMON JOB"
 				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/DIRECT_DATA_FLOW_CSV_TO_SYNAPSE')]",
-				"[concat(variables('factoryId'), '/linkedServices/adls')]"
+				"[concat(variables('factoryId'), '/datasets/controltable')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureSynapseAnalytics')]"
 			]
 		},
 		{
@@ -3751,6 +3938,61 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/CDC_SNAP_CHANGE')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "PARQUET_DATASET_DYNAMIC",
+								"type": "DatasetReference"
+							},
+							"name": "CDC"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
+								"type": "DatasetReference"
+							},
+							"name": "TGT"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     enableCdc: true,",
+						"     mode: 'read',",
+						"     skipInitialLoad: false,",
+						"     format: 'parquet') ~> CDC",
+						"CDC sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     staged: true,",
+						"     allowCopyCommand: true,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> TGT"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/PARQUET_DATASET_DYNAMIC')]",
+				"[concat(variables('factoryId'), '/datasets/DIRECT_SYNAPSE_DATASET_DYNAMIC')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DIRECT_DATA_FLOW_CSV_TO_SYNAPSE')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -4061,6 +4303,7 @@
 					},
 					"mode": "Microbatch"
 				},
+				"status": "Stopped",
 				"allowVNetOverride": false,
 				"typeProperties": {
 					"staging": {
