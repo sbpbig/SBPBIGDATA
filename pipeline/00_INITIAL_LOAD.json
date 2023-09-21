@@ -45,7 +45,13 @@
 				"inputs": [
 					{
 						"referenceName": "DS_PARQUET_SOURCE",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"FOLDER_NM": {
+								"value": "@pipeline().parameters.FOLDER_NM",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
