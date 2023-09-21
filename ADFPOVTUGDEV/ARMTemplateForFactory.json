@@ -592,13 +592,23 @@
 											"type": "Expression"
 										}
 									},
-									"TGT": {
+									"TMPCDC": {
 										"SynapseTableName": {
-											"value": "@pipeline().parameters.TGT_TBL_NM",
+											"value": "@concat('TMP_CDC_',pipeline().parameters.TGT_TBL_NM)",
 											"type": "Expression"
 										},
 										"SynapseSchema": {
-											"value": "@pipeline().parameters.TGT_DB_NM",
+											"value": "@pipeline().parameters.DB_NM",
+											"type": "Expression"
+										}
+									},
+									"CDCLOG": {
+										"SynapseTableName": {
+											"value": "@concat('LOG_CDC_',pipeline().parameters.TGT_TBL_NM)",
+											"type": "Expression"
+										},
+										"SynapseSchema": {
+											"value": "@pipeline().parameters.DB_NM",
 											"type": "Expression"
 										}
 									}
@@ -622,6 +632,7 @@
 						}
 					}
 				],
+				"concurrency": 1,
 				"policy": {
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
@@ -630,7 +641,7 @@
 					"FOLDER_NM": {
 						"type": "string"
 					},
-					"TGT_DB_NM": {
+					"DB_NM": {
 						"type": "string"
 					},
 					"TGT_TBL_NM": {
@@ -3959,7 +3970,14 @@
 								"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
 								"type": "DatasetReference"
 							},
-							"name": "TGT"
+							"name": "TMPCDC"
+						},
+						{
+							"dataset": {
+								"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
+								"type": "DatasetReference"
+							},
+							"name": "CDCLOG"
 						}
 					],
 					"transformations": [],
@@ -3977,13 +3995,25 @@
 						"     insertable:true,",
 						"     updateable:false,",
 						"     upsertable:false,",
-						"     truncate:true,",
+						"     recreate:true,",
 						"     format: 'table',",
 						"     staged: true,",
 						"     allowCopyCommand: true,",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> TGT"
+						"     errorHandlingOption: 'stopOnFirstError') ~> TMPCDC",
+						"CDC sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     staged: true,",
+						"     allowCopyCommand: true,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> CDCLOG"
 					]
 				}
 			},
