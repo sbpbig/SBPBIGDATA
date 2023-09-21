@@ -1,0 +1,81 @@
+{
+	"name": "20_PROCESS_TYPE4_CDC_STREAM",
+	"properties": {
+		"activities": [
+			{
+				"name": "CDC Snapshot",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "CDC_SNAP_CHANGE",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"CDC": {
+								"FOLDER_NM": {
+									"value": "@concat(pipeline().parameters.P_Object.TGT_TBL, '_DELTA_CHANGES')",
+									"type": "Expression"
+								}
+							},
+							"TMPCDC": {
+								"SynapseTableName": {
+									"value": "@concat('TMP_CDC_',pipeline().parameters.P_Object.TGT_TBL)",
+									"type": "Expression"
+								},
+								"SynapseSchema": {
+									"value": "@pipeline().parameters.P_Object.TGT_SCHEMA_NM",
+									"type": "Expression"
+								}
+							},
+							"CDCLOG": {
+								"SynapseTableName": {
+									"value": "@concat('LOG_CDC_',pipeline().parameters.P_Object.TGT_TBL)",
+									"type": "Expression"
+								},
+								"SynapseSchema": {
+									"value": "@pipeline().parameters.P_Object.TGT_SCHEMA_NM",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "adls",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "synapse-povtug/TMP_STAGING"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine",
+					"continuationSettings": {
+						"customizedCheckpointKey": "55de936d-2a87-4248-8cdf-6fd70b2812c4"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"P_Object": {
+				"type": "object"
+			},
+			"P_DataDT": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "COMMON JOB"
+		},
+		"annotations": []
+	}
+}
