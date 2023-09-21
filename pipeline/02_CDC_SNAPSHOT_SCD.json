@@ -25,13 +25,23 @@
 									"type": "Expression"
 								}
 							},
-							"TGT": {
+							"TMPCDC": {
 								"SynapseTableName": {
-									"value": "@pipeline().parameters.TGT_TBL_NM",
+									"value": "@concat('TMP_CDC_',pipeline().parameters.TGT_TBL_NM)",
 									"type": "Expression"
 								},
 								"SynapseSchema": {
-									"value": "@pipeline().parameters.TGT_DB_NM",
+									"value": "@pipeline().parameters.DB_NM",
+									"type": "Expression"
+								}
+							},
+							"CDCLOG": {
+								"SynapseTableName": {
+									"value": "@concat('LOG_CDC_',pipeline().parameters.TGT_TBL_NM)",
+									"type": "Expression"
+								},
+								"SynapseSchema": {
+									"value": "@pipeline().parameters.DB_NM",
 									"type": "Expression"
 								}
 							}
@@ -55,11 +65,12 @@
 				}
 			}
 		],
+		"concurrency": 1,
 		"parameters": {
 			"FOLDER_NM": {
 				"type": "string"
 			},
-			"TGT_DB_NM": {
+			"DB_NM": {
 				"type": "string"
 			},
 			"TGT_TBL_NM": {

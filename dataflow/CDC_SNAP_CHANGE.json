@@ -18,7 +18,14 @@
 						"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
 						"type": "DatasetReference"
 					},
-					"name": "TGT"
+					"name": "TMPCDC"
+				},
+				{
+					"dataset": {
+						"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
+						"type": "DatasetReference"
+					},
+					"name": "CDCLOG"
 				}
 			],
 			"transformations": [],
@@ -36,13 +43,25 @@
 				"     insertable:true,",
 				"     updateable:false,",
 				"     upsertable:false,",
-				"     truncate:true,",
+				"     recreate:true,",
 				"     format: 'table',",
 				"     staged: true,",
 				"     allowCopyCommand: true,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> TGT"
+				"     errorHandlingOption: 'stopOnFirstError') ~> TMPCDC",
+				"CDC sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> CDCLOG"
 			]
 		}
 	}
