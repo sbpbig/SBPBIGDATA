@@ -494,7 +494,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"pipeline": {
-											"referenceName": "20_PROCESS_TYPE3_CDC_TEMP_TO_LOG",
+											"referenceName": "20_PROCESS_TYPE3_CDC_INIT_TEMP_TO_LOG",
 											"type": "PipelineReference"
 										},
 										"waitOnCompletion": true,
@@ -523,6 +523,34 @@
 									"typeProperties": {
 										"pipeline": {
 											"referenceName": "20_PROCESS_TYPE4_CDC_STREAM",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"P_Object": {
+												"value": "@activity('GET PROCESS INFORMATION').output.firstRow",
+												"type": "Expression"
+											},
+											"P_DataDT": {
+												"value": "@pipeline().parameters.P_AS_AT_DT",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						},
+						{
+							"value": "5",
+							"activities": [
+								{
+									"name": "EXECUTE_PCS_TYPE5",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "20_PROCESS_TYPE5_CDC_INIT_TEMP_TO_SCD2",
 											"type": "PipelineReference"
 										},
 										"waitOnCompletion": true,
