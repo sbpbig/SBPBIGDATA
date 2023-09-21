@@ -2588,13 +2588,16 @@
 				},
 				"parameters": {
 					"FOLDER_NM": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "BSEG_DELTA_CHANGE/*"
 					},
 					"DB_NM": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "dbo"
 					},
 					"TGT_TBL_NM": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "BSEG"
 					}
 				},
 				"folder": {
