@@ -6,6 +6,22 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "ADFPOVTUGDEV"
+		},
+		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM": {
+			"type": "string",
+			"defaultValue": "BSEG_DELTA_CHANGES"
+		},
+		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_DB_NM": {
+			"type": "string",
+			"defaultValue": "dbo"
+		},
+		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM": {
+			"type": "string",
+			"defaultValue": "BSEG"
+		},
+		"CDC_File_Trigger_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourceGroups/POV_TUG/providers/Microsoft.Storage/storageAccounts/stpovtug"
 		}
 	},
 	"variables": {
@@ -62,8 +78,7 @@
 											"type": "Expression"
 										}
 									}
-								},
-								"linkedServiceParameters": {}
+								}
 							},
 							"staging": {
 								"linkedService": {
@@ -863,6 +878,38 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/20_PROCESS_TYPE4_CDC_STREAM')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CDC_File_Trigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "02_CDC_SNAPSHOT_SCD",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"FOLDER_NM": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM')]",
+							"DB_NM": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_DB_NM')]",
+							"TGT_TBL_NM": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM')]"
+						}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/synapse-povtug/blobs/BSEG_DELTA_CHANGES/",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('CDC_File_Trigger_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/05_COMMON_POC')]",

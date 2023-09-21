@@ -27,6 +27,22 @@
 			"type": "string",
 			"defaultValue": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourcegroups/POV_TUG/providers/Microsoft.DataFactory/factories/ADF-POV-TUG/integrationruntimes/integrationRuntime-POV-TUG"
 		},
+		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM": {
+			"type": "string",
+			"defaultValue": "BSEG_DELTA_CHANGES"
+		},
+		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_DB_NM": {
+			"type": "string",
+			"defaultValue": "dbo"
+		},
+		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM": {
+			"type": "string",
+			"defaultValue": "BSEG"
+		},
+		"CDC_File_Trigger_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourceGroups/POV_TUG/providers/Microsoft.Storage/storageAccounts/stpovtug"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -86,6 +102,18 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM": {
+						"value": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM')]"
+					},
+					"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_DB_NM": {
+						"value": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_DB_NM')]"
+					},
+					"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM": {
+						"value": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM')]"
+					},
+					"CDC_File_Trigger_properties_typeProperties_scope": {
+						"value": "[parameters('CDC_File_Trigger_properties_typeProperties_scope')]"
 					}
 				}
 			},
