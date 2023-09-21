@@ -1,0 +1,74 @@
+{
+	"name": "02_CDC_SNAPSHOT_SCD",
+	"properties": {
+		"activities": [
+			{
+				"name": "CDC Snapshot",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "CDC_SNAP_CHANGE",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"CDC": {
+								"FileName": {
+									"value": "@pipeline().parameters.FOLDER_NM",
+									"type": "Expression"
+								}
+							},
+							"TGT": {
+								"SynapseTableName": {
+									"value": "@pipeline().parameters.TGT_TBL_NM",
+									"type": "Expression"
+								},
+								"SynapseSchema": {
+									"value": "@pipeline().parameters.TGT_DB_NM",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "adls",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "synapse-povtug/TMP_STAGING"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Coarse",
+					"continuationSettings": {
+						"customizedCheckpointKey": "55de936d-2a87-4248-8cdf-6fd70b2812c4"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"FOLDER_NM": {
+				"type": "string"
+			},
+			"TGT_DB_NM": {
+				"type": "string"
+			},
+			"TGT_TBL_NM": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "TEST"
+		},
+		"annotations": []
+	}
+}
