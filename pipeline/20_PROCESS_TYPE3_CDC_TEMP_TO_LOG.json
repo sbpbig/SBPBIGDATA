@@ -1,0 +1,124 @@
+{
+	"name": "20_PROCESS_TYPE3_CDC_TEMP_TO_LOG",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderStoredProcedureName": "[CNTL].[PROC_GET_FI]",
+						"storedProcedureParameters": {
+							"P_DATA_DT": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.P_DataDT",
+									"type": "Expression"
+								}
+							},
+							"P_FI_ID": {
+								"type": "Int32",
+								"value": {
+									"value": "@pipeline().parameters.P_Object.FI_ID",
+									"type": "Expression"
+								}
+							},
+							"P_PCS_NM": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.P_Object.PCS_NM",
+									"type": "Expression"
+								}
+							}
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "controltable",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Transform Date and Time",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Lookup",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[PROC_CDC_INSERT_LOG]",
+					"storedProcedureParameters": {
+						"SRC_SCHEMA_NM": {
+							"value": {
+								"value": "@pipeline().parameters.P_Object.SRC_SCHEMA_NM",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"SRC_TBL": {
+							"value": {
+								"value": "@pipeline().parameters.P_Object.SRC_TBL",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"TGT_SCHEMA_NM": {
+							"value": {
+								"value": "@pipeline().parameters.P_Object.TGT_SCHEMA_NM",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"TGT_TBL": {
+							"value": {
+								"value": "@pipeline().parameters.P_Object.TGT_TBL",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseAnalytics",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"P_Object": {
+				"type": "object"
+			},
+			"P_DataDT": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "COMMON JOB"
+		},
+		"annotations": []
+	}
+}
