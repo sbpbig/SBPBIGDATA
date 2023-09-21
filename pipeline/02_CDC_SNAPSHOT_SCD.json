@@ -277,7 +277,8 @@
 		"concurrency": 1,
 		"parameters": {
 			"P_PCS_NM": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "LD_CDC_BSEG"
 			}
 		},
 		"folder": {
