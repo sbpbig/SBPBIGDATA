@@ -20,7 +20,7 @@
 						"type": "DataFlowReference",
 						"datasetParameters": {
 							"CDC": {
-								"FileName": {
+								"FOLDER_NM": {
 									"value": "@pipeline().parameters.FOLDER_NM",
 									"type": "Expression"
 								}
