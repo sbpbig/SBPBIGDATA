@@ -2877,7 +2877,7 @@
 						}
 					},
 					{
-						"name": "Transform Date and Time",
+						"name": "PROC_CDC_INSERT_LOG",
 						"type": "SqlServerStoredProcedure",
 						"dependsOn": [
 							{
