@@ -7,17 +7,9 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "ADFPOVTUGDEV"
 		},
-		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM": {
+		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_P_PCS_NM": {
 			"type": "string",
-			"defaultValue": "BSEG_DELTA_CHANGES"
-		},
-		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_DB_NM": {
-			"type": "string",
-			"defaultValue": "dbo"
-		},
-		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM": {
-			"type": "string",
-			"defaultValue": "BSEG"
+			"defaultValue": "LD_CDC_BSEG"
 		},
 		"CDC_File_Trigger_properties_typeProperties_scope": {
 			"type": "string",
@@ -893,9 +885,7 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"FOLDER_NM": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM')]",
-							"DB_NM": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_DB_NM')]",
-							"TGT_TBL_NM": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM')]"
+							"P_PCS_NM": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_P_PCS_NM')]"
 						}
 					}
 				],

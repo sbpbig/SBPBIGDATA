@@ -1331,8 +1331,7 @@
 											"type": "Expression"
 										}
 									}
-								},
-								"linkedServiceParameters": {}
+								}
 							},
 							"staging": {
 								"linkedService": {
@@ -1562,20 +1561,9 @@
 					"cancelAfter": {}
 				},
 				"parameters": {
-					"FOLDER_NM": {
-						"type": "string",
-						"defaultValue": "BSEG_DELTA_CHANGES"
-					},
-					"DB_NM": {
-						"type": "string",
-						"defaultValue": "dbo"
-					},
-					"TGT_TBL_NM": {
-						"type": "string",
-						"defaultValue": "BSEG"
-					},
 					"P_PCS_NM": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "LD_CDC_BSEG"
 					}
 				},
 				"folder": {

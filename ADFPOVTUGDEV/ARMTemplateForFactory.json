@@ -23,17 +23,9 @@
 			"type": "string",
 			"defaultValue": "https://stpovtug.dfs.core.windows.net/"
 		},
-		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM": {
+		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_P_PCS_NM": {
 			"type": "string",
-			"defaultValue": "BSEG_DELTA_CHANGES"
-		},
-		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_DB_NM": {
-			"type": "string",
-			"defaultValue": "dbo"
-		},
-		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM": {
-			"type": "string",
-			"defaultValue": "BSEG"
+			"defaultValue": "LD_CDC_BSEG"
 		},
 		"CDC_File_Trigger_properties_typeProperties_scope": {
 			"type": "string",
@@ -686,8 +678,7 @@
 											"type": "Expression"
 										}
 									}
-								},
-								"linkedServiceParameters": {}
+								}
 							},
 							"staging": {
 								"linkedService": {
@@ -917,20 +908,9 @@
 					"cancelAfter": {}
 				},
 				"parameters": {
-					"FOLDER_NM": {
-						"type": "string",
-						"defaultValue": "BSEG_DELTA_CHANGES"
-					},
-					"DB_NM": {
-						"type": "string",
-						"defaultValue": "dbo"
-					},
-					"TGT_TBL_NM": {
-						"type": "string",
-						"defaultValue": "BSEG"
-					},
 					"P_PCS_NM": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "LD_CDC_BSEG"
 					}
 				},
 				"folder": {
@@ -2662,9 +2642,7 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"FOLDER_NM": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM')]",
-							"DB_NM": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_DB_NM')]",
-							"TGT_TBL_NM": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM')]"
+							"P_PCS_NM": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_P_PCS_NM')]"
 						}
 					}
 				],
