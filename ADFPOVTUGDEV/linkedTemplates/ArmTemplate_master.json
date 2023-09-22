@@ -23,9 +23,17 @@
 			"type": "string",
 			"defaultValue": "https://stpovtug.dfs.core.windows.net/"
 		},
-		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_P_PCS_NM": {
+		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM": {
 			"type": "string",
-			"defaultValue": "LD_CDC_BSEG"
+			"defaultValue": "BSEG"
+		},
+		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_DB_NM": {
+			"type": "string",
+			"defaultValue": "dbo"
+		},
+		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM": {
+			"type": "string",
+			"defaultValue": "BSEG_DELTA_CHANGES"
 		},
 		"CDC_File_Trigger_properties_typeProperties_scope": {
 			"type": "string",
@@ -95,8 +103,14 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_P_PCS_NM": {
-						"value": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_P_PCS_NM')]"
+					"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM": {
+						"value": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM')]"
+					},
+					"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_DB_NM": {
+						"value": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_DB_NM')]"
+					},
+					"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM": {
+						"value": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM')]"
 					},
 					"CDC_File_Trigger_properties_typeProperties_scope": {
 						"value": "[parameters('CDC_File_Trigger_properties_typeProperties_scope')]"

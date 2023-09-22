@@ -17,8 +17,14 @@
 		"adls_properties_typeProperties_url": {
 			"value": "https://stpovtug.dfs.core.windows.net/"
 		},
-		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_P_PCS_NM": {
-			"value": "LD_CDC_BSEG"
+		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM": {
+			"value": "BSEG"
+		},
+		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_DB_NM": {
+			"value": "dbo"
+		},
+		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM": {
+			"value": "BSEG_DELTA_CHANGES"
 		},
 		"CDC_File_Trigger_properties_typeProperties_scope": {
 			"value": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourceGroups/POV_TUG/providers/Microsoft.Storage/storageAccounts/stpovtug"
