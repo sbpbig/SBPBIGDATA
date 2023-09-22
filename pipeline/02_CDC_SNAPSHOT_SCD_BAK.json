@@ -1,0 +1,289 @@
+{
+	"name": "02_CDC_SNAPSHOT_SCD_BAK",
+	"properties": {
+		"activities": [
+			{
+				"name": "CDC SNAPSHOT",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "INSERT PROCESS LOG",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "CDC_SNAP_CHANGE",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"CDC": {
+								"FOLDER_NM": {
+									"value": "@activity('GET PROCESS INFORMATION').output.firstRow.PTH",
+									"type": "Expression"
+								}
+							},
+							"TMPCDC": {
+								"SynapseTableName": {
+									"value": "@concat('TMP_CDC_', activity('GET PROCESS INFORMATION').output.firstRow.TGT_TBL)",
+									"type": "Expression"
+								},
+								"SynapseSchema": {
+									"value": "@activity('GET PROCESS INFORMATION').output.firstRow.TGT_SCHEMA_NM",
+									"type": "Expression"
+								}
+							},
+							"CDCLOG": {
+								"SynapseTableName": {
+									"value": "@concat('LOG_CDC_',activity('GET PROCESS INFORMATION').output.firstRow.TGT_TBL)",
+									"type": "Expression"
+								},
+								"SynapseSchema": {
+									"value": "@activity('GET PROCESS INFORMATION').output.firstRow.TGT_SCHEMA_NM",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "adls",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "synapse-povtug/TMP_STAGING"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine",
+					"continuationSettings": {
+						"customizedCheckpointKey": "55de936d-2a87-4248-8cdf-6fd70b2812c4"
+					}
+				}
+			},
+			{
+				"name": "GET PROCESS INFORMATION",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderStoredProcedureName": "[CNTL].[PROC_GET_PCS_CDC]",
+						"storedProcedureParameters": {
+							"P_PCS_NM": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.P_PCS_NM",
+									"type": "Expression"
+								}
+							}
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "controltable",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "UPDATE SUCCESS",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "CDC SNAPSHOT",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[CNTL].[PROC_UDT_PCS]",
+					"storedProcedureParameters": {
+						"P_CNT_SRC": {
+							"value": "0",
+							"type": "String"
+						},
+						"P_CNT_TGT": {
+							"value": "0",
+							"type": "String"
+						},
+						"P_LOAD_ID": {
+							"value": {
+								"value": "@activity('INSERT PROCESS LOG').output.FIRSTROW.LOAD_ID",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"P_PCS_NM": {
+							"value": {
+								"value": "@pipeline().parameters.P_PCS_NM",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"P_RMRK": {
+							"value": null,
+							"type": "String"
+						},
+						"P_ST": {
+							"value": "SUCCESS",
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "SqlServer1",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "UPDATE FAILED ON CDC SNAPSHOT",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "CDC SNAPSHOT",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[CNTL].[PROC_UDT_PCS]",
+					"storedProcedureParameters": {
+						"P_CNT_SRC": {
+							"value": null,
+							"type": "String"
+						},
+						"P_CNT_TGT": {
+							"value": null,
+							"type": "String"
+						},
+						"P_LOAD_ID": {
+							"value": {
+								"value": "@activity('INSERT PROCESS LOG').output.FIRSTROW.LOAD_ID",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"P_PCS_NM": {
+							"value": {
+								"value": "@pipeline().parameters.P_PCS_NM",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"P_RMRK": {
+							"value": "CDC SNAPSHOT FAILED",
+							"type": "String"
+						},
+						"P_ST": {
+							"value": "FAILED",
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "SqlServer1",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "INSERT PROCESS LOG",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "GET PROCESS INFORMATION",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderStoredProcedureName": "[CNTL].[PROC_CNTL_START_PCS]",
+						"storedProcedureParameters": {
+							"P_PCS_NM": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.P_PCS_NM",
+									"type": "Expression"
+								}
+							},
+							"P_RUN_MODE": {
+								"type": "String",
+								"value": "F"
+							},
+							"P_STREAM_SEQ_ID": {
+								"type": "String",
+								"value": null
+							}
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "controltable",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": true
+				}
+			}
+		],
+		"concurrency": 1,
+		"parameters": {
+			"P_PCS_NM": {
+				"type": "string",
+				"defaultValue": "LD_CDC_BSEG"
+			}
+		},
+		"folder": {
+			"name": "TEST"
+		},
+		"annotations": []
+	}
+}
