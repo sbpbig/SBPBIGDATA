@@ -260,6 +260,16 @@
 			},
 			"mode": "Microbatch"
 		},
-		"allowVNetOverride": false
+		"allowVNetOverride": false,
+		"typeProperties": {
+			"staging": {
+				"linkedService": {
+					"referenceName": "adls",
+					"type": "LinkedServiceReference"
+				},
+				"folderPath": "synapse-povtug/TMP_ACDOCA_INIT"
+			},
+			"linkedServiceType": "AzureBlobFS"
+		}
 	}
 }
