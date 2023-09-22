@@ -140,17 +140,6 @@
 									"value": "ACDOCA_CDC_SCD2"
 								},
 								{
-									"name": "keys",
-									"value": [
-										"RCLNT",
-										"RLDNR",
-										"RBUKRS",
-										"GJAHR",
-										"BELNR",
-										"DOCLN"
-									]
-								},
-								{
 									"name": "deletable",
 									"value": true
 								},
@@ -165,6 +154,17 @@
 								{
 									"name": "defaultToUpsert",
 									"value": true
+								},
+								{
+									"name": "keys",
+									"value": [
+										"RCLNT",
+										"RLDNR",
+										"RBUKRS",
+										"GJAHR",
+										"BELNR",
+										"DOCLN"
+									]
 								}
 							]
 						}
@@ -260,7 +260,7 @@
 			},
 			"mode": "Microbatch"
 		},
-		"status": "Stopped",
+		"status": "Starting",
 		"allowVNetOverride": false,
 		"typeProperties": {
 			"staging": {
