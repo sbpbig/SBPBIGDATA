@@ -260,6 +260,7 @@
 			},
 			"mode": "Microbatch"
 		},
+		"status": "Stopped",
 		"allowVNetOverride": false,
 		"typeProperties": {
 			"staging": {
