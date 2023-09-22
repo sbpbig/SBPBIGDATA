@@ -20,6 +20,14 @@
 								{
 									"name": "folderPath",
 									"value": "ACDOCA"
+								},
+								{
+									"name": "allowSchemaDrift",
+									"value": false
+								},
+								{
+									"name": "inferDriftedColumnTypes",
+									"value": false
 								}
 							]
 						}
@@ -129,7 +137,1620 @@
 					{
 						"name": "dbo.ACDOCA_CDC_SCD2",
 						"properties": {
-							"schema": [],
+							"schema": [
+								{
+									"name": "RCLNT",
+									"dataType": "string"
+								},
+								{
+									"name": "RLDNR",
+									"dataType": "string"
+								},
+								{
+									"name": "RBUKRS",
+									"dataType": "string"
+								},
+								{
+									"name": "GJAHR",
+									"dataType": "string"
+								},
+								{
+									"name": "BELNR",
+									"dataType": "string"
+								},
+								{
+									"name": "DOCLN",
+									"dataType": "string"
+								},
+								{
+									"name": "RYEAR",
+									"dataType": "string"
+								},
+								{
+									"name": "RRCTY",
+									"dataType": "string"
+								},
+								{
+									"name": "RMVCT",
+									"dataType": "string"
+								},
+								{
+									"name": "VORGN",
+									"dataType": "string"
+								},
+								{
+									"name": "VRGNG",
+									"dataType": "string"
+								},
+								{
+									"name": "BTTYPE",
+									"dataType": "string"
+								},
+								{
+									"name": "AWTYP",
+									"dataType": "string"
+								},
+								{
+									"name": "AWSYS",
+									"dataType": "string"
+								},
+								{
+									"name": "AWORG",
+									"dataType": "string"
+								},
+								{
+									"name": "AWREF",
+									"dataType": "string"
+								},
+								{
+									"name": "AWITEM",
+									"dataType": "string"
+								},
+								{
+									"name": "AWITGRP",
+									"dataType": "string"
+								},
+								{
+									"name": "SUBTA",
+									"dataType": "string"
+								},
+								{
+									"name": "XREVERSING",
+									"dataType": "string"
+								},
+								{
+									"name": "XREVERSED",
+									"dataType": "string"
+								},
+								{
+									"name": "XTRUEREV",
+									"dataType": "string"
+								},
+								{
+									"name": "AWTYP_REV",
+									"dataType": "string"
+								},
+								{
+									"name": "AWORG_REV",
+									"dataType": "string"
+								},
+								{
+									"name": "AWREF_REV",
+									"dataType": "string"
+								},
+								{
+									"name": "SUBTA_REV",
+									"dataType": "string"
+								},
+								{
+									"name": "XSETTLING",
+									"dataType": "string"
+								},
+								{
+									"name": "XSETTLED",
+									"dataType": "string"
+								},
+								{
+									"name": "PREC_AWTYP",
+									"dataType": "string"
+								},
+								{
+									"name": "PREC_AWORG",
+									"dataType": "string"
+								},
+								{
+									"name": "PREC_AWREF",
+									"dataType": "string"
+								},
+								{
+									"name": "PREC_AWITEM",
+									"dataType": "string"
+								},
+								{
+									"name": "PREC_SUBTA",
+									"dataType": "string"
+								},
+								{
+									"name": "PREC_AWMULT",
+									"dataType": "binary"
+								},
+								{
+									"name": "XSECONDARY",
+									"dataType": "string"
+								},
+								{
+									"name": "RTCUR",
+									"dataType": "string"
+								},
+								{
+									"name": "RWCUR",
+									"dataType": "string"
+								},
+								{
+									"name": "RHCUR",
+									"dataType": "string"
+								},
+								{
+									"name": "RKCUR",
+									"dataType": "string"
+								},
+								{
+									"name": "ROCUR",
+									"dataType": "string"
+								},
+								{
+									"name": "RVCUR",
+									"dataType": "string"
+								},
+								{
+									"name": "RBCUR",
+									"dataType": "string"
+								},
+								{
+									"name": "RCCUR",
+									"dataType": "string"
+								},
+								{
+									"name": "RDCUR",
+									"dataType": "string"
+								},
+								{
+									"name": "RECUR",
+									"dataType": "string"
+								},
+								{
+									"name": "RFCUR",
+									"dataType": "string"
+								},
+								{
+									"name": "RGCUR",
+									"dataType": "string"
+								},
+								{
+									"name": "RCO_OCUR",
+									"dataType": "string"
+								},
+								{
+									"name": "RUNIT",
+									"dataType": "string"
+								},
+								{
+									"name": "RVUNIT",
+									"dataType": "string"
+								},
+								{
+									"name": "RRUNIT",
+									"dataType": "string"
+								},
+								{
+									"name": "QUNIT1",
+									"dataType": "string"
+								},
+								{
+									"name": "QUNIT2",
+									"dataType": "string"
+								},
+								{
+									"name": "QUNIT3",
+									"dataType": "string"
+								},
+								{
+									"name": "RACCT",
+									"dataType": "string"
+								},
+								{
+									"name": "RCNTR",
+									"dataType": "string"
+								},
+								{
+									"name": "PRCTR",
+									"dataType": "string"
+								},
+								{
+									"name": "RFAREA",
+									"dataType": "string"
+								},
+								{
+									"name": "RBUSA",
+									"dataType": "string"
+								},
+								{
+									"name": "KOKRS",
+									"dataType": "string"
+								},
+								{
+									"name": "SEGMENT",
+									"dataType": "string"
+								},
+								{
+									"name": "SCNTR",
+									"dataType": "string"
+								},
+								{
+									"name": "PPRCTR",
+									"dataType": "string"
+								},
+								{
+									"name": "SFAREA",
+									"dataType": "string"
+								},
+								{
+									"name": "SBUSA",
+									"dataType": "string"
+								},
+								{
+									"name": "RASSC",
+									"dataType": "string"
+								},
+								{
+									"name": "PSEGMENT",
+									"dataType": "string"
+								},
+								{
+									"name": "TSL",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "WSL",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "WSL2",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "WSL3",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "HSL",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "KSL",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "OSL",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "VSL",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "BSL",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "CSL",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "DSL",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "ESL",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "FSL",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "GSL",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "KFSL",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "KFSL2",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "KFSL3",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "PSL",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "PSL2",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "PSL3",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "PFSL",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "PFSL2",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "PFSL3",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "CO_OSL",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "HSALK3",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "KSALK3",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "OSALK3",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "VSALK3",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "HSALKV",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "KSALKV",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "OSALKV",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "VSALKV",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "HPVPRS",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "KPVPRS",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "OPVPRS",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "VPVPRS",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "HSTPRS",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "KSTPRS",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "OSTPRS",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "VSTPRS",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "HSLALT",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "KSLALT",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "OSLALT",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "VSLALT",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "HSLEXT",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "KSLEXT",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "OSLEXT",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "VSLEXT",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "HVKWRT",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "HVKSAL",
+									"dataType": "decimal(31,2)"
+								},
+								{
+									"name": "MSL",
+									"dataType": "decimal(31,3)"
+								},
+								{
+									"name": "MFSL",
+									"dataType": "decimal(31,3)"
+								},
+								{
+									"name": "VMSL",
+									"dataType": "decimal(31,3)"
+								},
+								{
+									"name": "VMFSL",
+									"dataType": "decimal(31,3)"
+								},
+								{
+									"name": "RMSL",
+									"dataType": "decimal(31,3)"
+								},
+								{
+									"name": "QUANT1",
+									"dataType": "decimal(31,3)"
+								},
+								{
+									"name": "QUANT2",
+									"dataType": "decimal(31,3)"
+								},
+								{
+									"name": "QUANT3",
+									"dataType": "decimal(31,3)"
+								},
+								{
+									"name": "LBKUM",
+									"dataType": "decimal(31,3)"
+								},
+								{
+									"name": "DRCRK",
+									"dataType": "string"
+								},
+								{
+									"name": "POPER",
+									"dataType": "string"
+								},
+								{
+									"name": "PERIV",
+									"dataType": "string"
+								},
+								{
+									"name": "FISCYEARPER",
+									"dataType": "string"
+								},
+								{
+									"name": "BUDAT",
+									"dataType": "string"
+								},
+								{
+									"name": "BLDAT",
+									"dataType": "string"
+								},
+								{
+									"name": "BLART",
+									"dataType": "string"
+								},
+								{
+									"name": "BUZEI",
+									"dataType": "string"
+								},
+								{
+									"name": "ZUONR",
+									"dataType": "string"
+								},
+								{
+									"name": "BSCHL",
+									"dataType": "string"
+								},
+								{
+									"name": "BSTAT",
+									"dataType": "string"
+								},
+								{
+									"name": "LINETYPE",
+									"dataType": "string"
+								},
+								{
+									"name": "KTOSL",
+									"dataType": "string"
+								},
+								{
+									"name": "SLALITTYPE",
+									"dataType": "string"
+								},
+								{
+									"name": "XSPLITMOD",
+									"dataType": "string"
+								},
+								{
+									"name": "USNAM",
+									"dataType": "string"
+								},
+								{
+									"name": "TIMESTAMP",
+									"dataType": "decimal(19,0)"
+								},
+								{
+									"name": "EPRCTR",
+									"dataType": "string"
+								},
+								{
+									"name": "RHOART",
+									"dataType": "string"
+								},
+								{
+									"name": "GLACCOUNT_TYPE",
+									"dataType": "string"
+								},
+								{
+									"name": "KTOPL",
+									"dataType": "string"
+								},
+								{
+									"name": "LOKKT",
+									"dataType": "string"
+								},
+								{
+									"name": "KTOP2",
+									"dataType": "string"
+								},
+								{
+									"name": "REBZG",
+									"dataType": "string"
+								},
+								{
+									"name": "REBZJ",
+									"dataType": "string"
+								},
+								{
+									"name": "REBZZ",
+									"dataType": "string"
+								},
+								{
+									"name": "REBZT",
+									"dataType": "string"
+								},
+								{
+									"name": "RBEST",
+									"dataType": "string"
+								},
+								{
+									"name": "EBELN",
+									"dataType": "string"
+								},
+								{
+									"name": "EBELP",
+									"dataType": "string"
+								},
+								{
+									"name": "ZEKKN",
+									"dataType": "string"
+								},
+								{
+									"name": "SGTXT",
+									"dataType": "string"
+								},
+								{
+									"name": "KDAUF",
+									"dataType": "string"
+								},
+								{
+									"name": "KDPOS",
+									"dataType": "string"
+								},
+								{
+									"name": "MATNR",
+									"dataType": "string"
+								},
+								{
+									"name": "WERKS",
+									"dataType": "string"
+								},
+								{
+									"name": "LIFNR",
+									"dataType": "string"
+								},
+								{
+									"name": "KUNNR",
+									"dataType": "string"
+								},
+								{
+									"name": "FBUDA",
+									"dataType": "string"
+								},
+								{
+									"name": "KOART",
+									"dataType": "string"
+								},
+								{
+									"name": "UMSKZ",
+									"dataType": "string"
+								},
+								{
+									"name": "MWSKZ",
+									"dataType": "string"
+								},
+								{
+									"name": "HBKID",
+									"dataType": "string"
+								},
+								{
+									"name": "HKTID",
+									"dataType": "string"
+								},
+								{
+									"name": "XOPVW",
+									"dataType": "string"
+								},
+								{
+									"name": "AUGDT",
+									"dataType": "string"
+								},
+								{
+									"name": "AUGBL",
+									"dataType": "string"
+								},
+								{
+									"name": "AUGGJ",
+									"dataType": "string"
+								},
+								{
+									"name": "AFABE",
+									"dataType": "string"
+								},
+								{
+									"name": "ANLN1",
+									"dataType": "string"
+								},
+								{
+									"name": "ANLN2",
+									"dataType": "string"
+								},
+								{
+									"name": "BZDAT",
+									"dataType": "string"
+								},
+								{
+									"name": "ANBWA",
+									"dataType": "string"
+								},
+								{
+									"name": "MOVCAT",
+									"dataType": "string"
+								},
+								{
+									"name": "DEPR_PERIOD",
+									"dataType": "string"
+								},
+								{
+									"name": "ANLGR",
+									"dataType": "string"
+								},
+								{
+									"name": "ANLGR2",
+									"dataType": "string"
+								},
+								{
+									"name": "SETTLEMENT_RULE",
+									"dataType": "string"
+								},
+								{
+									"name": "UBZDT_PN",
+									"dataType": "string"
+								},
+								{
+									"name": "XVABG_PN",
+									"dataType": "string"
+								},
+								{
+									"name": "PROZS_PN",
+									"dataType": "decimal(6,2)"
+								},
+								{
+									"name": "XMANPROPVAL_PN",
+									"dataType": "string"
+								},
+								{
+									"name": "KALNR",
+									"dataType": "string"
+								},
+								{
+									"name": "VPRSV",
+									"dataType": "string"
+								},
+								{
+									"name": "MLAST",
+									"dataType": "string"
+								},
+								{
+									"name": "KZBWS",
+									"dataType": "string"
+								},
+								{
+									"name": "XOBEW",
+									"dataType": "string"
+								},
+								{
+									"name": "SOBKZ",
+									"dataType": "string"
+								},
+								{
+									"name": "VTSTAMP",
+									"dataType": "decimal(27,7)"
+								},
+								{
+									"name": "MAT_KDAUF",
+									"dataType": "string"
+								},
+								{
+									"name": "MAT_KDPOS",
+									"dataType": "string"
+								},
+								{
+									"name": "MAT_PSPNR",
+									"dataType": "string"
+								},
+								{
+									"name": "MAT_PS_POSID",
+									"dataType": "string"
+								},
+								{
+									"name": "MAT_LIFNR",
+									"dataType": "string"
+								},
+								{
+									"name": "BWTAR",
+									"dataType": "string"
+								},
+								{
+									"name": "BWKEY",
+									"dataType": "string"
+								},
+								{
+									"name": "HPEINH",
+									"dataType": "decimal(6,0)"
+								},
+								{
+									"name": "KPEINH",
+									"dataType": "decimal(6,0)"
+								},
+								{
+									"name": "OPEINH",
+									"dataType": "decimal(6,0)"
+								},
+								{
+									"name": "VPEINH",
+									"dataType": "decimal(6,0)"
+								},
+								{
+									"name": "MLPTYP",
+									"dataType": "string"
+								},
+								{
+									"name": "MLCATEG",
+									"dataType": "string"
+								},
+								{
+									"name": "QSBVALT",
+									"dataType": "string"
+								},
+								{
+									"name": "QSPROCESS",
+									"dataType": "string"
+								},
+								{
+									"name": "PERART",
+									"dataType": "string"
+								},
+								{
+									"name": "MLPOSNR",
+									"dataType": "string"
+								},
+								{
+									"name": "BUKRS_SENDER",
+									"dataType": "string"
+								},
+								{
+									"name": "RACCT_SENDER",
+									"dataType": "string"
+								},
+								{
+									"name": "ACCAS_SENDER",
+									"dataType": "string"
+								},
+								{
+									"name": "ACCASTY_SENDER",
+									"dataType": "string"
+								},
+								{
+									"name": "OBJNR",
+									"dataType": "string"
+								},
+								{
+									"name": "HRKFT",
+									"dataType": "string"
+								},
+								{
+									"name": "HKGRP",
+									"dataType": "string"
+								},
+								{
+									"name": "PAROB1",
+									"dataType": "string"
+								},
+								{
+									"name": "PAROBSRC",
+									"dataType": "string"
+								},
+								{
+									"name": "USPOB",
+									"dataType": "string"
+								},
+								{
+									"name": "CO_BELKZ",
+									"dataType": "string"
+								},
+								{
+									"name": "CO_BEKNZ",
+									"dataType": "string"
+								},
+								{
+									"name": "BELTP",
+									"dataType": "string"
+								},
+								{
+									"name": "MUVFLG",
+									"dataType": "string"
+								},
+								{
+									"name": "GKONT",
+									"dataType": "string"
+								},
+								{
+									"name": "GKOAR",
+									"dataType": "string"
+								},
+								{
+									"name": "ERLKZ",
+									"dataType": "string"
+								},
+								{
+									"name": "PERNR",
+									"dataType": "string"
+								},
+								{
+									"name": "PAOBJNR",
+									"dataType": "string"
+								},
+								{
+									"name": "XPAOBJNR_CO_REL",
+									"dataType": "string"
+								},
+								{
+									"name": "SCOPE",
+									"dataType": "string"
+								},
+								{
+									"name": "LOGSYSO",
+									"dataType": "string"
+								},
+								{
+									"name": "PBUKRS",
+									"dataType": "string"
+								},
+								{
+									"name": "PSCOPE",
+									"dataType": "string"
+								},
+								{
+									"name": "LOGSYSP",
+									"dataType": "string"
+								},
+								{
+									"name": "BWSTRAT",
+									"dataType": "string"
+								},
+								{
+									"name": "OBJNR_HK",
+									"dataType": "string"
+								},
+								{
+									"name": "AUFNR_ORG",
+									"dataType": "string"
+								},
+								{
+									"name": "UKOSTL",
+									"dataType": "string"
+								},
+								{
+									"name": "ULSTAR",
+									"dataType": "string"
+								},
+								{
+									"name": "UPRZNR",
+									"dataType": "string"
+								},
+								{
+									"name": "ACCAS",
+									"dataType": "string"
+								},
+								{
+									"name": "ACCASTY",
+									"dataType": "string"
+								},
+								{
+									"name": "LSTAR",
+									"dataType": "string"
+								},
+								{
+									"name": "AUFNR",
+									"dataType": "string"
+								},
+								{
+									"name": "AUTYP",
+									"dataType": "string"
+								},
+								{
+									"name": "PS_PSP_PNR",
+									"dataType": "string"
+								},
+								{
+									"name": "PS_POSID",
+									"dataType": "string"
+								},
+								{
+									"name": "PS_PSPID",
+									"dataType": "string"
+								},
+								{
+									"name": "NPLNR",
+									"dataType": "string"
+								},
+								{
+									"name": "NPLNR_VORGN",
+									"dataType": "string"
+								},
+								{
+									"name": "PRZNR",
+									"dataType": "string"
+								},
+								{
+									"name": "KSTRG",
+									"dataType": "string"
+								},
+								{
+									"name": "BEMOT",
+									"dataType": "string"
+								},
+								{
+									"name": "RSRCE",
+									"dataType": "string"
+								},
+								{
+									"name": "QMNUM",
+									"dataType": "string"
+								},
+								{
+									"name": "ERKRS",
+									"dataType": "string"
+								},
+								{
+									"name": "PACCAS",
+									"dataType": "string"
+								},
+								{
+									"name": "PACCASTY",
+									"dataType": "string"
+								},
+								{
+									"name": "PLSTAR",
+									"dataType": "string"
+								},
+								{
+									"name": "PAUFNR",
+									"dataType": "string"
+								},
+								{
+									"name": "PAUTYP",
+									"dataType": "string"
+								},
+								{
+									"name": "PPS_POSID",
+									"dataType": "string"
+								},
+								{
+									"name": "PPS_PSPID",
+									"dataType": "string"
+								},
+								{
+									"name": "PKDAUF",
+									"dataType": "string"
+								},
+								{
+									"name": "PKDPOS",
+									"dataType": "string"
+								},
+								{
+									"name": "PPAOBJNR",
+									"dataType": "string"
+								},
+								{
+									"name": "PNPLNR",
+									"dataType": "string"
+								},
+								{
+									"name": "PNPLNR_VORGN",
+									"dataType": "string"
+								},
+								{
+									"name": "PPRZNR",
+									"dataType": "string"
+								},
+								{
+									"name": "PKSTRG",
+									"dataType": "string"
+								},
+								{
+									"name": "CO_ACCASTY_N1",
+									"dataType": "string"
+								},
+								{
+									"name": "CO_ACCASTY_N2",
+									"dataType": "string"
+								},
+								{
+									"name": "CO_ACCASTY_N3",
+									"dataType": "string"
+								},
+								{
+									"name": "CO_ZLENR",
+									"dataType": "string"
+								},
+								{
+									"name": "CO_BELNR",
+									"dataType": "string"
+								},
+								{
+									"name": "CO_BUZEI",
+									"dataType": "string"
+								},
+								{
+									"name": "CO_BUZEI1",
+									"dataType": "string"
+								},
+								{
+									"name": "CO_BUZEI2",
+									"dataType": "string"
+								},
+								{
+									"name": "CO_BUZEI5",
+									"dataType": "string"
+								},
+								{
+									"name": "CO_BUZEI6",
+									"dataType": "string"
+								},
+								{
+									"name": "CO_BUZEI7",
+									"dataType": "string"
+								},
+								{
+									"name": "CO_REFBZ",
+									"dataType": "string"
+								},
+								{
+									"name": "CO_REFBZ1",
+									"dataType": "string"
+								},
+								{
+									"name": "CO_REFBZ2",
+									"dataType": "string"
+								},
+								{
+									"name": "CO_REFBZ5",
+									"dataType": "string"
+								},
+								{
+									"name": "CO_REFBZ6",
+									"dataType": "string"
+								},
+								{
+									"name": "CO_REFBZ7",
+									"dataType": "string"
+								},
+								{
+									"name": "WORK_ITEM_ID",
+									"dataType": "string"
+								},
+								{
+									"name": "FKART",
+									"dataType": "string"
+								},
+								{
+									"name": "VKORG",
+									"dataType": "string"
+								},
+								{
+									"name": "VTWEG",
+									"dataType": "string"
+								},
+								{
+									"name": "SPART",
+									"dataType": "string"
+								},
+								{
+									"name": "MATNR_COPA",
+									"dataType": "string"
+								},
+								{
+									"name": "MATKL",
+									"dataType": "string"
+								},
+								{
+									"name": "KDGRP",
+									"dataType": "string"
+								},
+								{
+									"name": "LAND1",
+									"dataType": "string"
+								},
+								{
+									"name": "BRSCH",
+									"dataType": "string"
+								},
+								{
+									"name": "BZIRK",
+									"dataType": "string"
+								},
+								{
+									"name": "KUNRE",
+									"dataType": "string"
+								},
+								{
+									"name": "KUNWE",
+									"dataType": "string"
+								},
+								{
+									"name": "KONZS",
+									"dataType": "string"
+								},
+								{
+									"name": "ACDOC_COPA_EEW_DUMMY_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "WWSOR_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "WWPRD_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "WWCOU_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "ROUTE_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "WWPH1_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "WWPH2_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "WWPH3_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "AUART_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "AUGRU_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "VKBUR_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "BWTAR_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "CHARG_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "INCO1_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "KTGRD_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "KTGRM_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "KVGR1_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "KVGR2_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "KVGR3_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "KVGR4_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "KVGR5_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "MVGR1_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "MVGR2_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "MVGR3_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "MVGR4_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "MVGR5_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "PAPH1_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "PAPH2_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "PAPH3_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "VBUND_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "HIE04_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "KMHI01_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "KMHI02_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "KMHI03_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "WWRCU_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "WWEMP_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "WWSTC_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "WWCHN_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "TEMPB_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "WWVDR_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "WWVLC_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "KMLAND_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "KMVKBU_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "KMVKGR_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "WWMTC_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "WWMP1_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "WWMP2_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "WWMP3_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "WWMPL_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "WWSCT_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "KONDM_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "WWBOF_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "WWBRK_PA",
+									"dataType": "string"
+								},
+								{
+									"name": "RE_BUKRS",
+									"dataType": "string"
+								},
+								{
+									"name": "RE_ACCOUNT",
+									"dataType": "string"
+								},
+								{
+									"name": "FIKRS",
+									"dataType": "string"
+								},
+								{
+									"name": "FISTL",
+									"dataType": "string"
+								},
+								{
+									"name": "MEASURE",
+									"dataType": "string"
+								},
+								{
+									"name": "RFUND",
+									"dataType": "string"
+								},
+								{
+									"name": "RGRANT_NBR",
+									"dataType": "string"
+								},
+								{
+									"name": "RBUDGET_PD",
+									"dataType": "string"
+								},
+								{
+									"name": "SFUND",
+									"dataType": "string"
+								},
+								{
+									"name": "SGRANT_NBR",
+									"dataType": "string"
+								},
+								{
+									"name": "SBUDGET_PD",
+									"dataType": "string"
+								},
+								{
+									"name": "VNAME",
+									"dataType": "string"
+								},
+								{
+									"name": "EGRUP",
+									"dataType": "string"
+								},
+								{
+									"name": "RECID",
+									"dataType": "string"
+								},
+								{
+									"name": "VPTNR",
+									"dataType": "string"
+								},
+								{
+									"name": "BTYPE",
+									"dataType": "string"
+								},
+								{
+									"name": "ETYPE",
+									"dataType": "string"
+								},
+								{
+									"name": "PRODPER",
+									"dataType": "string"
+								},
+								{
+									"name": "SWENR",
+									"dataType": "string"
+								},
+								{
+									"name": "SGENR",
+									"dataType": "string"
+								},
+								{
+									"name": "SGRNR",
+									"dataType": "string"
+								},
+								{
+									"name": "SMENR",
+									"dataType": "string"
+								},
+								{
+									"name": "RECNNR",
+									"dataType": "string"
+								},
+								{
+									"name": "SNKSL",
+									"dataType": "string"
+								},
+								{
+									"name": "SEMPSL",
+									"dataType": "string"
+								},
+								{
+									"name": "DABRZ",
+									"dataType": "string"
+								},
+								{
+									"name": "PSWENR",
+									"dataType": "string"
+								},
+								{
+									"name": "PSGENR",
+									"dataType": "string"
+								},
+								{
+									"name": "PSGRNR",
+									"dataType": "string"
+								},
+								{
+									"name": "PSMENR",
+									"dataType": "string"
+								},
+								{
+									"name": "PRECNNR",
+									"dataType": "string"
+								},
+								{
+									"name": "PSNKSL",
+									"dataType": "string"
+								},
+								{
+									"name": "PSEMPSL",
+									"dataType": "string"
+								},
+								{
+									"name": "PDABRZ",
+									"dataType": "string"
+								},
+								{
+									"name": "ACDOC_EEW_DUMMY",
+									"dataType": "string"
+								},
+								{
+									"name": "ZZHRKFT",
+									"dataType": "string"
+								},
+								{
+									"name": "ZZHRKTX",
+									"dataType": "string"
+								},
+								{
+									"name": "DUMMY_INCL_EEW_COBL",
+									"dataType": "string"
+								},
+								{
+									"name": "FUP_ACTION",
+									"dataType": "string"
+								},
+								{
+									"name": "MIG_SOURCE",
+									"dataType": "string"
+								},
+								{
+									"name": "MIG_DOCLN",
+									"dataType": "string"
+								},
+								{
+									"name": "_DATAAGING",
+									"dataType": "string"
+								},
+								{
+									"name": "START_DATE",
+									"dataType": "timestamp"
+								},
+								{
+									"name": "END_DATE",
+									"dataType": "timestamp"
+								},
+								{
+									"name": "ACTIVE_FLAG",
+									"dataType": "string"
+								},
+								{
+									"name": "DELETE_FLAG",
+									"dataType": "string"
+								}
+							],
 							"dslConnectorProperties": [
 								{
 									"name": "schemaName",
@@ -165,6 +1786,14 @@
 								{
 									"name": "defaultToUpsert",
 									"value": true
+								},
+								{
+									"name": "allowSchemaDrift",
+									"value": false
+								},
+								{
+									"name": "inferDriftedColumnTypes",
+									"value": false
 								}
 							]
 						}
@@ -260,6 +1889,7 @@
 			},
 			"mode": "Microbatch"
 		},
+		"status": "Stopped",
 		"allowVNetOverride": false,
 		"typeProperties": {
 			"staging": {
