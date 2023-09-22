@@ -446,7 +446,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ACDOCAINIT')]",
+			"name": "[concat(parameters('factoryName'), '/ACDOCAINIT_NEW')]",
 			"type": "Microsoft.DataFactory/factories/adfcdcs",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -589,17 +589,6 @@
 											"value": "ACDOCA_CDC_SCD2"
 										},
 										{
-											"name": "keys",
-											"value": [
-												"RCLNT",
-												"RLDNR",
-												"RBUKRS",
-												"GJAHR",
-												"BELNR",
-												"DOCLN"
-											]
-										},
-										{
 											"name": "deletable",
 											"value": true
 										},
@@ -614,6 +603,17 @@
 										{
 											"name": "defaultToUpsert",
 											"value": true
+										},
+										{
+											"name": "keys",
+											"value": [
+												"RCLNT",
+												"RLDNR",
+												"RBUKRS",
+												"GJAHR",
+												"BELNR",
+												"DOCLN"
+											]
 										}
 									]
 								}
