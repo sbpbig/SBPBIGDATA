@@ -10,7 +10,9 @@
 					"type": "PipelineReference"
 				},
 				"parameters": {
-					"P_PCS_NM": "LD_CDC_BSEG"
+					"TGT_TBL_NM": "BSEG",
+					"TGT_DB_NM": "dbo",
+					"FOLDER_NM": "BSEG_DELTA_CHANGES"
 				}
 			}
 		],
