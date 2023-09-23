@@ -1,0 +1,17 @@
+{
+	"name": "DS_SRC_PROCESS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "synapse-povtug"
+			}
+		}
+	}
+}
