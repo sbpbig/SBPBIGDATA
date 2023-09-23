@@ -210,6 +210,7 @@
 				]
 			}
 		],
+		"concurrency": 1,
 		"parameters": {
 			"FOLDER_NM": {
 				"type": "string",
