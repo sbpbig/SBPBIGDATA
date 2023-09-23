@@ -5,11 +5,20 @@
 			"referenceName": "adls",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"FOLDER_NM": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "Binary",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@dataset().FOLDER_NM",
+					"type": "Expression"
+				},
 				"fileSystem": "synapse-povtug"
 			}
 		}

@@ -5,7 +5,14 @@
 			{
 				"name": "Bulk Initial Load",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Move to Processing",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -21,7 +28,7 @@
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
 							"wildcardFolderPath": {
-								"value": "@pipeline().parameters.FOLDER_NM",
+								"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
 								"type": "Expression"
 							},
 							"wildcardFileName": "*",
@@ -48,7 +55,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"FOLDER_NM": {
-								"value": "@pipeline().parameters.FOLDER_NM",
+								"value": "@coalesce('')",
 								"type": "Expression"
 							}
 						}
@@ -65,6 +72,137 @@
 							},
 							"SynapseSchema": {
 								"value": "@pipeline().parameters.TGT_DB_NM",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Move to Processing",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": {
+								"value": "@pipeline().parameters.FOLDER_NM",
+								"type": "Expression"
+							},
+							"wildcardFileName": "*",
+							"deleteFilesAfterCompletion": true
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_SRC_PROCESS",
+						"type": "DatasetReference",
+						"parameters": {
+							"FOLDER_NM": {
+								"value": "@coalesce('')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DS_SRC_PROCESS",
+						"type": "DatasetReference",
+						"parameters": {
+							"FOLDER_NM": {
+								"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Move to Archive",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Bulk Initial Load",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": {
+								"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
+								"type": "Expression"
+							},
+							"wildcardFileName": "*",
+							"deleteFilesAfterCompletion": true
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_SRC_PROCESS",
+						"type": "DatasetReference",
+						"parameters": {
+							"FOLDER_NM": {
+								"value": "@coalesce('')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DS_SRC_PROCESS",
+						"type": "DatasetReference",
+						"parameters": {
+							"FOLDER_NM": {
+								"value": "@concat(pipeline().parameters.FOLDER_NM, '_ARCHIVE')",
 								"type": "Expression"
 							}
 						}
