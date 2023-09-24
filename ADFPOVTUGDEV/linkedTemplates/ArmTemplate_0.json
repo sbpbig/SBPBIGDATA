@@ -1286,6 +1286,37 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DS_SRC_PROCESS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"FOLDER_NM": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": {
+							"value": "@dataset().FOLDER_NM",
+							"type": "Expression"
+						},
+						"fileSystem": "synapse-povtug"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/adls')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/00_INITIAL_LOAD')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1294,7 +1325,14 @@
 					{
 						"name": "Bulk Initial Load",
 						"type": "Copy",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "Move to Processing",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -1310,7 +1348,7 @@
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
 									"wildcardFolderPath": {
-										"value": "@pipeline().parameters.FOLDER_NM",
+										"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
 										"type": "Expression"
 									},
 									"wildcardFileName": "*",
@@ -1337,7 +1375,7 @@
 								"type": "DatasetReference",
 								"parameters": {
 									"FOLDER_NM": {
-										"value": "@pipeline().parameters.FOLDER_NM",
+										"value": "@coalesce('')",
 										"type": "Expression"
 									}
 								}
@@ -1359,8 +1397,140 @@
 								}
 							}
 						]
+					},
+					{
+						"name": "Move to Processing",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": {
+										"value": "@pipeline().parameters.FOLDER_NM",
+										"type": "Expression"
+									},
+									"wildcardFileName": "*",
+									"deleteFilesAfterCompletion": true
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "DS_SRC_PROCESS",
+								"type": "DatasetReference",
+								"parameters": {
+									"FOLDER_NM": {
+										"value": "@coalesce('')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DS_SRC_PROCESS",
+								"type": "DatasetReference",
+								"parameters": {
+									"FOLDER_NM": {
+										"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Move to Archive",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Bulk Initial Load",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": {
+										"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
+										"type": "Expression"
+									},
+									"wildcardFileName": "*",
+									"deleteFilesAfterCompletion": true
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "DS_SRC_PROCESS",
+								"type": "DatasetReference",
+								"parameters": {
+									"FOLDER_NM": {
+										"value": "@coalesce('')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DS_SRC_PROCESS",
+								"type": "DatasetReference",
+								"parameters": {
+									"FOLDER_NM": {
+										"value": "@concat(pipeline().parameters.FOLDER_NM, '_ARCHIVE')",
+										"type": "Expression"
+									}
+								}
+							}
+						]
 					}
 				],
+				"concurrency": 1,
 				"policy": {
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
@@ -1385,7 +1555,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DS_PARQUET_SOURCE')]",
-				"[concat(variables('factoryId'), '/datasets/DIRECT_SYNAPSE_DATASET_DYNAMIC')]"
+				"[concat(variables('factoryId'), '/datasets/DIRECT_SYNAPSE_DATASET_DYNAMIC')]",
+				"[concat(variables('factoryId'), '/datasets/DS_SRC_PROCESS')]"
 			]
 		},
 		{
@@ -2300,57 +2471,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DS_PARQUET_SOURCE')]",
-				"[concat(variables('factoryId'), '/datasets/DIRECT_SYNAPSE_DATASET_DYNAMIC')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DIRECT_DATA_FLOW_CSV_TO_SYNAPSE')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "PARQUET_DATASET_DYNAMIC",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [],
-					"scriptLines": [
-						"source(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false,",
-						"     format: 'parquet') ~> source1",
-						"source1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     format: 'table',",
-						"     staged: true,",
-						"     allowCopyCommand: true,",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/PARQUET_DATASET_DYNAMIC')]",
 				"[concat(variables('factoryId'), '/datasets/DIRECT_SYNAPSE_DATASET_DYNAMIC')]"
 			]
 		}
