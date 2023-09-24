@@ -1880,7 +1880,8 @@
 						"defaultValue": "dbo"
 					},
 					"TGT_TBL_NM": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "ACDOCA_SCD2"
 					}
 				},
 				"folder": {
@@ -2169,7 +2170,8 @@
 						"defaultValue": "dbo"
 					},
 					"TGT_TBL_NM": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "ACDOCA_SCD2"
 					}
 				},
 				"folder": {
