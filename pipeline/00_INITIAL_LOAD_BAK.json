@@ -1,5 +1,5 @@
 {
-	"name": "00_INITIAL_LOAD",
+	"name": "00_INITIAL_LOAD_BAK",
 	"properties": {
 		"activities": [
 			{
@@ -28,7 +28,7 @@
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
 							"wildcardFolderPath": {
-								"value": "@concat(pipeline().parameters.FOLDER_NM, '_', pipeline().parameters.YEAR, '_PROCESSING')",
+								"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
 								"type": "Expression"
 							},
 							"wildcardFileName": "*",
@@ -40,6 +40,10 @@
 					},
 					"sink": {
 						"type": "SqlDWSink",
+						"preCopyScript": {
+							"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.TGT_DB_NM, '.', concat(pipeline().parameters.TGT_TBL_NM, '_TMP'))}",
+							"type": "Expression"
+						},
 						"allowPolyBase": true,
 						"polyBaseSettings": {
 							"rejectValue": 0,
@@ -68,7 +72,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"SynapseTableName": {
-								"value": "@pipeline().parameters.TGT_TBL_NM",
+								"value": "@concat(pipeline().parameters.TGT_TBL_NM, '_TMP')",
 								"type": "Expression"
 							},
 							"SynapseSchema": {
@@ -102,7 +106,7 @@
 								"type": "Expression"
 							},
 							"wildcardFolderPath": {
-								"value": "@concat(pipeline().parameters.FOLDER_NM, '/', pipeline().parameters.YEAR)",
+								"value": "@pipeline().parameters.FOLDER_NM",
 								"type": "Expression"
 							},
 							"wildcardFileName": "*",
@@ -138,7 +142,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"FOLDER_NM": {
-								"value": "@concat(pipeline().parameters.FOLDER_NM, '_', pipeline().parameters.YEAR, '_PROCESSING')",
+								"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
 								"type": "Expression"
 							}
 						}
@@ -150,7 +154,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Bulk Initial Load",
+						"activity": "Copy Temp Into Target",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -171,7 +175,7 @@
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
 							"wildcardFolderPath": {
-								"value": "@concat(pipeline().parameters.FOLDER_NM, '_', pipeline().parameters.YEAR, '_PROCESSING')",
+								"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
 								"type": "Expression"
 							},
 							"wildcardFileName": "*",
@@ -207,12 +211,48 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"FOLDER_NM": {
-								"value": "@concat(pipeline().parameters.FOLDER_NM, '_', pipeline().parameters.YEAR, '_ARCHIVE')",
+								"value": "@concat(pipeline().parameters.FOLDER_NM, '_ARCHIVE')",
 								"type": "Expression"
 							}
 						}
 					}
 				]
+			},
+			{
+				"name": "Copy Temp Into Target",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Bulk Initial Load",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseAnalytics",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "@concat('INSERT INTO ', pipeline().parameters.TGT_DB_NM, '.', pipeline().parameters.TGT_TBL_NM, ' SELECT * FROM ', pipeline().parameters.TGT_DB_NM, '.', concat(pipeline().parameters.TGT_TBL_NM, '_TMP'))",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
 			}
 		],
 		"concurrency": 1,
