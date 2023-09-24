@@ -2,7 +2,7 @@
 	"name": "ACDOCA_CDC2",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipeline": {
 			"pipelineReference": {
 				"referenceName": "00_INITIAL_LOAD",
