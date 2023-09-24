@@ -26,6 +26,15 @@
 		"ACDOCA_CDC2_properties_pipeline_parameters_TGT_TBL_NM": {
 			"value": "ACDOCA_CDC_SCD2_PART"
 		},
+		"ACDOCA_SCD2_TRIG45_properties_00_INITIAL_LOAD_parameters_FOLDER_NM": {
+			"value": "ACDOCA_PART_CDC2"
+		},
+		"ACDOCA_SCD2_TRIG45_properties_00_INITIAL_LOAD_parameters_TGT_DB_NM": {
+			"value": "dbo"
+		},
+		"ACDOCA_SCD2_TRIG45_properties_00_INITIAL_LOAD_parameters_TGT_TBL_NM": {
+			"value": "ACDOCA_CDC_SCD2"
+		},
 		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM": {
 			"value": "BSEG"
 		},
