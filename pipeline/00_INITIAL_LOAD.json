@@ -40,12 +40,17 @@
 					},
 					"sink": {
 						"type": "SqlDWSink",
+						"preCopyScript": {
+							"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.TGT_DB_NM, '.', concat(pipeline().parameters.TGT_TBL_NM, '_TMP'))}",
+							"type": "Expression"
+						},
 						"allowPolyBase": true,
 						"polyBaseSettings": {
 							"rejectValue": 0,
 							"rejectType": "value",
 							"useTypeDefault": true
-						}
+						},
+						"disableMetricsCollection": false
 					},
 					"enableStaging": false
 				},
@@ -145,7 +150,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Copy TMP to Target",
+						"activity": "Copy Temp Into Target",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -210,8 +215,8 @@
 				]
 			},
 			{
-				"name": "Copy TMP to Target",
-				"type": "Copy",
+				"name": "Copy Temp Into Target",
+				"type": "Script",
 				"dependsOn": [
 					{
 						"activity": "Bulk Initial Load",
@@ -228,60 +233,22 @@
 					"secureInput": false
 				},
 				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "SqlDWSource",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
-					},
-					"sink": {
-						"type": "SqlDWSink",
-						"writeBehavior": "Insert",
-						"sqlWriterUseTableLock": false,
-						"disableMetricsCollection": false
-					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseAnalytics",
+					"type": "LinkedServiceReference"
 				},
-				"inputs": [
-					{
-						"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
-						"type": "DatasetReference",
-						"parameters": {
-							"SynapseTableName": {
-								"value": "@concat(pipeline().parameters.TGT_TBL_NM, '_TMP')",
-								"type": "Expression"
-							},
-							"SynapseSchema": {
-								"value": "@pipeline().parameters.TGT_DB_NM",
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "@concat('INSERT INTO ', pipeline().parameters.TGT_DB_NM, '.', pipeline().parameters.TGT_TBL_NM, ' SELECT * FROM ', pipeline().parameters.TGT_DB_NM, '.', concat(pipeline().parameters.TGT_TBL_NM, '_TMP'))",
 								"type": "Expression"
 							}
 						}
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
-						"type": "DatasetReference",
-						"parameters": {
-							"SynapseTableName": {
-								"value": "@pipeline().parameters.TGT_TBL_NM",
-								"type": "Expression"
-							},
-							"SynapseSchema": {
-								"value": "@pipeline().parameters.TGT_DB_NM",
-								"type": "Expression"
-							}
-						}
-					}
-				]
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
 			}
 		],
 		"concurrency": 1,
