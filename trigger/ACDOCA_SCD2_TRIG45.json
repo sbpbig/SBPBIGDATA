@@ -1,0 +1,29 @@
+{
+	"name": "ACDOCA_SCD2_TRIG45",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "00_INITIAL_LOAD",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"FOLDER_NM": "ACDOCA_PART_CDC2",
+					"TGT_DB_NM": "dbo",
+					"TGT_TBL_NM": "ACDOCA_CDC_SCD2"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 45,
+				"startTime": "2023-09-24T13:52:00",
+				"timeZone": "SE Asia Standard Time"
+			}
+		}
+	}
+}
