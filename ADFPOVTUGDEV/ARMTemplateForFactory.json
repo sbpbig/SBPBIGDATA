@@ -292,6 +292,138 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/00_INITIAL_LOAD_MANUAL')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Bulk Initial Load",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ParquetSource",
+								"additionalColumns": [
+									{
+										"name": "START_DATE",
+										"value": {
+											"value": "@utcnow()",
+											"type": "Expression"
+										}
+									},
+									{
+										"name": "END_DATE",
+										"value": "9000-12-31 00:00:00"
+									},
+									{
+										"name": "ACTIVE_FLAG",
+										"value": "Y"
+									},
+									{
+										"name": "DELETE_FLAG",
+										"value": "N"
+									}
+								],
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": {
+										"value": "@pipeline().parameters.FOLDER_NM",
+										"type": "Expression"
+									},
+									"wildcardFileName": "*",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "ParquetReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlDWSink",
+								"allowPolyBase": true,
+								"polyBaseSettings": {
+									"rejectValue": 0,
+									"rejectType": "value",
+									"useTypeDefault": true
+								}
+							},
+							"enableStaging": true,
+							"stagingSettings": {
+								"linkedServiceName": {
+									"referenceName": "adls",
+									"type": "LinkedServiceReference"
+								},
+								"path": "synapse-povtug/TMP_STG_ACDOCA"
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DS_PARQUET_SOURCE",
+								"type": "DatasetReference",
+								"parameters": {
+									"FOLDER_NM": {
+										"value": "@pipeline().parameters.FOLDER_NM",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
+								"type": "DatasetReference",
+								"parameters": {
+									"SynapseTableName": {
+										"value": "@pipeline().parameters.TGT_TBL_NM",
+										"type": "Expression"
+									},
+									"SynapseSchema": {
+										"value": "@pipeline().parameters.TGT_DB_NM",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"FOLDER_NM": {
+						"type": "string",
+						"defaultValue": "BSEG_1"
+					},
+					"TGT_DB_NM": {
+						"type": "string",
+						"defaultValue": "dbo"
+					},
+					"TGT_TBL_NM": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "TEST"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_PARQUET_SOURCE')]",
+				"[concat(variables('factoryId'), '/datasets/DIRECT_SYNAPSE_DATASET_DYNAMIC')]",
+				"[concat(variables('factoryId'), '/linkedServices/adls')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/00_STREAM_COMMON_POC')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -2967,6 +3099,37 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DS_SRC_PROCESS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"FOLDER_NM": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": {
+							"value": "@dataset().FOLDER_NM",
+							"type": "Expression"
+						},
+						"fileSystem": "synapse-povtug"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/adls')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PARQUET_DATASET_DYNAMIC')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -4901,140 +5064,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/adls')]",
 				"[concat(variables('factoryId'), '/linkedServices/AzureSynapseAnalytics')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/00_INITIAL_LOAD_MANUAL')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Bulk Initial Load",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "ParquetSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"wildcardFolderPath": {
-										"value": "@pipeline().parameters.FOLDER_NM",
-										"type": "Expression"
-									},
-									"wildcardFileName": "*",
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "ParquetReadSettings"
-								}
-							},
-							"sink": {
-								"type": "SqlDWSink",
-								"allowPolyBase": true,
-								"polyBaseSettings": {
-									"rejectValue": 0,
-									"rejectType": "value",
-									"useTypeDefault": true
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "DS_PARQUET_SOURCE",
-								"type": "DatasetReference",
-								"parameters": {
-									"FOLDER_NM": {
-										"value": "@pipeline().parameters.FOLDER_NM",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
-								"type": "DatasetReference",
-								"parameters": {
-									"SynapseTableName": {
-										"value": "@pipeline().parameters.TGT_TBL_NM",
-										"type": "Expression"
-									},
-									"SynapseSchema": {
-										"value": "@pipeline().parameters.TGT_DB_NM",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"FOLDER_NM": {
-						"type": "string",
-						"defaultValue": "BSEG_1"
-					},
-					"TGT_DB_NM": {
-						"type": "string",
-						"defaultValue": "dbo"
-					},
-					"TGT_TBL_NM": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "TEST"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DS_PARQUET_SOURCE')]",
-				"[concat(variables('factoryId'), '/datasets/DIRECT_SYNAPSE_DATASET_DYNAMIC')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_SRC_PROCESS')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "adls",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"FOLDER_NM": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": {
-							"value": "@dataset().FOLDER_NM",
-							"type": "Expression"
-						},
-						"fileSystem": "synapse-povtug"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/adls')]"
 			]
 		}
 	]
