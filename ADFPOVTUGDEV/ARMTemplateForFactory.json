@@ -131,7 +131,7 @@
 								"type": "DatasetReference",
 								"parameters": {
 									"SynapseTableName": {
-										"value": "@pipeline().parameters.TGT_TBL_NM",
+										"value": "@concat(pipeline().parameters.TGT_TBL_NM, '_TMP')",
 										"type": "Expression"
 									},
 									"SynapseSchema": {
@@ -209,7 +209,7 @@
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "Bulk Initial Load",
+								"activity": "Copy TMP to Target",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -267,6 +267,80 @@
 								"parameters": {
 									"FOLDER_NM": {
 										"value": "@concat(pipeline().parameters.FOLDER_NM, '_ARCHIVE')",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Copy TMP to Target",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Bulk Initial Load",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "SqlDWSink",
+								"writeBehavior": "Insert",
+								"sqlWriterUseTableLock": false,
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
+								"type": "DatasetReference",
+								"parameters": {
+									"SynapseTableName": {
+										"value": "@concat(pipeline().parameters.TGT_TBL_NM, '_TMP')",
+										"type": "Expression"
+									},
+									"SynapseSchema": {
+										"value": "@pipeline().parameters.TGT_DB_NM",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
+								"type": "DatasetReference",
+								"parameters": {
+									"SynapseTableName": {
+										"value": "@pipeline().parameters.TGT_TBL_NM",
+										"type": "Expression"
+									},
+									"SynapseSchema": {
+										"value": "@pipeline().parameters.TGT_DB_NM",
 										"type": "Expression"
 									}
 								}
