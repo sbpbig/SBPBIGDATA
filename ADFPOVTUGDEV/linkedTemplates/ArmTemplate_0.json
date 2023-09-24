@@ -1580,27 +1580,6 @@
 						"typeProperties": {
 							"source": {
 								"type": "ParquetSource",
-								"additionalColumns": [
-									{
-										"name": "START_DATE",
-										"value": {
-											"value": "@utcnow()",
-											"type": "Expression"
-										}
-									},
-									{
-										"name": "END_DATE",
-										"value": "9000-12-31 00:00:00"
-									},
-									{
-										"name": "ACTIVE_FLAG",
-										"value": "Y"
-									},
-									{
-										"name": "DELETE_FLAG",
-										"value": "N"
-									}
-								],
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
@@ -1624,14 +1603,7 @@
 									"useTypeDefault": true
 								}
 							},
-							"enableStaging": true,
-							"stagingSettings": {
-								"linkedServiceName": {
-									"referenceName": "adls",
-									"type": "LinkedServiceReference"
-								},
-								"path": "synapse-povtug/TMP_STG_ACDOCA"
-							}
+							"enableStaging": false
 						},
 						"inputs": [
 							{
@@ -1687,8 +1659,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DS_PARQUET_SOURCE')]",
-				"[concat(variables('factoryId'), '/datasets/DIRECT_SYNAPSE_DATASET_DYNAMIC')]",
-				"[concat(variables('factoryId'), '/linkedServices/adls')]"
+				"[concat(variables('factoryId'), '/datasets/DIRECT_SYNAPSE_DATASET_DYNAMIC')]"
 			]
 		},
 		{
