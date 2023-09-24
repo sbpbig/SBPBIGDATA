@@ -3,19 +3,7 @@
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Stopped",
-		"pipelines": [
-			{
-				"pipelineReference": {
-					"referenceName": "00_INITIAL_LOAD",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"FOLDER_NM": "ACDOCA_PART_CDC2",
-					"TGT_DB_NM": "dbo",
-					"TGT_TBL_NM": "ACDOCA_CDC_SCD2"
-				}
-			}
-		],
+		"pipelines": [],
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
