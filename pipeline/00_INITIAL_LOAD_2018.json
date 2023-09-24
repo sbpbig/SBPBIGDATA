@@ -246,7 +246,7 @@
 						{
 							"type": "Query",
 							"text": {
-								"value": "@concat('INSERT INTO ', pipeline().parameters.TGT_DB_NM, '.', pipeline().parameters.TGT_TBL_NM, ' SELECT * FROM ACDOCA_SCD2_TMP2018 ;' )",
+								"value": "@concat('INSERT INTO ', pipeline().parameters.TGT_DB_NM, '.', pipeline().parameters.TGT_TBL_NM,' WITH (TABLOCK)', ' SELECT * FROM ACDOCA_SCD2_TMP2018 ;' )",
 								"type": "Expression"
 							}
 						}
