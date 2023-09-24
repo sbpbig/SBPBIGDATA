@@ -1,0 +1,30 @@
+{
+	"name": "ACDOCA_CDC2",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipeline": {
+			"pipelineReference": {
+				"referenceName": "00_INITIAL_LOAD",
+				"type": "PipelineReference"
+			},
+			"parameters": {
+				"FOLDER_NM": "ACDOCA_PART_CDC2",
+				"TGT_DB_NM": "dbo",
+				"TGT_TBL_NM": "ACDOCA_CDC_SCD2_PART"
+			}
+		},
+		"type": "TumblingWindowTrigger",
+		"typeProperties": {
+			"frequency": "Minute",
+			"interval": 10,
+			"startTime": "2023-09-24T03:21:00Z",
+			"delay": "00:00:00",
+			"maxConcurrency": 50,
+			"retryPolicy": {
+				"intervalInSeconds": 30
+			},
+			"dependsOn": []
+		}
+	}
+}
