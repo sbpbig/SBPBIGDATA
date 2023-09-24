@@ -1,5 +1,5 @@
 {
-	"name": "00_INITIAL_LOAD",
+	"name": "00_INITIAL_LOAD_2017",
 	"properties": {
 		"activities": [
 			{
@@ -246,7 +246,7 @@
 						{
 							"type": "Query",
 							"text": {
-								"value": "@concat('INSERT INTO ', pipeline().parameters.TGT_DB_NM, '.', pipeline().parameters.TGT_TBL_NM, ' SELECT * FROM ', pipeline().parameters.TGT_DB_NM, '.', concat(pipeline().parameters.TGT_TBL_NM, '_TMP'))",
+								"value": "@concat('INSERT INTO ', pipeline().parameters.TGT_DB_NM, '.', pipeline().parameters.TGT_TBL_NM, ' SELECT * FROM ACDOCA_SCD2_TMP2018 ;' )",
 								"type": "Expression"
 							}
 						}
@@ -258,15 +258,14 @@
 		"concurrency": 1,
 		"parameters": {
 			"FOLDER_NM": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "ACDOCA_RE_2017"
 			},
 			"TGT_DB_NM": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "dbo"
 			},
 			"TGT_TBL_NM": {
-				"type": "string"
-			},
-			"YEAR": {
 				"type": "string"
 			}
 		},
