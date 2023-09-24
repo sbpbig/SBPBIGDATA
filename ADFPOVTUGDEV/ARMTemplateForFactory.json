@@ -281,12 +281,10 @@
 				},
 				"parameters": {
 					"FOLDER_NM": {
-						"type": "string",
-						"defaultValue": "BSEG_1"
+						"type": "string"
 					},
 					"TGT_DB_NM": {
-						"type": "string",
-						"defaultValue": "dbo"
+						"type": "string"
 					},
 					"TGT_TBL_NM": {
 						"type": "string"
@@ -3218,7 +3216,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Stopped",
+				"runtimeState": "Started",
 				"pipeline": {
 					"pipelineReference": {
 						"referenceName": "00_INITIAL_LOAD",
