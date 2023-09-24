@@ -72,7 +72,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"SynapseTableName": {
-								"value": "@concat(pipeline().parameters.TGT_TBL_NM, '_TMP')",
+								"value": "@concat(pipeline().parameters.TGT_TBL_NM, '_TMP2017')",
 								"type": "Expression"
 							},
 							"SynapseSchema": {
