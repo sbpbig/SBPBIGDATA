@@ -35,17 +35,17 @@
 			"type": "string",
 			"defaultValue": "ACDOCA_CDC_SCD2_PART"
 		},
-		"ACDOCA_SCD2_TRIG45_properties_00_INITIAL_LOAD_parameters_FOLDER_NM": {
+		"ACDOCA_INIT_properties_pipeline_parameters_FOLDER_NM": {
 			"type": "string",
 			"defaultValue": "ACDOCA_PART_CDC2"
 		},
-		"ACDOCA_SCD2_TRIG45_properties_00_INITIAL_LOAD_parameters_TGT_DB_NM": {
+		"ACDOCA_INIT_properties_pipeline_parameters_TGT_DB_NM": {
 			"type": "string",
 			"defaultValue": "dbo"
 		},
-		"ACDOCA_SCD2_TRIG45_properties_00_INITIAL_LOAD_parameters_TGT_TBL_NM": {
+		"ACDOCA_INIT_properties_pipeline_parameters_TGT_TBL_NM": {
 			"type": "string",
-			"defaultValue": "ACDOCA_CDC_SCD2"
+			"defaultValue": "ACDOCA_SCD2"
 		},
 		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM": {
 			"type": "string",
@@ -104,7 +104,7 @@
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
 									"wildcardFolderPath": {
-										"value": "@concat(pipeline().parameters.FOLDER_NM, '_', pipeline().parameters.YEAR, '_PROCESSING')",
+										"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
 										"type": "Expression"
 									},
 									"wildcardFileName": "*",
@@ -174,11 +174,11 @@
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
 									"modifiedDatetimeEnd": {
-										"value": "@addminutes(utcNow(), -30)",
+										"value": "@addminutes(utcNow(), -20)",
 										"type": "Expression"
 									},
 									"wildcardFolderPath": {
-										"value": "@concat(pipeline().parameters.FOLDER_NM, '/', pipeline().parameters.YEAR)",
+										"value": "@pipeline().parameters.FOLDER_NM",
 										"type": "Expression"
 									},
 									"wildcardFileName": "*",
@@ -214,7 +214,7 @@
 								"type": "DatasetReference",
 								"parameters": {
 									"FOLDER_NM": {
-										"value": "@concat(pipeline().parameters.FOLDER_NM, '_', pipeline().parameters.YEAR, '_PROCESSING')",
+										"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
 										"type": "Expression"
 									}
 								}
@@ -247,7 +247,7 @@
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
 									"wildcardFolderPath": {
-										"value": "@concat(pipeline().parameters.FOLDER_NM, '_', pipeline().parameters.YEAR, '_PROCESSING')",
+										"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
 										"type": "Expression"
 									},
 									"wildcardFileName": "*",
@@ -283,7 +283,7 @@
 								"type": "DatasetReference",
 								"parameters": {
 									"FOLDER_NM": {
-										"value": "@concat(pipeline().parameters.FOLDER_NM, '_', pipeline().parameters.YEAR, '_ARCHIVE')",
+										"value": "@concat(pipeline().parameters.FOLDER_NM, '_ARCHIVE')",
 										"type": "Expression"
 									}
 								}
@@ -291,7 +291,7 @@
 						]
 					}
 				],
-				"concurrency": 2,
+				"concurrency": 1,
 				"policy": {
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
@@ -304,9 +304,6 @@
 						"type": "string"
 					},
 					"TGT_TBL_NM": {
-						"type": "string"
-					},
-					"YEAR": {
 						"type": "string"
 					}
 				},
@@ -4136,25 +4133,48 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ACDOCA_INIT')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipeline": {
+					"pipelineReference": {
+						"referenceName": "00_INITIAL_LOAD",
+						"type": "PipelineReference"
+					},
+					"parameters": {
+						"FOLDER_NM": "[parameters('ACDOCA_INIT_properties_pipeline_parameters_FOLDER_NM')]",
+						"TGT_DB_NM": "[parameters('ACDOCA_INIT_properties_pipeline_parameters_TGT_DB_NM')]",
+						"TGT_TBL_NM": "[parameters('ACDOCA_INIT_properties_pipeline_parameters_TGT_TBL_NM')]"
+					}
+				},
+				"type": "TumblingWindowTrigger",
+				"typeProperties": {
+					"frequency": "Minute",
+					"interval": 20,
+					"startTime": "2023-09-24T18:30:00Z",
+					"delay": "00:00:00",
+					"maxConcurrency": 50,
+					"retryPolicy": {
+						"intervalInSeconds": 30
+					},
+					"dependsOn": []
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/00_INITIAL_LOAD')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ACDOCA_SCD2_TRIG45')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
 				"runtimeState": "Stopped",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "00_INITIAL_LOAD",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"FOLDER_NM": "[parameters('ACDOCA_SCD2_TRIG45_properties_00_INITIAL_LOAD_parameters_FOLDER_NM')]",
-							"TGT_DB_NM": "[parameters('ACDOCA_SCD2_TRIG45_properties_00_INITIAL_LOAD_parameters_TGT_DB_NM')]",
-							"TGT_TBL_NM": "[parameters('ACDOCA_SCD2_TRIG45_properties_00_INITIAL_LOAD_parameters_TGT_TBL_NM')]"
-						}
-					}
-				],
+				"pipelines": [],
 				"type": "ScheduleTrigger",
 				"typeProperties": {
 					"recurrence": {
@@ -4165,9 +4185,7 @@
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/00_INITIAL_LOAD')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/CDC_File_Trigger')]",
