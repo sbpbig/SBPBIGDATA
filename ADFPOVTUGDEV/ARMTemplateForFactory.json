@@ -174,7 +174,7 @@
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
 									"modifiedDatetimeEnd": {
-										"value": "@addminutes(utcNow(), -20)",
+										"value": "@addminutes(utcNow(), -15)",
 										"type": "Expression"
 									},
 									"wildcardFolderPath": {
@@ -4156,7 +4156,7 @@
 					"interval": 20,
 					"startTime": "2023-09-24T11:40:00Z",
 					"delay": "00:00:00",
-					"maxConcurrency": 50,
+					"maxConcurrency": 1,
 					"retryPolicy": {
 						"intervalInSeconds": 30
 					},

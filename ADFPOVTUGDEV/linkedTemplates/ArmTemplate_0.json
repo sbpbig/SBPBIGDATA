@@ -1418,7 +1418,7 @@
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
 									"modifiedDatetimeEnd": {
-										"value": "@addminutes(utcNow(), -20)",
+										"value": "@addminutes(utcNow(), -15)",
 										"type": "Expression"
 									},
 									"wildcardFolderPath": {
