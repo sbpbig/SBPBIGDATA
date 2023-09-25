@@ -6,7 +6,10 @@
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"YEAR": {
+			"FOLDER_NM": {
+				"type": "string"
+			},
+			"FILE_NM": {
 				"type": "string"
 			}
 		},
@@ -15,8 +18,12 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().FILE_NM",
+					"type": "Expression"
+				},
 				"folderPath": {
-					"value": "@concat('mfsrc/',dataset().YEAR)",
+					"value": "@dataset().FOLDER_NM",
 					"type": "Expression"
 				},
 				"fileSystem": "synapse-povtug"

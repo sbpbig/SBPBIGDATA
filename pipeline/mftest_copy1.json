@@ -1,5 +1,5 @@
 {
-	"name": "mftest",
+	"name": "mftest_copy1",
 	"properties": {
 		"activities": [
 			{
@@ -129,84 +129,6 @@
 								"value": {
 									"value": "@activity('Get files').output.childItems[1]",
 									"type": "Expression"
-								}
-							}
-						}
-					]
-				}
-			},
-			{
-				"name": "Set variable1",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "ForEach1",
-						"dependencyConditions": [
-							"Completed"
-						]
-					}
-				],
-				"policy": {
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "File_List",
-					"value": {
-						"value": "@variables('Files')",
-						"type": "Expression"
-					}
-				}
-			},
-			{
-				"name": "ForEach2",
-				"type": "ForEach",
-				"dependsOn": [
-					{
-						"activity": "Set variable1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"items": {
-						"value": "@variables('File_List')",
-						"type": "Expression"
-					},
-					"activities": [
-						{
-							"name": "Get Metadata1",
-							"type": "GetMetadata",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "0.12:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"dataset": {
-									"referenceName": "mftest",
-									"type": "DatasetReference",
-									"parameters": {
-										"FOLDER_NM": "2"
-									}
-								},
-								"fieldList": [
-									"exists"
-								],
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "BinaryReadSettings"
 								}
 							}
 						}
