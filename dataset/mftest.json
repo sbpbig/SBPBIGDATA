@@ -1,0 +1,26 @@
+{
+	"name": "mftest",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"YEAR": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@concat('mfsrc/',dataset().YEAR)",
+					"type": "Expression"
+				},
+				"fileSystem": "synapse-povtug"
+			}
+		}
+	}
+}
