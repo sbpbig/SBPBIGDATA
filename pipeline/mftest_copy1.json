@@ -43,7 +43,7 @@
 				}
 			},
 			{
-				"name": "ForEach1",
+				"name": "ForEachFile",
 				"type": "ForEach",
 				"dependsOn": [
 					{
