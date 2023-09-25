@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Get Folder Name",
+				"name": "Get Files name",
 				"type": "GetMetadata",
 				"dependsOn": [],
 				"policy": {
@@ -20,6 +20,10 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"FOLDER_NM": {
+								"value": "@pipeline().parameters.FOLDER_NM",
+								"type": "Expression"
+							},
+							"FILE_NM": {
 								"value": "@coalesce('')",
 								"type": "Expression"
 							}
@@ -43,7 +47,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Get Folder Name",
+						"activity": "Get Files name",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -52,13 +56,14 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Get Folder Name').output.childItems",
+						"value": "@take(activity('Get Files name').output.childItems,5 )",
 						"type": "Expression"
 					},
+					"batchCount": 5,
 					"activities": [
 						{
-							"name": "Get files",
-							"type": "GetMetadata",
+							"name": "Move to Processing",
+							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
 								"timeout": "0.12:00:00",
@@ -69,77 +74,69 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"dataset": {
+								"source": {
+									"type": "BinarySource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": false,
+										"deleteFilesAfterCompletion": true
+									},
+									"formatSettings": {
+										"type": "BinaryReadSettings"
+									}
+								},
+								"sink": {
+									"type": "BinarySink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
 									"referenceName": "mftest",
 									"type": "DatasetReference",
 									"parameters": {
 										"FOLDER_NM": {
+											"value": "@pipeline().parameters.FOLDER_NM",
+											"type": "Expression"
+										},
+										"FILE_NM": {
 											"value": "@item().name",
 											"type": "Expression"
 										}
 									}
-								},
-								"fieldList": [
-									"childItems"
-								],
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "BinaryReadSettings"
-								}
-							}
-						},
-						{
-							"name": "Append variable1",
-							"type": "AppendVariable",
-							"dependsOn": [
-								{
-									"activity": "Get files",
-									"dependencyConditions": [
-										"Succeeded"
-									]
 								}
 							],
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "Files",
-								"value": {
-									"value": "@activity('Get files').output.childItems[0]",
-									"type": "Expression"
-								}
-							}
-						},
-						{
-							"name": "Append variable1_copy1",
-							"type": "AppendVariable",
-							"dependsOn": [
+							"outputs": [
 								{
-									"activity": "Get files",
-									"dependencyConditions": [
-										"Succeeded"
-									]
+									"referenceName": "mftest",
+									"type": "DatasetReference",
+									"parameters": {
+										"FOLDER_NM": {
+											"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
+											"type": "Expression"
+										},
+										"FILE_NM": {
+											"value": "@item().name",
+											"type": "Expression"
+										}
+									}
 								}
-							],
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "Files",
-								"value": {
-									"value": "@activity('Get files').output.childItems[1]",
-									"type": "Expression"
-								}
-							}
+							]
 						}
 					]
 				}
 			}
 		],
+		"parameters": {
+			"FOLDER_NM": {
+				"type": "string",
+				"defaultValue": "mfsrc"
+			}
+		},
 		"variables": {
-			"test": {
-				"type": "Array"
-			},
 			"Files": {
 				"type": "Array"
 			},
@@ -147,7 +144,8 @@
 				"type": "Array"
 			},
 			"count": {
-				"type": "Integer"
+				"type": "Integer",
+				"defaultValue": 0
 			}
 		},
 		"folder": {
