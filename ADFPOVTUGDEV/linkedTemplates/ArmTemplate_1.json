@@ -19,18 +19,6 @@
 			"type": "string",
 			"defaultValue": "ACDOCA_CDC_SCD2_PART"
 		},
-		"ACDOCA_INIT_properties_pipeline_parameters_FOLDER_NM": {
-			"type": "string",
-			"defaultValue": "ACDOCA_PART_CDC2"
-		},
-		"ACDOCA_INIT_properties_pipeline_parameters_TGT_DB_NM": {
-			"type": "string",
-			"defaultValue": "dbo"
-		},
-		"ACDOCA_INIT_properties_pipeline_parameters_TGT_TBL_NM": {
-			"type": "string",
-			"defaultValue": "ACDOCA_SCD2"
-		},
 		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM": {
 			"type": "string",
 			"defaultValue": "BSEG"
@@ -2404,39 +2392,6 @@
 					"startTime": "2023-09-24T03:21:00Z",
 					"delay": "00:00:00",
 					"maxConcurrency": 50,
-					"retryPolicy": {
-						"intervalInSeconds": 30
-					},
-					"dependsOn": []
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ACDOCA_INIT')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipeline": {
-					"pipelineReference": {
-						"referenceName": "00_INITIAL_LOAD",
-						"type": "PipelineReference"
-					},
-					"parameters": {
-						"FOLDER_NM": "[parameters('ACDOCA_INIT_properties_pipeline_parameters_FOLDER_NM')]",
-						"TGT_DB_NM": "[parameters('ACDOCA_INIT_properties_pipeline_parameters_TGT_DB_NM')]",
-						"TGT_TBL_NM": "[parameters('ACDOCA_INIT_properties_pipeline_parameters_TGT_TBL_NM')]"
-					}
-				},
-				"type": "TumblingWindowTrigger",
-				"typeProperties": {
-					"frequency": "Minute",
-					"interval": 20,
-					"startTime": "2023-09-24T11:40:00Z",
-					"delay": "00:00:00",
-					"maxConcurrency": 1,
 					"retryPolicy": {
 						"intervalInSeconds": 30
 					},

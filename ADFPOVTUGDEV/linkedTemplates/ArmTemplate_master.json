@@ -35,18 +35,6 @@
 			"type": "string",
 			"defaultValue": "ACDOCA_CDC_SCD2_PART"
 		},
-		"ACDOCA_INIT_properties_pipeline_parameters_FOLDER_NM": {
-			"type": "string",
-			"defaultValue": "ACDOCA_PART_CDC2"
-		},
-		"ACDOCA_INIT_properties_pipeline_parameters_TGT_DB_NM": {
-			"type": "string",
-			"defaultValue": "dbo"
-		},
-		"ACDOCA_INIT_properties_pipeline_parameters_TGT_TBL_NM": {
-			"type": "string",
-			"defaultValue": "ACDOCA_SCD2"
-		},
 		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM": {
 			"type": "string",
 			"defaultValue": "BSEG"
@@ -135,15 +123,6 @@
 					},
 					"ACDOCA_CDC2_properties_pipeline_parameters_TGT_TBL_NM": {
 						"value": "[parameters('ACDOCA_CDC2_properties_pipeline_parameters_TGT_TBL_NM')]"
-					},
-					"ACDOCA_INIT_properties_pipeline_parameters_FOLDER_NM": {
-						"value": "[parameters('ACDOCA_INIT_properties_pipeline_parameters_FOLDER_NM')]"
-					},
-					"ACDOCA_INIT_properties_pipeline_parameters_TGT_DB_NM": {
-						"value": "[parameters('ACDOCA_INIT_properties_pipeline_parameters_TGT_DB_NM')]"
-					},
-					"ACDOCA_INIT_properties_pipeline_parameters_TGT_TBL_NM": {
-						"value": "[parameters('ACDOCA_INIT_properties_pipeline_parameters_TGT_TBL_NM')]"
 					},
 					"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM": {
 						"value": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM')]"
