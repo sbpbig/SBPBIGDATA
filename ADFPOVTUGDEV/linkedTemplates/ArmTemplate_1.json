@@ -53,106 +53,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/00_INITIAL_LOAD_MANUAL')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Bulk Initial Load",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "ParquetSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"wildcardFolderPath": {
-										"value": "@pipeline().parameters.FOLDER_NM",
-										"type": "Expression"
-									},
-									"wildcardFileName": "*",
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "ParquetReadSettings"
-								}
-							},
-							"sink": {
-								"type": "SqlDWSink",
-								"allowPolyBase": true,
-								"polyBaseSettings": {
-									"rejectValue": 0,
-									"rejectType": "value",
-									"useTypeDefault": true
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "DS_PARQUET_SOURCE",
-								"type": "DatasetReference",
-								"parameters": {
-									"FOLDER_NM": {
-										"value": "@pipeline().parameters.FOLDER_NM",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
-								"type": "DatasetReference",
-								"parameters": {
-									"SynapseTableName": {
-										"value": "@pipeline().parameters.TGT_TBL_NM",
-										"type": "Expression"
-									},
-									"SynapseSchema": {
-										"value": "@pipeline().parameters.TGT_DB_NM",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"FOLDER_NM": {
-						"type": "string",
-						"defaultValue": "BSEG_1"
-					},
-					"TGT_DB_NM": {
-						"type": "string",
-						"defaultValue": "dbo"
-					},
-					"TGT_TBL_NM": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "TEST"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/02_CDC_SNAPSHOT_SCD')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -424,6 +324,169 @@
 					},
 					"TMP_TBL_NM": {
 						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "TEST"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/mftest_copy1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get Files name",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "mftest",
+								"type": "DatasetReference",
+								"parameters": {
+									"FOLDER_NM": {
+										"value": "@pipeline().parameters.FOLDER_NM",
+										"type": "Expression"
+									},
+									"FILE_NM": {
+										"value": "@coalesce('')",
+										"type": "Expression"
+									}
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "BinaryReadSettings"
+							}
+						}
+					},
+					{
+						"name": "ForEachFile",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Get Files name",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@take(activity('Get Files name').output.childItems,5 )",
+								"type": "Expression"
+							},
+							"batchCount": 5,
+							"activities": [
+								{
+									"name": "Move to Processing",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "BinarySource",
+											"storeSettings": {
+												"type": "AzureBlobFSReadSettings",
+												"recursive": false,
+												"deleteFilesAfterCompletion": true
+											},
+											"formatSettings": {
+												"type": "BinaryReadSettings"
+											}
+										},
+										"sink": {
+											"type": "BinarySink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											}
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "mftest",
+											"type": "DatasetReference",
+											"parameters": {
+												"FOLDER_NM": {
+													"value": "@pipeline().parameters.FOLDER_NM",
+													"type": "Expression"
+												},
+												"FILE_NM": {
+													"value": "@item().name",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "mftest",
+											"type": "DatasetReference",
+											"parameters": {
+												"FOLDER_NM": {
+													"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
+													"type": "Expression"
+												},
+												"FILE_NM": {
+													"value": "@item().name",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"FOLDER_NM": {
+						"type": "string",
+						"defaultValue": "mfsrc"
+					}
+				},
+				"variables": {
+					"Files": {
+						"type": "Array"
+					},
+					"File_List": {
+						"type": "Array"
+					},
+					"count": {
+						"type": "Integer",
+						"defaultValue": 0
 					}
 				},
 				"folder": {
@@ -1681,6 +1744,93 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/02_CDC_SNAPSHOT_SCD_BAK2')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "CDC SNAPSHOT",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "CDC_SNAP_CHANGE",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"CDC": {
+										"FOLDER_NM": {
+											"value": "@pipeline().parameters.FOLDER_NM",
+											"type": "Expression"
+										}
+									},
+									"TMPCDC": {
+										"SynapseTableName": {
+											"value": "@concat('TMP_CDC_', pipeline().parameters.TGT_TBL_NM)",
+											"type": "Expression"
+										},
+										"SynapseSchema": {
+											"value": "@pipeline().parameters.TGT_DB_NM",
+											"type": "Expression"
+										}
+									}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "adls",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "synapse-povtug/TMP_STAGING"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine",
+							"continuationSettings": {
+								"customizedCheckpointKey": "55de936d-2a87-4248-8cdf-6fd70b2812c4"
+							}
+						}
+					}
+				],
+				"concurrency": 1,
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"TGT_TBL_NM": {
+						"type": "string",
+						"defaultValue": "BSEG"
+					},
+					"TGT_DB_NM": {
+						"type": "string",
+						"defaultValue": "dbo"
+					},
+					"FOLDER_NM": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "TEST"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/CDC_SNAP_CHANGE')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/20_PROCESS_TYPE1_LOAD')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -2268,7 +2418,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipeline": {
 					"pipelineReference": {
 						"referenceName": "00_INITIAL_LOAD",
@@ -2327,93 +2477,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/02_CDC_SNAPSHOT_SCD')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/02_CDC_SNAPSHOT_SCD_BAK2')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "CDC SNAPSHOT",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "CDC_SNAP_CHANGE",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"CDC": {
-										"FOLDER_NM": {
-											"value": "@pipeline().parameters.FOLDER_NM",
-											"type": "Expression"
-										}
-									},
-									"TMPCDC": {
-										"SynapseTableName": {
-											"value": "@concat('TMP_CDC_', pipeline().parameters.TGT_TBL_NM)",
-											"type": "Expression"
-										},
-										"SynapseSchema": {
-											"value": "@pipeline().parameters.TGT_DB_NM",
-											"type": "Expression"
-										}
-									}
-								}
-							},
-							"staging": {
-								"linkedService": {
-									"referenceName": "adls",
-									"type": "LinkedServiceReference"
-								},
-								"folderPath": "synapse-povtug/TMP_STAGING"
-							},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine",
-							"continuationSettings": {
-								"customizedCheckpointKey": "55de936d-2a87-4248-8cdf-6fd70b2812c4"
-							}
-						}
-					}
-				],
-				"concurrency": 1,
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"TGT_TBL_NM": {
-						"type": "string",
-						"defaultValue": "BSEG"
-					},
-					"TGT_DB_NM": {
-						"type": "string",
-						"defaultValue": "dbo"
-					},
-					"FOLDER_NM": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "TEST"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/CDC_SNAP_CHANGE')]"
 			]
 		},
 		{
