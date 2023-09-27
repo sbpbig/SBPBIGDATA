@@ -476,7 +476,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"parameters": {
-					"FileName": {
+					"Foldername": {
 						"type": "string"
 					}
 				},
@@ -486,7 +486,7 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"folderPath": {
-							"value": "@dataset().FileName",
+							"value": "@dataset().Foldername",
 							"type": "Expression"
 						},
 						"fileSystem": "synapse-povtug"
