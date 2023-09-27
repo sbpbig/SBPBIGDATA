@@ -88,7 +88,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "INSERT INTO dbo.ACODCA_CDC_SCD2 \nSELECT * FROM dbo.ACDOCA_CDC_SCD2_ROUNDROBIN"
+							"text": "INSERT INTO dbo.ACDOCA_CDC_SCD2 \nSELECT * FROM dbo.ACDOCA_CDC_SCD2_ROUNDROBIN"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
@@ -161,39 +161,6 @@
 				]
 			},
 			{
-				"name": "Script1_copy1",
-				"type": "Script",
-				"dependsOn": [
-					{
-						"activity": "2021",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"linkedServiceName": {
-					"referenceName": "AzureSynapseAnalytics",
-					"type": "LinkedServiceReference"
-				},
-				"typeProperties": {
-					"scripts": [
-						{
-							"type": "Query",
-							"text": "INSERT INTO dbo.ACODCA_CDC_SCD2 \nSELECT * FROM dbo.ACDOCA_CDC_SCD2_ROUNDROBIN"
-						}
-					],
-					"scriptBlockExecutionTimeout": "02:00:00"
-				}
-			},
-			{
 				"name": "2020",
 				"type": "Copy",
 				"dependsOn": [
@@ -260,44 +227,11 @@
 				]
 			},
 			{
-				"name": "Script1_copy1_copy1",
-				"type": "Script",
-				"dependsOn": [
-					{
-						"activity": "2020",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"linkedServiceName": {
-					"referenceName": "AzureSynapseAnalytics",
-					"type": "LinkedServiceReference"
-				},
-				"typeProperties": {
-					"scripts": [
-						{
-							"type": "Query",
-							"text": "INSERT INTO dbo.ACODCA_CDC_SCD2 \nSELECT * FROM dbo.ACDOCA_CDC_SCD2_ROUNDROBIN"
-						}
-					],
-					"scriptBlockExecutionTimeout": "02:00:00"
-				}
-			},
-			{
 				"name": "2019",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Script1_copy1_copy1",
+						"activity": "Script1_copy2",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -359,44 +293,11 @@
 				]
 			},
 			{
-				"name": "Script1_copy1_copy1_copy1",
-				"type": "Script",
-				"dependsOn": [
-					{
-						"activity": "2019",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"linkedServiceName": {
-					"referenceName": "AzureSynapseAnalytics",
-					"type": "LinkedServiceReference"
-				},
-				"typeProperties": {
-					"scripts": [
-						{
-							"type": "Query",
-							"text": "INSERT INTO dbo.ACODCA_CDC_SCD2 \nSELECT * FROM dbo.ACDOCA_CDC_SCD2_ROUNDROBIN"
-						}
-					],
-					"scriptBlockExecutionTimeout": "02:00:00"
-				}
-			},
-			{
 				"name": "2018",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Script1_copy1_copy1_copy1",
+						"activity": "Script1_copy3",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -458,44 +359,11 @@
 				]
 			},
 			{
-				"name": "Script1_copy1_copy1_copy1_copy1",
-				"type": "Script",
-				"dependsOn": [
-					{
-						"activity": "2018",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"linkedServiceName": {
-					"referenceName": "AzureSynapseAnalytics",
-					"type": "LinkedServiceReference"
-				},
-				"typeProperties": {
-					"scripts": [
-						{
-							"type": "Query",
-							"text": "INSERT INTO dbo.ACODCA_CDC_SCD2 \nSELECT * FROM dbo.ACDOCA_CDC_SCD2_ROUNDROBIN"
-						}
-					],
-					"scriptBlockExecutionTimeout": "02:00:00"
-				}
-			},
-			{
 				"name": "A_2015-2016-2017",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Script1_copy1_copy1_copy1_copy1",
+						"activity": "Script1_copy4",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -557,7 +425,139 @@
 				]
 			},
 			{
-				"name": "Script1_copy1_copy1_copy1_copy1_copy1",
+				"name": "Script1_copy1",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "2021",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseAnalytics",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "INSERT INTO dbo.ACDOCA_CDC_SCD2 \nSELECT * FROM dbo.ACDOCA_CDC_SCD2_ROUNDROBIN"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Script1_copy2",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "2020",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseAnalytics",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "INSERT INTO dbo.ACDOCA_CDC_SCD2 \nSELECT * FROM dbo.ACDOCA_CDC_SCD2_ROUNDROBIN"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Script1_copy3",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "2019",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseAnalytics",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "INSERT INTO dbo.ACDOCA_CDC_SCD2 \nSELECT * FROM dbo.ACDOCA_CDC_SCD2_ROUNDROBIN"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Script1_copy4",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "2018",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseAnalytics",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "INSERT INTO dbo.ACDOCA_CDC_SCD2 \nSELECT * FROM dbo.ACDOCA_CDC_SCD2_ROUNDROBIN"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Script1_copy5",
 				"type": "Script",
 				"dependsOn": [
 					{
@@ -583,7 +583,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "INSERT INTO dbo.ACODCA_CDC_SCD2 \nSELECT * FROM dbo.ACDOCA_CDC_SCD2_ROUNDROBIN"
+							"text": "INSERT INTO dbo.ACDOCA_CDC_SCD2 \nSELECT * FROM dbo.ACDOCA_CDC_SCD2_ROUNDROBIN"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
