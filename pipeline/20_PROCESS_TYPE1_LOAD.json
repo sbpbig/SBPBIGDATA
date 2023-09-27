@@ -75,7 +75,7 @@
 						"type": "DataFlowReference",
 						"datasetParameters": {
 							"source1": {
-								"FileName": {
+								"Foldername": {
 									"value": "@activity('Lookup').output.firstRow.FI_NM",
 									"type": "Expression"
 								}
