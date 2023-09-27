@@ -1,0 +1,37 @@
+{
+	"name": "CTAS",
+	"properties": {
+		"activities": [
+			{
+				"name": "Script1",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseAnalytics",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "CREATE TABLE dbo.ACDOCA_CDC_SCD2\nWITH\n(\tCLUSTERED COLUMNSTORE INDEX,\n\tDISTRIBUTION = HASH ( [BELNR], [DOCLN],[RBUKRS],[GJAHR],[RLDNR],[RCLNT] ),\n\t\n\tPARTITION   (   [GJAHR] RANGE RIGHT FOR VALUES\n                    (2017,2018,2019,2020,2021,2022,2023))\n)\nAS\nSELECT * FROM dbo.ACDOCA_SCD2"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			}
+		],
+		"folder": {
+			"name": "TEST"
+		},
+		"annotations": []
+	}
+}
