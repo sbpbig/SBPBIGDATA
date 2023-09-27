@@ -277,8 +277,7 @@
 				],
 				"concurrency": 1,
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"parameters": {
 					"FOLDER_NM": {
@@ -563,8 +562,7 @@
 				],
 				"concurrency": 1,
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"parameters": {
 					"FOLDER_NM": {
@@ -669,8 +667,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"parameters": {
 					"FOLDER_NM": {
@@ -1031,8 +1028,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"parameters": {
 					"P_STREAM_NM": {
@@ -1148,8 +1144,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "TEST"
@@ -1194,8 +1189,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "TEST"
@@ -1240,8 +1234,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "TEST"
@@ -1507,8 +1500,7 @@
 				],
 				"concurrency": 1,
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"parameters": {
 					"TGT_TBL_NM": {
@@ -1811,8 +1803,7 @@
 				],
 				"concurrency": 1,
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"parameters": {
 					"P_PCS_NM": {
@@ -1894,8 +1885,7 @@
 				],
 				"concurrency": 1,
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"parameters": {
 					"TGT_TBL_NM": {
@@ -2112,8 +2102,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"parameters": {
 					"P_PROCESS_NM": {
@@ -2899,8 +2888,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"parameters": {
 					"P_PCS_NM": {
@@ -3071,8 +3059,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"parameters": {
 					"P_Object": {
@@ -3180,8 +3167,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"parameters": {
 					"P_Object": {
@@ -3294,8 +3280,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"parameters": {
 					"P_Object": {
@@ -3376,8 +3361,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"parameters": {
 					"P_Object": {
@@ -3490,8 +3474,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"parameters": {
 					"P_Object": {
@@ -3508,6 +3491,51 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/controltable')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureSynapseAnalytics')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CTAS')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Script1",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzureSynapseAnalytics",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": "CREATE TABLE dbo.ACDOCA_CDC_SCD2\nWITH\n(\tCLUSTERED COLUMNSTORE INDEX,\n\tDISTRIBUTION = HASH ( [BELNR], [DOCLN],[RBUKRS],[GJAHR],[RLDNR],[RCLNT] ),\n\t\n\tPARTITION   (   [GJAHR] RANGE RIGHT FOR VALUES\n                    (2017,2018,2019,2020,2021,2022,2023))\n)\nAS\nSELECT * FROM dbo.ACDOCA_SCD2"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "TEST"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureSynapseAnalytics')]"
 			]
 		},
@@ -3646,8 +3674,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"parameters": {
 					"FOLDER_NM": {
