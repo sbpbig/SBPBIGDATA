@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
+				"name": "2022",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -20,7 +20,7 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
-							"wildcardFolderPath": "A_2023",
+							"wildcardFolderPath": "A_2022",
 							"wildcardFileName": "*",
 							"enablePartitionDiscovery": false
 						},
@@ -46,7 +46,7 @@
 						"referenceName": "PARQUET_DATASET_DYNAMIC",
 						"type": "DatasetReference",
 						"parameters": {
-							"Foldername": "A_2023"
+							"Foldername": "A_2022"
 						}
 					}
 				],
@@ -66,7 +66,502 @@
 				"type": "Script",
 				"dependsOn": [
 					{
-						"activity": "Copy data1",
+						"activity": "2022",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseAnalytics",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "INSERT INTO dbo.ACODCA_CDC_SCD2 \nSELECT * FROM dbo.ACDOCA_CDC_SCD2_ROUNDROBIN"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "2021",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Script1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": "A_2021",
+							"wildcardFileName": "*",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "ParquetReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlDWSink",
+						"preCopyScript": "TRUNCATE TABLE ACDOCA_CDC_SCD2_ROUNDROBIN;",
+						"allowPolyBase": true,
+						"polyBaseSettings": {
+							"rejectValue": 0,
+							"rejectType": "value",
+							"useTypeDefault": true
+						},
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "PARQUET_DATASET_DYNAMIC",
+						"type": "DatasetReference",
+						"parameters": {
+							"Foldername": "A_2021"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
+						"type": "DatasetReference",
+						"parameters": {
+							"SynapseTableName": "ACDOCA_CDC_SCD2_ROUNDROBIN",
+							"SynapseSchema": "dbo"
+						}
+					}
+				]
+			},
+			{
+				"name": "Script1_copy1",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "2021",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseAnalytics",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "INSERT INTO dbo.ACODCA_CDC_SCD2 \nSELECT * FROM dbo.ACDOCA_CDC_SCD2_ROUNDROBIN"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "2020",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Script1_copy1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": "A_2020",
+							"wildcardFileName": "*",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "ParquetReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlDWSink",
+						"preCopyScript": "TRUNCATE TABLE ACDOCA_CDC_SCD2_ROUNDROBIN;",
+						"allowPolyBase": true,
+						"polyBaseSettings": {
+							"rejectValue": 0,
+							"rejectType": "value",
+							"useTypeDefault": true
+						},
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "PARQUET_DATASET_DYNAMIC",
+						"type": "DatasetReference",
+						"parameters": {
+							"Foldername": "A_2020"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
+						"type": "DatasetReference",
+						"parameters": {
+							"SynapseTableName": "ACDOCA_CDC_SCD2_ROUNDROBIN",
+							"SynapseSchema": "dbo"
+						}
+					}
+				]
+			},
+			{
+				"name": "Script1_copy1_copy1",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "2020",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseAnalytics",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "INSERT INTO dbo.ACODCA_CDC_SCD2 \nSELECT * FROM dbo.ACDOCA_CDC_SCD2_ROUNDROBIN"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "2019",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Script1_copy1_copy1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": "A_2019",
+							"wildcardFileName": "*",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "ParquetReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlDWSink",
+						"preCopyScript": "TRUNCATE TABLE ACDOCA_CDC_SCD2_ROUNDROBIN;",
+						"allowPolyBase": true,
+						"polyBaseSettings": {
+							"rejectValue": 0,
+							"rejectType": "value",
+							"useTypeDefault": true
+						},
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "PARQUET_DATASET_DYNAMIC",
+						"type": "DatasetReference",
+						"parameters": {
+							"Foldername": "A_2019"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
+						"type": "DatasetReference",
+						"parameters": {
+							"SynapseTableName": "ACDOCA_CDC_SCD2_ROUNDROBIN",
+							"SynapseSchema": "dbo"
+						}
+					}
+				]
+			},
+			{
+				"name": "Script1_copy1_copy1_copy1",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "2019",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseAnalytics",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "INSERT INTO dbo.ACODCA_CDC_SCD2 \nSELECT * FROM dbo.ACDOCA_CDC_SCD2_ROUNDROBIN"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "2018",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Script1_copy1_copy1_copy1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": "A_2018",
+							"wildcardFileName": "*",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "ParquetReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlDWSink",
+						"preCopyScript": "TRUNCATE TABLE ACDOCA_CDC_SCD2_ROUNDROBIN;",
+						"allowPolyBase": true,
+						"polyBaseSettings": {
+							"rejectValue": 0,
+							"rejectType": "value",
+							"useTypeDefault": true
+						},
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "PARQUET_DATASET_DYNAMIC",
+						"type": "DatasetReference",
+						"parameters": {
+							"Foldername": "A_2018"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
+						"type": "DatasetReference",
+						"parameters": {
+							"SynapseTableName": "ACDOCA_CDC_SCD2_ROUNDROBIN",
+							"SynapseSchema": "dbo"
+						}
+					}
+				]
+			},
+			{
+				"name": "Script1_copy1_copy1_copy1_copy1",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "2018",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseAnalytics",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "INSERT INTO dbo.ACODCA_CDC_SCD2 \nSELECT * FROM dbo.ACDOCA_CDC_SCD2_ROUNDROBIN"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "A_2015-2016-2017",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Script1_copy1_copy1_copy1_copy1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": "A_2015-2016-2017",
+							"wildcardFileName": "*",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "ParquetReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlDWSink",
+						"preCopyScript": "TRUNCATE TABLE ACDOCA_CDC_SCD2_ROUNDROBIN;",
+						"allowPolyBase": true,
+						"polyBaseSettings": {
+							"rejectValue": 0,
+							"rejectType": "value",
+							"useTypeDefault": true
+						},
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "PARQUET_DATASET_DYNAMIC",
+						"type": "DatasetReference",
+						"parameters": {
+							"Foldername": "A_2015-2016-2017"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
+						"type": "DatasetReference",
+						"parameters": {
+							"SynapseTableName": "ACDOCA_CDC_SCD2_ROUNDROBIN",
+							"SynapseSchema": "dbo"
+						}
+					}
+				]
+			},
+			{
+				"name": "Script1_copy1_copy1_copy1_copy1_copy1",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "A_2015-2016-2017",
 						"dependencyConditions": [
 							"Succeeded"
 						]
