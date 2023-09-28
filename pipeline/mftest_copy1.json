@@ -46,7 +46,7 @@
 						"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
 						"type": "DatasetReference",
 						"parameters": {
-							"SynapseTableName": "tbl_tmp",
+							"SynapseTableName": "BSEG_CDC_TEMP",
 							"SynapseSchema": "dbo"
 						}
 					}
