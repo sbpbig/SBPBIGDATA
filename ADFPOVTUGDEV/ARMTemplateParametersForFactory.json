@@ -8,6 +8,9 @@
 		"AzureSynapseAnalytics_connectionString": {
 			"value": ""
 		},
+		"AzureSynapseAnalytics_test_connectionString": {
+			"value": ""
+		},
 		"SqlServer1_connectionString": {
 			"value": ""
 		},
