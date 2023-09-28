@@ -7,6 +7,26 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "ADFPOVTUGDEV"
 		},
+		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM": {
+			"type": "string",
+			"defaultValue": "ACDOCA_CDC_SCD2"
+		},
+		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_DB_NM": {
+			"type": "string",
+			"defaultValue": "dbo"
+		},
+		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_FOLDER_NM": {
+			"type": "string",
+			"defaultValue": "ACDOCA_CDC"
+		},
+		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TMP_TBL_NM": {
+			"type": "string",
+			"defaultValue": "ACDOCA_CDC_TEMP"
+		},
+		"ACDOCA_CDC_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourceGroups/POV_TUG/providers/Microsoft.Storage/storageAccounts/stpovtug"
+		},
 		"ACDOCA_CDC2_properties_pipeline_parameters_FOLDER_NM": {
 			"type": "string",
 			"defaultValue": "ACDOCA_PART_CDC2"
@@ -18,6 +38,26 @@
 		"ACDOCA_CDC2_properties_pipeline_parameters_TGT_TBL_NM": {
 			"type": "string",
 			"defaultValue": "ACDOCA_CDC_SCD2_PART"
+		},
+		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_BSEG_parameters_TGT_TBL_NM": {
+			"type": "string",
+			"defaultValue": "BSEG_CDC_SCD2"
+		},
+		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_BSEG_parameters_TGT_DB_NM": {
+			"type": "string",
+			"defaultValue": "dbo"
+		},
+		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_BSEG_parameters_FOLDER_NM": {
+			"type": "string",
+			"defaultValue": "BSEG_CDC"
+		},
+		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_BSEG_parameters_TMP_TBL_NM": {
+			"type": "string",
+			"defaultValue": "BSEG_CDC_TEMP"
+		},
+		"BSEG_CDC_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourceGroups/POV_TUG/providers/Microsoft.Storage/storageAccounts/stpovtug"
 		},
 		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM": {
 			"type": "string",
@@ -339,6 +379,39 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ACDOCA_CDC')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "02_CDC_SNAPSHOT_SCD_ACDOCA",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TGT_TBL_NM": "[parameters('ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM')]",
+							"TGT_DB_NM": "[parameters('ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_DB_NM')]",
+							"FOLDER_NM": "[parameters('ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_FOLDER_NM')]",
+							"TMP_TBL_NM": "[parameters('ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TMP_TBL_NM')]"
+						}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/synapse-povtug/blobs/ACDOCA_CDC/",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('ACDOCA_CDC_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ACDOCA_CDC2')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -367,6 +440,39 @@
 						"intervalInSeconds": 30
 					},
 					"dependsOn": []
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BSEG_CDC')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "02_CDC_SNAPSHOT_SCD_BSEG",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TGT_TBL_NM": "[parameters('BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_BSEG_parameters_TGT_TBL_NM')]",
+							"TGT_DB_NM": "[parameters('BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_BSEG_parameters_TGT_DB_NM')]",
+							"FOLDER_NM": "[parameters('BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_BSEG_parameters_FOLDER_NM')]",
+							"TMP_TBL_NM": "[parameters('BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_BSEG_parameters_TMP_TBL_NM')]"
+						}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/synapse-povtug/blobs/BSEG_CDC/",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('BSEG_CDC_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
 				}
 			},
 			"dependsOn": []
