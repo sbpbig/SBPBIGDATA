@@ -249,17 +249,19 @@
 		"parameters": {
 			"TGT_TBL_NM": {
 				"type": "string",
-				"defaultValue": "BSEG"
+				"defaultValue": "ACDOCA_CDC_SCD2"
 			},
 			"TGT_DB_NM": {
 				"type": "string",
 				"defaultValue": "dbo"
 			},
 			"FOLDER_NM": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "test_cdc_stream"
 			},
 			"TMP_TBL_NM": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "tbl_tmp"
 			}
 		},
 		"folder": {
