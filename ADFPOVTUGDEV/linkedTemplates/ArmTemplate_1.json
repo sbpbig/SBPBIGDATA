@@ -2352,6 +2352,115 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/final_copy1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "totemp",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ParquetSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": "VBAP_CDC_initial",
+									"wildcardFileName": "*",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "ParquetReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlDWSink",
+								"preCopyScript": "TRUNCATE TABLE ACDOCA_CDC_SCD2_ROUNDROBIN;",
+								"allowPolyBase": true,
+								"polyBaseSettings": {
+									"rejectValue": 0,
+									"rejectType": "value",
+									"useTypeDefault": true
+								},
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "PARQUET_DATASET_DYNAMIC",
+								"type": "DatasetReference",
+								"parameters": {
+									"Foldername": "VBAP_CDC_initial"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
+								"type": "DatasetReference",
+								"parameters": {
+									"SynapseTableName": "VBAP_CDC_SCD2_RB",
+									"SynapseSchema": "dbo"
+								}
+							}
+						]
+					},
+					{
+						"name": "Script1",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "totemp",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzureSynapseAnalytics",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": "INSERT INTO dbo.VBAP_CDC_SCD2\nSELECT * FROM dbo.VBAP_CDC_SCD2_RB"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "TEST"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/mftest_copy1')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -4211,86 +4320,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/controltable')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/20_PROCESS_TYPE4_CDC_STREAM')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "CDC Snapshot",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "CDC_SNAP_CHANGE",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"CDC": {
-										"FOLDER_NM": {
-											"value": "@concat(pipeline().parameters.P_Object.TGT_TBL, '_DELTA_CHANGES')",
-											"type": "Expression"
-										}
-									},
-									"TMPCDC": {
-										"SynapseTableName": {
-											"value": "@concat('TMP_CDC_',pipeline().parameters.P_Object.TGT_TBL)",
-											"type": "Expression"
-										},
-										"SynapseSchema": {
-											"value": "@pipeline().parameters.P_Object.TGT_SCHEMA_NM",
-											"type": "Expression"
-										}
-									}
-								}
-							},
-							"staging": {
-								"linkedService": {
-									"referenceName": "adls",
-									"type": "LinkedServiceReference"
-								},
-								"folderPath": "synapse-povtug/TMP_STAGING"
-							},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine",
-							"continuationSettings": {
-								"customizedCheckpointKey": "55de936d-2a87-4248-8cdf-6fd70b2812c4"
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"P_Object": {
-						"type": "object"
-					},
-					"P_DataDT": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "COMMON JOB"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/CDC_SNAP_CHANGE')]"
 			]
 		}
 	]
