@@ -1737,7 +1737,7 @@
 					},
 					"TMP_TBL_NM": {
 						"type": "string",
-						"defaultValue": "tbl_tmp"
+						"defaultValue": "tbl_tmp_test"
 					}
 				},
 				"folder": {
