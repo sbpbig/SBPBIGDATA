@@ -4276,6 +4276,7 @@
 						]
 					}
 				],
+				"concurrency": 32,
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
