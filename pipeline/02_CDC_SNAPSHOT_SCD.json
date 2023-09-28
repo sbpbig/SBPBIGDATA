@@ -219,7 +219,7 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "Move to Archive",
+						"activity": "Load to Temp",
 						"dependencyConditions": [
 							"Succeeded"
 						]
