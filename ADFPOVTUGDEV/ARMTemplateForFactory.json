@@ -4223,17 +4223,9 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "ParquetSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"wildcardFolderPath": "test_cdc_stream_ARCHIVE",
-									"wildcardFileName": "*.parquet",
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "ParquetReadSettings"
-								}
+								"type": "SqlDWSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
 							},
 							"sink": {
 								"type": "ParquetSink",
@@ -4258,10 +4250,11 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "PARQUET_DATASET_DYNAMIC",
+								"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
 								"type": "DatasetReference",
 								"parameters": {
-									"Foldername": "test_cdc_stream_ARCHIVE"
+									"SynapseTableName": "tbl_tmp",
+									"SynapseSchema": "dbo"
 								}
 							}
 						],
@@ -4298,6 +4291,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DIRECT_SYNAPSE_DATASET_DYNAMIC')]",
 				"[concat(variables('factoryId'), '/datasets/PARQUET_DATASET_DYNAMIC')]"
 			]
 		},
