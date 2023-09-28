@@ -1401,7 +1401,7 @@
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "Load to Temp",
+								"activity": "Merge Into Target Table",
 								"dependencyConditions": [
 									"Succeeded"
 								]
