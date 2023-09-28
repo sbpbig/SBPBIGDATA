@@ -260,7 +260,7 @@
 			},
 			"FOLDER_NM": {
 				"type": "string",
-				"defaultValue": "test_cdc_stream"
+				"defaultValue": "test_cdc_stream_ACDOCA"
 			},
 			"TMP_TBL_NM": {
 				"type": "string",
