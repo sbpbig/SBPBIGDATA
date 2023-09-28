@@ -101,6 +101,137 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/20_PROCESS_TYPE1_LOAD')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderStoredProcedureName": "[[CNTL].[PROC_GET_FI]",
+								"storedProcedureParameters": {
+									"P_DATA_DT": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.P_DataDT",
+											"type": "Expression"
+										}
+									},
+									"P_FI_ID": {
+										"type": "Int32",
+										"value": {
+											"value": "@pipeline().parameters.P_Object.FI_ID",
+											"type": "Expression"
+										}
+									},
+									"P_PCS_NM": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.P_Object.PCS_NM",
+											"type": "Expression"
+										}
+									}
+								},
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "controltable",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "DIRECT_DATA_FLOW_CSV_TO_SYNAPSE",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Lookup",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DIRECT_DATA_FLOW_CSV_TO_SYNAPSE",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {
+										"Foldername": {
+											"value": "@activity('Lookup').output.firstRow.FI_NM",
+											"type": "Expression"
+										}
+									},
+									"sink1": {
+										"SynapseTableName": {
+											"value": "@pipeline().parameters.P_Object.TGT_TBL",
+											"type": "Expression"
+										},
+										"SynapseSchema": {
+											"value": "@pipeline().parameters.P_Object.TGT_SCHEMA_NM",
+											"type": "Expression"
+										}
+									}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "adls",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "raw/staging"
+							},
+							"compute": {
+								"coreCount": 16,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"P_Object": {
+						"type": "object"
+					},
+					"P_DataDT": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "COMMON JOB"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/20_PROCESS_TYPE2_TRANS')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1452,6 +1583,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/20_PROCESS_TYPE1_LOAD')]",
 				"[concat(variables('factoryId'), '/pipelines/20_PROCESS_TYPE2_TRANS')]",
 				"[concat(variables('factoryId'), '/pipelines/20_PROCESS_TYPE3_CDC_INIT_TEMP_TO_LOG')]",
 				"[concat(variables('factoryId'), '/pipelines/20_PROCESS_TYPE4_CDC_STREAM')]",

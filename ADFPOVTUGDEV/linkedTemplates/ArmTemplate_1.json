@@ -13,6 +13,284 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/ACDOCA')]",
+			"type": "Microsoft.DataFactory/factories/adfcdcs",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"SourceConnectionsInfo": [
+					{
+						"SourceEntities": [
+							{
+								"name": "synapse-povtug/ACDOCA_INITIAL",
+								"properties": {
+									"schema": [],
+									"dslConnectorProperties": [
+										{
+											"name": "container",
+											"value": "synapse-povtug"
+										},
+										{
+											"name": "fileSystem",
+											"value": "synapse-povtug"
+										},
+										{
+											"name": "folderPath",
+											"value": "ACDOCA_INITIAL"
+										}
+									]
+								}
+							}
+						],
+						"Connection": {
+							"linkedService": {
+								"referenceName": "adls",
+								"type": "LinkedServiceReference"
+							},
+							"linkedServiceType": "AzureBlobFS",
+							"type": "linkedservicetype",
+							"isInlineDataset": true,
+							"commonDslConnectorProperties": [
+								{
+									"name": "allowSchemaDrift",
+									"value": true
+								},
+								{
+									"name": "inferDriftedColumnTypes",
+									"value": true
+								},
+								{
+									"name": "format",
+									"value": "parquet"
+								},
+								{
+									"name": "dateFormats",
+									"value": [
+										"MM/dd/yyyy",
+										"dd/MM/yyyy",
+										"yyyy/MM/dd",
+										"MM-dd-yyyy",
+										"dd-MM-yyyy",
+										"yyyy-MM-dd",
+										"dd.MM.yyyy",
+										"MM.dd.yyyy",
+										"yyyy.MM.dd"
+									]
+								},
+								{
+									"name": "timestampFormats",
+									"value": [
+										"yyyyMMddHHmm",
+										"yyyyMMdd HHmm",
+										"yyyyMMddHHmmss",
+										"yyyyMMdd HHmmss",
+										"dd-MM-yyyy HH:mm:ss",
+										"dd-MM-yyyy HH:mm",
+										"yyyy-M-d H:m:s",
+										"yyyy-MM-dd\\'T\\'HH:mm:ss\\'Z\\'",
+										"yyyy-M-d\\'T\\'H:m:s\\'Z\\'",
+										"yyyy-M-d\\'T\\'H:m:s",
+										"yyyy-MM-dd\\'T\\'HH:mm:ss",
+										"yyyy-MM-dd HH:mm:ss",
+										"yyyy-MM-dd HH:mm",
+										"yyyy.MM.dd HH:mm:ss",
+										"MM/dd/yyyy HH:mm:ss",
+										"M/d/yyyy H:m:s",
+										"yyyy/MM/dd HH:mm:ss",
+										"yyyy/M/d H:m:s",
+										"dd MMM yyyy HH:mm:ss",
+										"dd MMMM yyyy HH:mm:ss",
+										"d MMM yyyy H:m:s",
+										"d MMMM yyyy H:m:s",
+										"d-M-yyyy H:m:s",
+										"d-M-yyyy H:m",
+										"yyyy-M-d H:m",
+										"MM/dd/yyyy HH:mm",
+										"M/d/yyyy H:m",
+										"yyyy/MM/dd HH:mm",
+										"yyyy/M/d H:m",
+										"dd MMMM yyyy HH:mm",
+										"dd MMM yyyy HH:mm",
+										"d MMMM yyyy H:m",
+										"d MMM yyyy H:m",
+										"MM-dd-yyyy hh:mm:ss a",
+										"MM-dd-yyyy HH:mm:ss",
+										"MM/dd/yyyy hh:mm:ss a",
+										"yyyy.MM.dd hh:mm:ss a",
+										"MM/dd/yyyy",
+										"dd/MM/yyyy",
+										"yyyy/MM/dd",
+										"MM-dd-yyyy",
+										"dd-MM-yyyy",
+										"yyyy-MM-dd",
+										"dd.MM.yyyy",
+										"MM.dd.yyyy",
+										"yyyy.MM.dd"
+									]
+								},
+								{
+									"name": "enableCdc",
+									"value": true
+								},
+								{
+									"name": "skipInitialLoad",
+									"value": true
+								}
+							]
+						}
+					}
+				],
+				"TargetConnectionsInfo": [
+					{
+						"TargetEntities": [
+							{
+								"name": "dbo.ACDOCA_CDC_SCD2",
+								"properties": {
+									"schema": [],
+									"dslConnectorProperties": [
+										{
+											"name": "schemaName",
+											"value": "dbo"
+										},
+										{
+											"name": "tableName",
+											"value": "ACDOCA_CDC_SCD2"
+										},
+										{
+											"name": "keys",
+											"value": [
+												"RCLNT",
+												"RLDNR",
+												"RBUKRS",
+												"GJAHR",
+												"BELNR",
+												"DOCLN"
+											]
+										},
+										{
+											"name": "deletable",
+											"value": true
+										},
+										{
+											"name": "updateable",
+											"value": true
+										},
+										{
+											"name": "upsertable",
+											"value": true
+										},
+										{
+											"name": "defaultToUpsert",
+											"value": true
+										}
+									]
+								}
+							}
+						],
+						"Connection": {
+							"linkedService": {
+								"referenceName": "AzureSynapseAnalytics",
+								"type": "LinkedServiceReference"
+							},
+							"linkedServiceType": "AzureSqlDW",
+							"type": "linkedservicetype",
+							"isInlineDataset": true,
+							"commonDslConnectorProperties": [
+								{
+									"name": "allowSchemaDrift",
+									"value": true
+								},
+								{
+									"name": "inferDriftedColumnTypes",
+									"value": true
+								},
+								{
+									"name": "format",
+									"value": "table"
+								},
+								{
+									"name": "store",
+									"value": "synapseanalytics"
+								},
+								{
+									"name": "databaseType",
+									"value": "databaseType"
+								},
+								{
+									"name": "database",
+									"value": "database"
+								},
+								{
+									"name": "deletable",
+									"value": false
+								},
+								{
+									"name": "insertable",
+									"value": true
+								},
+								{
+									"name": "updateable",
+									"value": false
+								},
+								{
+									"name": "upsertable",
+									"value": false
+								},
+								{
+									"name": "allowCopyCommand",
+									"value": false
+								},
+								{
+									"name": "staged",
+									"value": true
+								},
+								{
+									"name": "skipDuplicateMapInputs",
+									"value": true
+								},
+								{
+									"name": "skipDuplicateMapOutputs",
+									"value": true
+								}
+							]
+						},
+						"DataMapperMappings": [
+							{
+								"targetEntityName": "dbo.ACDOCA_CDC_SCD2",
+								"sourceEntityName": "synapse-povtug/ACDOCA_INITIAL",
+								"sourceConnectionReference": {
+									"connectionName": "adls",
+									"type": "linkedservicetype"
+								},
+								"attributeMappingInfo": {
+									"attributeMappings": []
+								}
+							}
+						],
+						"Relationships": []
+					}
+				],
+				"Policy": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 1
+					},
+					"mode": "Microbatch"
+				},
+				"allowVNetOverride": false,
+				"typeProperties": {
+					"staging": {
+						"linkedService": {
+							"referenceName": "adls",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "synapse-povtug/TMP_ACDOCA_INIT"
+					},
+					"linkedServiceType": "AzureBlobFS"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/BSEGCDC')]",
 			"type": "Microsoft.DataFactory/factories/adfcdcs",
 			"apiVersion": "2018-06-01",
@@ -8458,140 +8736,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/CDC_SNAP_CHANGE')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/20_PROCESS_TYPE1_LOAD')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Lookup",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"sqlReaderStoredProcedureName": "[[CNTL].[PROC_GET_FI]",
-								"storedProcedureParameters": {
-									"P_DATA_DT": {
-										"type": "String",
-										"value": {
-											"value": "@pipeline().parameters.P_DataDT",
-											"type": "Expression"
-										}
-									},
-									"P_FI_ID": {
-										"type": "Int32",
-										"value": {
-											"value": "@pipeline().parameters.P_Object.FI_ID",
-											"type": "Expression"
-										}
-									},
-									"P_PCS_NM": {
-										"type": "String",
-										"value": {
-											"value": "@pipeline().parameters.P_Object.PCS_NM",
-											"type": "Expression"
-										}
-									}
-								},
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "controltable",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "DIRECT_DATA_FLOW_CSV_TO_SYNAPSE",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [
-							{
-								"activity": "Lookup",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "DIRECT_DATA_FLOW_CSV_TO_SYNAPSE",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {
-										"Foldername": {
-											"value": "@activity('Lookup').output.firstRow.FI_NM",
-											"type": "Expression"
-										}
-									},
-									"sink1": {
-										"SynapseTableName": {
-											"value": "@pipeline().parameters.P_Object.TGT_TBL",
-											"type": "Expression"
-										},
-										"SynapseSchema": {
-											"value": "@pipeline().parameters.P_Object.TGT_SCHEMA_NM",
-											"type": "Expression"
-										}
-									}
-								}
-							},
-							"staging": {
-								"linkedService": {
-									"referenceName": "adls",
-									"type": "LinkedServiceReference"
-								},
-								"folderPath": "raw/staging"
-							},
-							"compute": {
-								"coreCount": 16,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"P_Object": {
-						"type": "object"
-					},
-					"P_DataDT": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "COMMON JOB"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/controltable')]",
-				"[concat(variables('factoryId'), '/dataflows/DIRECT_DATA_FLOW_CSV_TO_SYNAPSE')]"
 			]
 		}
 	]
