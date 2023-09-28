@@ -708,15 +708,18 @@
 									"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.TGT_DB_NM, '.', pipeline().parameters.TMP_TBL_NM)}",
 									"type": "Expression"
 								},
-								"allowPolyBase": true,
-								"polyBaseSettings": {
-									"rejectValue": 0,
-									"rejectType": "value",
-									"useTypeDefault": true
-								},
+								"writeBehavior": "Insert",
 								"disableMetricsCollection": false
 							},
-							"enableStaging": false
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
 						},
 						"inputs": [
 							{
