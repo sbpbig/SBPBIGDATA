@@ -99,6 +99,26 @@
 			"type": "string",
 			"defaultValue": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourceGroups/POV_TUG/providers/Microsoft.Storage/storageAccounts/stpovtug"
 		},
+		"VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TGT_TBL_NM": {
+			"type": "string",
+			"defaultValue": "VBAP_CDC_SCD2"
+		},
+		"VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TGT_DB_NM": {
+			"type": "string",
+			"defaultValue": "dbo"
+		},
+		"VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_FOLDER_NM": {
+			"type": "string",
+			"defaultValue": "VBAP_CDC"
+		},
+		"VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TMP_TBL_NM": {
+			"type": "string",
+			"defaultValue": "VBAP_CDC_TEMP"
+		},
+		"VBAP_CDC_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourceGroups/POV_TUG/providers/Microsoft.Storage/storageAccounts/stpovtug"
+		},
 		"integrationRuntime-ADFPOVTUGDEV_properties_typeProperties_linkedInfo_resourceId": {
 			"type": "string",
 			"defaultValue": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourcegroups/POV_TUG/providers/Microsoft.DataFactory/factories/ADF-POV-TUG/integrationruntimes/integrationRuntime-POV-TUG"
@@ -239,6 +259,21 @@
 					},
 					"CDC_File_Trigger_properties_typeProperties_scope": {
 						"value": "[parameters('CDC_File_Trigger_properties_typeProperties_scope')]"
+					},
+					"VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TGT_TBL_NM": {
+						"value": "[parameters('VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TGT_TBL_NM')]"
+					},
+					"VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TGT_DB_NM": {
+						"value": "[parameters('VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TGT_DB_NM')]"
+					},
+					"VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_FOLDER_NM": {
+						"value": "[parameters('VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_FOLDER_NM')]"
+					},
+					"VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TMP_TBL_NM": {
+						"value": "[parameters('VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TMP_TBL_NM')]"
+					},
+					"VBAP_CDC_properties_typeProperties_scope": {
+						"value": "[parameters('VBAP_CDC_properties_typeProperties_scope')]"
 					}
 				}
 			},

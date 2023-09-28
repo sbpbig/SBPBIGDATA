@@ -74,12 +74,136 @@
 		"CDC_File_Trigger_properties_typeProperties_scope": {
 			"type": "string",
 			"defaultValue": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourceGroups/POV_TUG/providers/Microsoft.Storage/storageAccounts/stpovtug"
+		},
+		"VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TGT_TBL_NM": {
+			"type": "string",
+			"defaultValue": "VBAP_CDC_SCD2"
+		},
+		"VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TGT_DB_NM": {
+			"type": "string",
+			"defaultValue": "dbo"
+		},
+		"VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_FOLDER_NM": {
+			"type": "string",
+			"defaultValue": "VBAP_CDC"
+		},
+		"VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TMP_TBL_NM": {
+			"type": "string",
+			"defaultValue": "VBAP_CDC_TEMP"
+		},
+		"VBAP_CDC_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourceGroups/POV_TUG/providers/Microsoft.Storage/storageAccounts/stpovtug"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/20_PROCESS_TYPE2_TRANS')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderStoredProcedureName": "[[CNTL].[PROC_GET_FI]",
+								"storedProcedureParameters": {
+									"P_DATA_DT": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.P_DataDT",
+											"type": "Expression"
+										}
+									},
+									"P_FI_ID": {
+										"type": "Int32",
+										"value": {
+											"value": "@pipeline().parameters.P_Object.FI_ID",
+											"type": "Expression"
+										}
+									},
+									"P_PCS_NM": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.P_Object.PCS_NM",
+											"type": "Expression"
+										}
+									}
+								},
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "controltable",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "Transform Date and Time",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Lookup",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@concat('[dbo].[Transform_',pipeline().parameters.P_Object.TGT_TBL,']')",
+								"type": "Expression"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSynapseAnalytics",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"P_Object": {
+						"type": "object"
+					},
+					"P_DataDT": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "COMMON JOB"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/20_PROCESS_TYPE3_CDC_INIT_TEMP_TO_LOG')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -502,6 +626,39 @@
 					"blobPathBeginsWith": "/synapse-povtug/blobs/BSEG_DELTA_CHANGES/",
 					"ignoreEmptyBlobs": true,
 					"scope": "[parameters('CDC_File_Trigger_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/VBAP_CDC')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "02_CDC_SNAPSHOT_SCD_VBAP",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TGT_TBL_NM": "[parameters('VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TGT_TBL_NM')]",
+							"TGT_DB_NM": "[parameters('VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TGT_DB_NM')]",
+							"FOLDER_NM": "[parameters('VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_FOLDER_NM')]",
+							"TMP_TBL_NM": "[parameters('VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TMP_TBL_NM')]"
+						}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/synapse-povtug/blobs/VBAP_CDC/",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('VBAP_CDC_properties_typeProperties_scope')]",
 					"events": [
 						"Microsoft.Storage.BlobCreated"
 					]
@@ -1295,6 +1452,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/20_PROCESS_TYPE2_TRANS')]",
 				"[concat(variables('factoryId'), '/pipelines/20_PROCESS_TYPE3_CDC_INIT_TEMP_TO_LOG')]",
 				"[concat(variables('factoryId'), '/pipelines/20_PROCESS_TYPE4_CDC_STREAM')]",
 				"[concat(variables('factoryId'), '/pipelines/20_PROCESS_TYPE5_CDC_INIT_TEMP_TO_SCD2')]"

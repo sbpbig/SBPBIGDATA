@@ -74,6 +74,21 @@
 		"StorageEvent_Test_properties_typeProperties_scope": {
 			"value": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourceGroups/POV_TUG/providers/Microsoft.Storage/storageAccounts/stpovtug"
 		},
+		"VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TGT_TBL_NM": {
+			"value": "VBAP_CDC_SCD2"
+		},
+		"VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TGT_DB_NM": {
+			"value": "dbo"
+		},
+		"VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_FOLDER_NM": {
+			"value": "VBAP_CDC"
+		},
+		"VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TMP_TBL_NM": {
+			"value": "VBAP_CDC_TEMP"
+		},
+		"VBAP_CDC_properties_typeProperties_scope": {
+			"value": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourceGroups/POV_TUG/providers/Microsoft.Storage/storageAccounts/stpovtug"
+		},
 		"integrationRuntime-ADFPOVTUGDEV_properties_typeProperties_linkedInfo_resourceId": {
 			"value": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourcegroups/POV_TUG/providers/Microsoft.DataFactory/factories/ADF-POV-TUG/integrationruntimes/integrationRuntime-POV-TUG"
 		},
