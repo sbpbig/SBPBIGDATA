@@ -20,21 +20,6 @@
 		"adls_properties_typeProperties_url": {
 			"value": "https://stpovtug.dfs.core.windows.net/"
 		},
-		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM": {
-			"value": "ACDOCA_CDC_SCD2"
-		},
-		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_DB_NM": {
-			"value": "dbo"
-		},
-		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_FOLDER_NM": {
-			"value": "ACDOCA_CDC"
-		},
-		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TMP_TBL_NM": {
-			"value": "ACDOCA_CDC_TEMP"
-		},
-		"ACDOCA_CDC_properties_typeProperties_scope": {
-			"value": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourceGroups/POV_TUG/providers/Microsoft.Storage/storageAccounts/stpovtug"
-		},
 		"ACDOCA_CDC2_properties_pipeline_parameters_FOLDER_NM": {
 			"value": "ACDOCA_PART_CDC2"
 		},
@@ -43,21 +28,6 @@
 		},
 		"ACDOCA_CDC2_properties_pipeline_parameters_TGT_TBL_NM": {
 			"value": "ACDOCA_CDC_SCD2_PART"
-		},
-		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM": {
-			"value": "BSEG_CDC_SCD2"
-		},
-		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_DB_NM": {
-			"value": "dbo"
-		},
-		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_FOLDER_NM": {
-			"value": "BSEG_CDC"
-		},
-		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TMP_TBL_NM": {
-			"value": "BSEG_CDC_TEMP"
-		},
-		"BSEG_CDC_properties_typeProperties_scope": {
-			"value": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourceGroups/POV_TUG/providers/Microsoft.Storage/storageAccounts/stpovtug"
 		},
 		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM": {
 			"value": "BSEG"
