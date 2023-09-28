@@ -1252,7 +1252,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Bulk Initial Load",
+						"name": "Load to Temp",
 						"type": "Copy",
 						"dependsOn": [
 							{
@@ -1399,7 +1399,7 @@
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "Bulk Initial Load",
+								"activity": "Load to Temp",
 								"dependencyConditions": [
 									"Succeeded"
 								]
