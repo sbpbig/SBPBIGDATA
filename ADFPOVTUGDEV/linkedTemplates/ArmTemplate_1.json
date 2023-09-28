@@ -2385,7 +2385,6 @@
 							},
 							"sink": {
 								"type": "SqlDWSink",
-								"preCopyScript": "TRUNCATE TABLE ACDOCA_CDC_SCD2_ROUNDROBIN;",
 								"allowPolyBase": true,
 								"polyBaseSettings": {
 									"rejectValue": 0,
