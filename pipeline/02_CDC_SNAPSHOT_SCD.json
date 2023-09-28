@@ -7,7 +7,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Move to Processing",
+						"activity": "Script1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -40,10 +40,6 @@
 					},
 					"sink": {
 						"type": "SqlDWSink",
-						"preCopyScript": {
-							"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.TGT_DB_NM, '.', pipeline().parameters.TMP_TBL_NM)}",
-							"type": "Expression"
-						},
 						"allowPolyBase": true,
 						"polyBaseSettings": {
 							"rejectValue": 0,
@@ -244,6 +240,42 @@
 				"linkedServiceName": {
 					"referenceName": "AzureSynapseAnalytics",
 					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Script1",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Move to Processing",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseAnalytics",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.TGT_DB_NM, '.', pipeline().parameters.TMP_TBL_NM)}",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
 				}
 			}
 		],
