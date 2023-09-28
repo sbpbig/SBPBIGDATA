@@ -1,0 +1,273 @@
+{
+	"name": "02_CDC_SNAPSHOT_SCD_VBAP",
+	"properties": {
+		"activities": [
+			{
+				"name": "Load to Temp",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Move to Processing",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": {
+								"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
+								"type": "Expression"
+							},
+							"wildcardFileName": "*",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "ParquetReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlDWSink",
+						"preCopyScript": {
+							"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.TGT_DB_NM, '.', pipeline().parameters.TMP_TBL_NM)}",
+							"type": "Expression"
+						},
+						"writeBehavior": "Insert",
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_PARQUET_SOURCE",
+						"type": "DatasetReference",
+						"parameters": {
+							"FOLDER_NM": {
+								"value": "@coalesce('')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
+						"type": "DatasetReference",
+						"parameters": {
+							"SynapseTableName": {
+								"value": "@pipeline().parameters.TMP_TBL_NM",
+								"type": "Expression"
+							},
+							"SynapseSchema": {
+								"value": "@pipeline().parameters.TGT_DB_NM",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Move to Processing",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": {
+								"value": "@pipeline().parameters.FOLDER_NM",
+								"type": "Expression"
+							},
+							"wildcardFileName": "*",
+							"deleteFilesAfterCompletion": true
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_SRC_PROCESS",
+						"type": "DatasetReference",
+						"parameters": {
+							"FOLDER_NM": {
+								"value": "@coalesce('')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DS_SRC_PROCESS",
+						"type": "DatasetReference",
+						"parameters": {
+							"FOLDER_NM": {
+								"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Move to Archive",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Merge Into Target Table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": {
+								"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
+								"type": "Expression"
+							},
+							"wildcardFileName": "*",
+							"deleteFilesAfterCompletion": true
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_SRC_PROCESS",
+						"type": "DatasetReference",
+						"parameters": {
+							"FOLDER_NM": {
+								"value": "@coalesce('')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DS_SRC_PROCESS",
+						"type": "DatasetReference",
+						"parameters": {
+							"FOLDER_NM": {
+								"value": "@concat(pipeline().parameters.FOLDER_NM, '_ARCHIVE')",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Merge Into Target Table",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Load to Temp",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": {
+						"value": "@concat(pipeline().parameters.TGT_DB_NM, '.PROC_SCD2_', split(pipeline().parameters.TGT_TBL_NM, '_')[0])",
+						"type": "Expression"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseAnalytics",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"concurrency": 1,
+		"parameters": {
+			"TGT_TBL_NM": {
+				"type": "string",
+				"defaultValue": "ACDOCA_CDC_SCD2"
+			},
+			"TGT_DB_NM": {
+				"type": "string",
+				"defaultValue": "dbo"
+			},
+			"FOLDER_NM": {
+				"type": "string"
+			},
+			"TMP_TBL_NM": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "TEST"
+		},
+		"annotations": []
+	}
+}
