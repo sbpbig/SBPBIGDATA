@@ -27,19 +27,19 @@
 			"type": "string",
 			"defaultValue": "https://stpovtug.dfs.core.windows.net/"
 		},
-		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM": {
+		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM": {
 			"type": "string",
 			"defaultValue": "ACDOCA_CDC_SCD2"
 		},
-		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_DB_NM": {
+		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_DB_NM": {
 			"type": "string",
 			"defaultValue": "dbo"
 		},
-		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM": {
+		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_FOLDER_NM": {
 			"type": "string",
 			"defaultValue": "ACDOCA_CDC"
 		},
-		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TMP_TBL_NM": {
+		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TMP_TBL_NM": {
 			"type": "string",
 			"defaultValue": "ACDOCA_CDC_TEMP"
 		},
@@ -59,19 +59,19 @@
 			"type": "string",
 			"defaultValue": "ACDOCA_CDC_SCD2_PART"
 		},
-		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM": {
+		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM": {
 			"type": "string",
 			"defaultValue": "BSEG_CDC_SCD2"
 		},
-		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_DB_NM": {
+		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_DB_NM": {
 			"type": "string",
 			"defaultValue": "dbo"
 		},
-		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM": {
+		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_FOLDER_NM": {
 			"type": "string",
 			"defaultValue": "BSEG_CDC"
 		},
-		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TMP_TBL_NM": {
+		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TMP_TBL_NM": {
 			"type": "string",
 			"defaultValue": "BSEG_CDC_TEMP"
 		},
@@ -79,15 +79,15 @@
 			"type": "string",
 			"defaultValue": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourceGroups/POV_TUG/providers/Microsoft.Storage/storageAccounts/stpovtug"
 		},
-		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM": {
+		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM": {
 			"type": "string",
 			"defaultValue": "BSEG"
 		},
-		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_DB_NM": {
+		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_DB_NM": {
 			"type": "string",
 			"defaultValue": "dbo"
 		},
-		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM": {
+		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_FOLDER_NM": {
 			"type": "string",
 			"defaultValue": "BSEG_DELTA_CHANGES"
 		},
@@ -1294,7 +1294,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/02_CDC_SNAPSHOT_SCD')]",
+			"name": "[concat(parameters('factoryName'), '/02_CDC_SNAPSHOT_SCD_ACDOCA')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1955,6 +1955,290 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/CDC_SNAP_CHANGE')]",
 				"[concat(variables('factoryId'), '/linkedServices/adls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/02_CDC_SNAPSHOT_SCD_BSEG')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Load to Temp",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Move to Processing",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ParquetSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": {
+										"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
+										"type": "Expression"
+									},
+									"wildcardFileName": "*",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "ParquetReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlDWSink",
+								"preCopyScript": {
+									"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.TGT_DB_NM, '.', pipeline().parameters.TMP_TBL_NM)}",
+									"type": "Expression"
+								},
+								"writeBehavior": "Insert",
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DS_PARQUET_SOURCE",
+								"type": "DatasetReference",
+								"parameters": {
+									"FOLDER_NM": {
+										"value": "@coalesce('')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
+								"type": "DatasetReference",
+								"parameters": {
+									"SynapseTableName": {
+										"value": "@pipeline().parameters.TMP_TBL_NM",
+										"type": "Expression"
+									},
+									"SynapseSchema": {
+										"value": "@pipeline().parameters.TGT_DB_NM",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Move to Processing",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": {
+										"value": "@pipeline().parameters.FOLDER_NM",
+										"type": "Expression"
+									},
+									"wildcardFileName": "*",
+									"deleteFilesAfterCompletion": true
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "DS_SRC_PROCESS",
+								"type": "DatasetReference",
+								"parameters": {
+									"FOLDER_NM": {
+										"value": "@coalesce('')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DS_SRC_PROCESS",
+								"type": "DatasetReference",
+								"parameters": {
+									"FOLDER_NM": {
+										"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Move to Archive",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Merge Into Target Table",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": {
+										"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
+										"type": "Expression"
+									},
+									"wildcardFileName": "*",
+									"deleteFilesAfterCompletion": true
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "DS_SRC_PROCESS",
+								"type": "DatasetReference",
+								"parameters": {
+									"FOLDER_NM": {
+										"value": "@coalesce('')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DS_SRC_PROCESS",
+								"type": "DatasetReference",
+								"parameters": {
+									"FOLDER_NM": {
+										"value": "@concat(pipeline().parameters.FOLDER_NM, '_ARCHIVE')",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Merge Into Target Table",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Load to Temp",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@concat(pipeline().parameters.TGT_DB_NM, '.PROC_SCD2_', split(pipeline().parameters.TGT_TBL_NM, '_')[0])",
+								"type": "Expression"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSynapseAnalytics",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"concurrency": 1,
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"TGT_TBL_NM": {
+						"type": "string",
+						"defaultValue": "ACDOCA_CDC_SCD2"
+					},
+					"TGT_DB_NM": {
+						"type": "string",
+						"defaultValue": "dbo"
+					},
+					"FOLDER_NM": {
+						"type": "string"
+					},
+					"TMP_TBL_NM": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "TEST"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_PARQUET_SOURCE')]",
+				"[concat(variables('factoryId'), '/datasets/DIRECT_SYNAPSE_DATASET_DYNAMIC')]",
+				"[concat(variables('factoryId'), '/datasets/DS_SRC_PROCESS')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureSynapseAnalytics')]"
 			]
 		},
 		{
@@ -9135,14 +9419,14 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "02_CDC_SNAPSHOT_SCD",
+							"referenceName": "02_CDC_SNAPSHOT_SCD_ACDOCA",
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"TGT_TBL_NM": "[parameters('ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM')]",
-							"TGT_DB_NM": "[parameters('ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_DB_NM')]",
-							"FOLDER_NM": "[parameters('ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM')]",
-							"TMP_TBL_NM": "[parameters('ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TMP_TBL_NM')]"
+							"TGT_TBL_NM": "[parameters('ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM')]",
+							"TGT_DB_NM": "[parameters('ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_DB_NM')]",
+							"FOLDER_NM": "[parameters('ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_FOLDER_NM')]",
+							"TMP_TBL_NM": "[parameters('ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TMP_TBL_NM')]"
 						}
 					}
 				],
@@ -9157,7 +9441,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/02_CDC_SNAPSHOT_SCD')]"
+				"[concat(variables('factoryId'), '/pipelines/02_CDC_SNAPSHOT_SCD_ACDOCA')]"
 			]
 		},
 		{
@@ -9205,14 +9489,14 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "02_CDC_SNAPSHOT_SCD",
+							"referenceName": "02_CDC_SNAPSHOT_SCD_ACDOCA",
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"TGT_TBL_NM": "[parameters('BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM')]",
-							"TGT_DB_NM": "[parameters('BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_DB_NM')]",
-							"FOLDER_NM": "[parameters('BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM')]",
-							"TMP_TBL_NM": "[parameters('BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TMP_TBL_NM')]"
+							"TGT_TBL_NM": "[parameters('BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM')]",
+							"TGT_DB_NM": "[parameters('BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_DB_NM')]",
+							"FOLDER_NM": "[parameters('BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_FOLDER_NM')]",
+							"TMP_TBL_NM": "[parameters('BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TMP_TBL_NM')]"
 						}
 					}
 				],
@@ -9227,7 +9511,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/02_CDC_SNAPSHOT_SCD')]"
+				"[concat(variables('factoryId'), '/pipelines/02_CDC_SNAPSHOT_SCD_ACDOCA')]"
 			]
 		},
 		{
@@ -9240,13 +9524,13 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "02_CDC_SNAPSHOT_SCD",
+							"referenceName": "02_CDC_SNAPSHOT_SCD_ACDOCA",
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"TGT_TBL_NM": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM')]",
-							"TGT_DB_NM": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_DB_NM')]",
-							"FOLDER_NM": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM')]"
+							"TGT_TBL_NM": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM')]",
+							"TGT_DB_NM": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_DB_NM')]",
+							"FOLDER_NM": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_FOLDER_NM')]"
 						}
 					}
 				],
@@ -9261,7 +9545,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/02_CDC_SNAPSHOT_SCD')]"
+				"[concat(variables('factoryId'), '/pipelines/02_CDC_SNAPSHOT_SCD_ACDOCA')]"
 			]
 		},
 		{

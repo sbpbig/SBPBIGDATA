@@ -27,19 +27,19 @@
 			"type": "string",
 			"defaultValue": "https://stpovtug.dfs.core.windows.net/"
 		},
-		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM": {
+		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM": {
 			"type": "string",
 			"defaultValue": "ACDOCA_CDC_SCD2"
 		},
-		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_DB_NM": {
+		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_DB_NM": {
 			"type": "string",
 			"defaultValue": "dbo"
 		},
-		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM": {
+		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_FOLDER_NM": {
 			"type": "string",
 			"defaultValue": "ACDOCA_CDC"
 		},
-		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TMP_TBL_NM": {
+		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TMP_TBL_NM": {
 			"type": "string",
 			"defaultValue": "ACDOCA_CDC_TEMP"
 		},
@@ -59,19 +59,19 @@
 			"type": "string",
 			"defaultValue": "ACDOCA_CDC_SCD2_PART"
 		},
-		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM": {
+		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM": {
 			"type": "string",
 			"defaultValue": "BSEG_CDC_SCD2"
 		},
-		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_DB_NM": {
+		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_DB_NM": {
 			"type": "string",
 			"defaultValue": "dbo"
 		},
-		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM": {
+		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_FOLDER_NM": {
 			"type": "string",
 			"defaultValue": "BSEG_CDC"
 		},
-		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TMP_TBL_NM": {
+		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TMP_TBL_NM": {
 			"type": "string",
 			"defaultValue": "BSEG_CDC_TEMP"
 		},
@@ -79,15 +79,15 @@
 			"type": "string",
 			"defaultValue": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourceGroups/POV_TUG/providers/Microsoft.Storage/storageAccounts/stpovtug"
 		},
-		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM": {
+		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM": {
 			"type": "string",
 			"defaultValue": "BSEG"
 		},
-		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_DB_NM": {
+		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_DB_NM": {
 			"type": "string",
 			"defaultValue": "dbo"
 		},
-		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM": {
+		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_FOLDER_NM": {
 			"type": "string",
 			"defaultValue": "BSEG_DELTA_CHANGES"
 		},
@@ -189,17 +189,17 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM": {
-						"value": "[parameters('ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM')]"
+					"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM": {
+						"value": "[parameters('ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM')]"
 					},
-					"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_DB_NM": {
-						"value": "[parameters('ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_DB_NM')]"
+					"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_DB_NM": {
+						"value": "[parameters('ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_DB_NM')]"
 					},
-					"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM": {
-						"value": "[parameters('ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM')]"
+					"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_FOLDER_NM": {
+						"value": "[parameters('ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_FOLDER_NM')]"
 					},
-					"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TMP_TBL_NM": {
-						"value": "[parameters('ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TMP_TBL_NM')]"
+					"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TMP_TBL_NM": {
+						"value": "[parameters('ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TMP_TBL_NM')]"
 					},
 					"ACDOCA_CDC_properties_typeProperties_scope": {
 						"value": "[parameters('ACDOCA_CDC_properties_typeProperties_scope')]"
@@ -213,29 +213,29 @@
 					"ACDOCA_CDC2_properties_pipeline_parameters_TGT_TBL_NM": {
 						"value": "[parameters('ACDOCA_CDC2_properties_pipeline_parameters_TGT_TBL_NM')]"
 					},
-					"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM": {
-						"value": "[parameters('BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM')]"
+					"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM": {
+						"value": "[parameters('BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM')]"
 					},
-					"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_DB_NM": {
-						"value": "[parameters('BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_DB_NM')]"
+					"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_DB_NM": {
+						"value": "[parameters('BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_DB_NM')]"
 					},
-					"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM": {
-						"value": "[parameters('BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM')]"
+					"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_FOLDER_NM": {
+						"value": "[parameters('BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_FOLDER_NM')]"
 					},
-					"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TMP_TBL_NM": {
-						"value": "[parameters('BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_parameters_TMP_TBL_NM')]"
+					"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TMP_TBL_NM": {
+						"value": "[parameters('BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TMP_TBL_NM')]"
 					},
 					"BSEG_CDC_properties_typeProperties_scope": {
 						"value": "[parameters('BSEG_CDC_properties_typeProperties_scope')]"
 					},
-					"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM": {
-						"value": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_TBL_NM')]"
+					"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM": {
+						"value": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM')]"
 					},
-					"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_DB_NM": {
-						"value": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_TGT_DB_NM')]"
+					"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_DB_NM": {
+						"value": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_DB_NM')]"
 					},
-					"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM": {
-						"value": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_parameters_FOLDER_NM')]"
+					"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_FOLDER_NM": {
+						"value": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_FOLDER_NM')]"
 					},
 					"CDC_File_Trigger_properties_typeProperties_scope": {
 						"value": "[parameters('CDC_File_Trigger_properties_typeProperties_scope')]"
