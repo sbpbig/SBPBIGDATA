@@ -1451,12 +1451,10 @@
 						"defaultValue": "dbo"
 					},
 					"FOLDER_NM": {
-						"type": "string",
-						"defaultValue": "test_cdc_stream"
+						"type": "string"
 					},
 					"TMP_TBL_NM": {
-						"type": "string",
-						"defaultValue": "tbl_tmp"
+						"type": "string"
 					}
 				},
 				"folder": {
