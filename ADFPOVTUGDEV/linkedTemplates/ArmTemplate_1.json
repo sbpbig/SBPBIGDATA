@@ -2652,7 +2652,7 @@
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
-									"wildcardFolderPath": "VBAP_CDC_initial",
+									"wildcardFolderPath": "VBAP_CDC_INIT",
 									"wildcardFileName": "*",
 									"enablePartitionDiscovery": false
 								},
@@ -6612,7 +6612,7 @@
 								"referenceName": "PARQUET_DATASET_DYNAMIC",
 								"type": "DatasetReference",
 								"parameters": {
-									"Foldername": "VBAP_CDC_initial"
+									"Foldername": "VBAP_CDC_INIT"
 								}
 							}
 						],
