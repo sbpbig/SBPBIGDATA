@@ -1472,7 +1472,7 @@
 						"type": "SqlServerStoredProcedure",
 						"dependsOn": [
 							{
-								"activity": "Move to Archive",
+								"activity": "Load to Temp",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1505,17 +1505,19 @@
 				"parameters": {
 					"TGT_TBL_NM": {
 						"type": "string",
-						"defaultValue": "BSEG"
+						"defaultValue": "ACDOCA_CDC_SCD2"
 					},
 					"TGT_DB_NM": {
 						"type": "string",
 						"defaultValue": "dbo"
 					},
 					"FOLDER_NM": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "test_cdc_stream"
 					},
 					"TMP_TBL_NM": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "tbl_tmp"
 					}
 				},
 				"folder": {
@@ -4206,8 +4208,8 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Get Files name",
-						"type": "GetMetadata",
+						"name": "Copy data1",
+						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
@@ -4218,129 +4220,53 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"dataset": {
-								"referenceName": "mftest",
+							"source": {
+								"type": "SqlDWSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
 								"type": "DatasetReference",
 								"parameters": {
-									"FOLDER_NM": {
-										"value": "@pipeline().parameters.FOLDER_NM",
-										"type": "Expression"
-									},
-									"FILE_NM": {
-										"value": "@coalesce('')",
-										"type": "Expression"
-									}
+									"SynapseTableName": "tbl_tmp",
+									"SynapseSchema": "dbo"
 								}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "AzureBlobFSReadSettings",
-								"recursive": true,
-								"enablePartitionDiscovery": false
-							},
-							"formatSettings": {
-								"type": "BinaryReadSettings"
-							}
-						}
-					},
-					{
-						"name": "ForEachFile",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Get Files name",
-								"dependencyConditions": [
-									"Succeeded"
-								]
 							}
 						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@take(activity('Get Files name').output.childItems,5 )",
-								"type": "Expression"
-							},
-							"batchCount": 5,
-							"activities": [
-								{
-									"name": "Move to Processing",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "BinarySource",
-											"storeSettings": {
-												"type": "AzureBlobFSReadSettings",
-												"recursive": false,
-												"deleteFilesAfterCompletion": true
-											},
-											"formatSettings": {
-												"type": "BinaryReadSettings"
-											}
-										},
-										"sink": {
-											"type": "BinarySink",
-											"storeSettings": {
-												"type": "AzureBlobFSWriteSettings"
-											}
-										},
-										"enableStaging": false
-									},
-									"inputs": [
-										{
-											"referenceName": "mftest",
-											"type": "DatasetReference",
-											"parameters": {
-												"FOLDER_NM": {
-													"value": "@pipeline().parameters.FOLDER_NM",
-													"type": "Expression"
-												},
-												"FILE_NM": {
-													"value": "@item().name",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "mftest",
-											"type": "DatasetReference",
-											"parameters": {
-												"FOLDER_NM": {
-													"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
-													"type": "Expression"
-												},
-												"FILE_NM": {
-													"value": "@item().name",
-													"type": "Expression"
-												}
-											}
-										}
-									]
+						"outputs": [
+							{
+								"referenceName": "PARQUET_DATASET_DYNAMIC",
+								"type": "DatasetReference",
+								"parameters": {
+									"Foldername": "test_cdc_stream"
 								}
-							]
-						}
+							}
+						]
 					}
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"FOLDER_NM": {
-						"type": "string",
-						"defaultValue": "mfsrc"
-					}
 				},
 				"variables": {
 					"Files": {
@@ -4360,7 +4286,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/mftest')]"
+				"[concat(variables('factoryId'), '/datasets/DIRECT_SYNAPSE_DATASET_DYNAMIC')]",
+				"[concat(variables('factoryId'), '/datasets/PARQUET_DATASET_DYNAMIC')]"
 			]
 		},
 		{
