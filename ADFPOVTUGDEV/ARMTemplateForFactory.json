@@ -2186,7 +2186,7 @@
 					},
 					"FOLDER_NM": {
 						"type": "string",
-						"defaultValue": "test_cdc_stream"
+						"defaultValue": "test_cdc_stream_ACDOCA"
 					},
 					"TMP_TBL_NM": {
 						"type": "string",
@@ -4657,7 +4657,7 @@
 								"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
 								"type": "DatasetReference",
 								"parameters": {
-									"SynapseTableName": "tbl_tmp",
+									"SynapseTableName": "BSEG_CDC_TEMP",
 									"SynapseSchema": "dbo"
 								}
 							}
