@@ -104,6 +104,10 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
+							"modifiedDatetimeEnd": {
+								"value": "@addSeconds(utcNow(),-15)",
+								"type": "Expression"
+							},
 							"wildcardFolderPath": {
 								"value": "@pipeline().parameters.FOLDER_NM",
 								"type": "Expression"
