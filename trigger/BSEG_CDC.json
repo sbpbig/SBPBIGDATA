@@ -1,0 +1,30 @@
+{
+	"name": "BSEG_CDC",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "02_CDC_SNAPSHOT_SCD_BSEG",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"TGT_TBL_NM": "BSEG_CDC_SCD2",
+					"TGT_DB_NM": "dbo",
+					"FOLDER_NM": "BSEG_CDC",
+					"TMP_TBL_NM": "BSEG_CDC_TEMP"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/synapse-povtug/blobs/BSEG_CDC/",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourceGroups/POV_TUG/providers/Microsoft.Storage/storageAccounts/stpovtug",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}
