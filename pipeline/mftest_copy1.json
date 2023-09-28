@@ -30,6 +30,8 @@
 						}
 					},
 					"enableStaging": false,
+					"parallelCopies": 32,
+					"dataIntegrationUnits": 32,
 					"translator": {
 						"type": "TabularTranslator",
 						"typeConversion": true,
