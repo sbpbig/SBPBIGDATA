@@ -6,7 +6,7 @@
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "02_CDC_SNAPSHOT_SCD",
+					"referenceName": "02_CDC_SNAPSHOT_SCD_ACDOCA",
 					"type": "PipelineReference"
 				},
 				"parameters": {

@@ -1,5 +1,5 @@
 {
-	"name": "02_CDC_SNAPSHOT_SCD_ACDOCA",
+	"name": "02_CDC_SNAPSHOT_SCD_BSEG",
 	"properties": {
 		"activities": [
 			{
