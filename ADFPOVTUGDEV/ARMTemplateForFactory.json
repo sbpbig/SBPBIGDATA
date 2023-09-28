@@ -51,6 +51,10 @@
 			"type": "string",
 			"defaultValue": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourceGroups/POV_TUG/providers/Microsoft.Storage/storageAccounts/stpovtug"
 		},
+		"StorageEvent_Test_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourceGroups/POV_TUG/providers/Microsoft.Storage/storageAccounts/stpovtug"
+		},
 		"integrationRuntime-ADFPOVTUGDEV_properties_typeProperties_linkedInfo_resourceId": {
 			"type": "string",
 			"defaultValue": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourcegroups/POV_TUG/providers/Microsoft.DataFactory/factories/ADF-POV-TUG/integrationruntimes/integrationRuntime-POV-TUG"
@@ -1501,17 +1505,19 @@
 				"parameters": {
 					"TGT_TBL_NM": {
 						"type": "string",
-						"defaultValue": "BSEG"
+						"defaultValue": "ACDOCA_CDC_SCD2"
 					},
 					"TGT_DB_NM": {
 						"type": "string",
 						"defaultValue": "dbo"
 					},
 					"FOLDER_NM": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "test_cdc_stream"
 					},
 					"TMP_TBL_NM": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "tbl_tmp"
 					}
 				},
 				"folder": {
@@ -3536,6 +3542,58 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DUMMY')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Set variable1",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "INPUT",
+							"value": "1"
+						}
+					},
+					{
+						"name": "Wait1",
+						"type": "Wait",
+						"dependsOn": [
+							{
+								"activity": "Set variable1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": 60
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"INPUT": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "TEST"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/final')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -4150,8 +4208,8 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Get Files name",
-						"type": "GetMetadata",
+						"name": "Copy data1",
+						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
@@ -4162,129 +4220,53 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"dataset": {
-								"referenceName": "mftest",
+							"source": {
+								"type": "SqlDWSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
 								"type": "DatasetReference",
 								"parameters": {
-									"FOLDER_NM": {
-										"value": "@pipeline().parameters.FOLDER_NM",
-										"type": "Expression"
-									},
-									"FILE_NM": {
-										"value": "@coalesce('')",
-										"type": "Expression"
-									}
+									"SynapseTableName": "tbl_tmp",
+									"SynapseSchema": "dbo"
 								}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "AzureBlobFSReadSettings",
-								"recursive": true,
-								"enablePartitionDiscovery": false
-							},
-							"formatSettings": {
-								"type": "BinaryReadSettings"
-							}
-						}
-					},
-					{
-						"name": "ForEachFile",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Get Files name",
-								"dependencyConditions": [
-									"Succeeded"
-								]
 							}
 						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@take(activity('Get Files name').output.childItems,5 )",
-								"type": "Expression"
-							},
-							"batchCount": 5,
-							"activities": [
-								{
-									"name": "Move to Processing",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "BinarySource",
-											"storeSettings": {
-												"type": "AzureBlobFSReadSettings",
-												"recursive": false,
-												"deleteFilesAfterCompletion": true
-											},
-											"formatSettings": {
-												"type": "BinaryReadSettings"
-											}
-										},
-										"sink": {
-											"type": "BinarySink",
-											"storeSettings": {
-												"type": "AzureBlobFSWriteSettings"
-											}
-										},
-										"enableStaging": false
-									},
-									"inputs": [
-										{
-											"referenceName": "mftest",
-											"type": "DatasetReference",
-											"parameters": {
-												"FOLDER_NM": {
-													"value": "@pipeline().parameters.FOLDER_NM",
-													"type": "Expression"
-												},
-												"FILE_NM": {
-													"value": "@item().name",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "mftest",
-											"type": "DatasetReference",
-											"parameters": {
-												"FOLDER_NM": {
-													"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
-													"type": "Expression"
-												},
-												"FILE_NM": {
-													"value": "@item().name",
-													"type": "Expression"
-												}
-											}
-										}
-									]
+						"outputs": [
+							{
+								"referenceName": "PARQUET_DATASET_DYNAMIC",
+								"type": "DatasetReference",
+								"parameters": {
+									"Foldername": "test_cdc_stream"
 								}
-							]
-						}
+							}
+						]
 					}
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"FOLDER_NM": {
-						"type": "string",
-						"defaultValue": "mfsrc"
-					}
 				},
 				"variables": {
 					"Files": {
@@ -4304,7 +4286,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/mftest')]"
+				"[concat(variables('factoryId'), '/datasets/DIRECT_SYNAPSE_DATASET_DYNAMIC')]",
+				"[concat(variables('factoryId'), '/datasets/PARQUET_DATASET_DYNAMIC')]"
 			]
 		},
 		{
@@ -4688,6 +4671,36 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/02_CDC_SNAPSHOT_SCD')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/StorageEvent_Test')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "DUMMY",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/synapse-povtug/blobs/CDC_TEMP/",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('StorageEvent_Test_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/DUMMY')]"
 			]
 		},
 		{

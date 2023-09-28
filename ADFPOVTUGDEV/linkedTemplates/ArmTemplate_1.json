@@ -41,6 +41,527 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/00_INITIAL_LOAD')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Bulk Initial Load",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Move to Processing",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ParquetSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": {
+										"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
+										"type": "Expression"
+									},
+									"wildcardFileName": "*",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "ParquetReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlDWSink",
+								"allowPolyBase": true,
+								"polyBaseSettings": {
+									"rejectValue": 0,
+									"rejectType": "value",
+									"useTypeDefault": true
+								},
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "DS_PARQUET_SOURCE",
+								"type": "DatasetReference",
+								"parameters": {
+									"FOLDER_NM": {
+										"value": "@coalesce('')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
+								"type": "DatasetReference",
+								"parameters": {
+									"SynapseTableName": {
+										"value": "@pipeline().parameters.TGT_TBL_NM",
+										"type": "Expression"
+									},
+									"SynapseSchema": {
+										"value": "@pipeline().parameters.TGT_DB_NM",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Move to Processing",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": {
+										"value": "@pipeline().parameters.FOLDER_NM",
+										"type": "Expression"
+									},
+									"wildcardFileName": "*",
+									"deleteFilesAfterCompletion": true
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "DS_SRC_PROCESS",
+								"type": "DatasetReference",
+								"parameters": {
+									"FOLDER_NM": {
+										"value": "@coalesce('')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DS_SRC_PROCESS",
+								"type": "DatasetReference",
+								"parameters": {
+									"FOLDER_NM": {
+										"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Move to Archive",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Bulk Initial Load",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": {
+										"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
+										"type": "Expression"
+									},
+									"wildcardFileName": "*",
+									"deleteFilesAfterCompletion": true
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "DS_SRC_PROCESS",
+								"type": "DatasetReference",
+								"parameters": {
+									"FOLDER_NM": {
+										"value": "@coalesce('')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DS_SRC_PROCESS",
+								"type": "DatasetReference",
+								"parameters": {
+									"FOLDER_NM": {
+										"value": "@concat(pipeline().parameters.FOLDER_NM, '_ARCHIVE')",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					}
+				],
+				"concurrency": 1,
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"FOLDER_NM": {
+						"type": "string"
+					},
+					"TGT_DB_NM": {
+						"type": "string"
+					},
+					"TGT_TBL_NM": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "TEST"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/00_INITIAL_LOAD_BAK')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Bulk Initial Load",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Move to Processing",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ParquetSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": {
+										"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
+										"type": "Expression"
+									},
+									"wildcardFileName": "*",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "ParquetReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlDWSink",
+								"preCopyScript": {
+									"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.TGT_DB_NM, '.', concat(pipeline().parameters.TGT_TBL_NM, '_TMP'))}",
+									"type": "Expression"
+								},
+								"allowPolyBase": true,
+								"polyBaseSettings": {
+									"rejectValue": 0,
+									"rejectType": "value",
+									"useTypeDefault": true
+								},
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "DS_PARQUET_SOURCE",
+								"type": "DatasetReference",
+								"parameters": {
+									"FOLDER_NM": {
+										"value": "@coalesce('')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
+								"type": "DatasetReference",
+								"parameters": {
+									"SynapseTableName": {
+										"value": "@concat(pipeline().parameters.TGT_TBL_NM, '_TMP')",
+										"type": "Expression"
+									},
+									"SynapseSchema": {
+										"value": "@pipeline().parameters.TGT_DB_NM",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Move to Processing",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"modifiedDatetimeEnd": {
+										"value": "@addminutes(utcNow(), -30)",
+										"type": "Expression"
+									},
+									"wildcardFolderPath": {
+										"value": "@pipeline().parameters.FOLDER_NM",
+										"type": "Expression"
+									},
+									"wildcardFileName": "*",
+									"deleteFilesAfterCompletion": true
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "DS_SRC_PROCESS",
+								"type": "DatasetReference",
+								"parameters": {
+									"FOLDER_NM": {
+										"value": "@coalesce('')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DS_SRC_PROCESS",
+								"type": "DatasetReference",
+								"parameters": {
+									"FOLDER_NM": {
+										"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Move to Archive",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Copy Temp Into Target",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": {
+										"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
+										"type": "Expression"
+									},
+									"wildcardFileName": "*",
+									"deleteFilesAfterCompletion": true
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "DS_SRC_PROCESS",
+								"type": "DatasetReference",
+								"parameters": {
+									"FOLDER_NM": {
+										"value": "@coalesce('')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DS_SRC_PROCESS",
+								"type": "DatasetReference",
+								"parameters": {
+									"FOLDER_NM": {
+										"value": "@concat(pipeline().parameters.FOLDER_NM, '_ARCHIVE')",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Copy Temp Into Target",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "Bulk Initial Load",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzureSynapseAnalytics",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "@concat('INSERT INTO ', pipeline().parameters.TGT_DB_NM, '.', pipeline().parameters.TGT_TBL_NM, ' SELECT * FROM ', pipeline().parameters.TGT_DB_NM, '.', concat(pipeline().parameters.TGT_TBL_NM, '_TMP'))",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					}
+				],
+				"concurrency": 1,
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"FOLDER_NM": {
+						"type": "string"
+					},
+					"TGT_DB_NM": {
+						"type": "string"
+					},
+					"TGT_TBL_NM": {
+						"type": "string"
+					},
+					"YEAR": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "TEST"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/00_INITIAL_LOAD_MANUAL')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -395,17 +916,19 @@
 				"parameters": {
 					"TGT_TBL_NM": {
 						"type": "string",
-						"defaultValue": "BSEG"
+						"defaultValue": "ACDOCA_CDC_SCD2"
 					},
 					"TGT_DB_NM": {
 						"type": "string",
 						"defaultValue": "dbo"
 					},
 					"FOLDER_NM": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "test_cdc_stream"
 					},
 					"TMP_TBL_NM": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "tbl_tmp"
 					}
 				},
 				"folder": {
@@ -1026,8 +1549,8 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Get Files name",
-						"type": "GetMetadata",
+						"name": "Copy data1",
+						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
@@ -1038,129 +1561,53 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"dataset": {
-								"referenceName": "mftest",
+							"source": {
+								"type": "SqlDWSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
 								"type": "DatasetReference",
 								"parameters": {
-									"FOLDER_NM": {
-										"value": "@pipeline().parameters.FOLDER_NM",
-										"type": "Expression"
-									},
-									"FILE_NM": {
-										"value": "@coalesce('')",
-										"type": "Expression"
-									}
+									"SynapseTableName": "tbl_tmp",
+									"SynapseSchema": "dbo"
 								}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "AzureBlobFSReadSettings",
-								"recursive": true,
-								"enablePartitionDiscovery": false
-							},
-							"formatSettings": {
-								"type": "BinaryReadSettings"
-							}
-						}
-					},
-					{
-						"name": "ForEachFile",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Get Files name",
-								"dependencyConditions": [
-									"Succeeded"
-								]
 							}
 						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@take(activity('Get Files name').output.childItems,5 )",
-								"type": "Expression"
-							},
-							"batchCount": 5,
-							"activities": [
-								{
-									"name": "Move to Processing",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "BinarySource",
-											"storeSettings": {
-												"type": "AzureBlobFSReadSettings",
-												"recursive": false,
-												"deleteFilesAfterCompletion": true
-											},
-											"formatSettings": {
-												"type": "BinaryReadSettings"
-											}
-										},
-										"sink": {
-											"type": "BinarySink",
-											"storeSettings": {
-												"type": "AzureBlobFSWriteSettings"
-											}
-										},
-										"enableStaging": false
-									},
-									"inputs": [
-										{
-											"referenceName": "mftest",
-											"type": "DatasetReference",
-											"parameters": {
-												"FOLDER_NM": {
-													"value": "@pipeline().parameters.FOLDER_NM",
-													"type": "Expression"
-												},
-												"FILE_NM": {
-													"value": "@item().name",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "mftest",
-											"type": "DatasetReference",
-											"parameters": {
-												"FOLDER_NM": {
-													"value": "@concat(pipeline().parameters.FOLDER_NM, '_PROCESSING')",
-													"type": "Expression"
-												},
-												"FILE_NM": {
-													"value": "@item().name",
-													"type": "Expression"
-												}
-											}
-										}
-									]
+						"outputs": [
+							{
+								"referenceName": "PARQUET_DATASET_DYNAMIC",
+								"type": "DatasetReference",
+								"parameters": {
+									"Foldername": "test_cdc_stream"
 								}
-							]
-						}
+							}
+						]
 					}
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"FOLDER_NM": {
-						"type": "string",
-						"defaultValue": "mfsrc"
-					}
 				},
 				"variables": {
 					"Files": {
@@ -3088,7 +3535,9 @@
 					"dependsOn": []
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/00_INITIAL_LOAD')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/CDC_File_Trigger')]",
@@ -3916,630 +4365,6 @@
 				"[concat(variables('factoryId'), '/pipelines/20_PROCESS_TYPE3_CDC_INIT_TEMP_TO_LOG')]",
 				"[concat(variables('factoryId'), '/pipelines/20_PROCESS_TYPE4_CDC_STREAM')]",
 				"[concat(variables('factoryId'), '/pipelines/20_PROCESS_TYPE5_CDC_INIT_TEMP_TO_SCD2')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/05_COMMON_POC')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "INSERT PROCESS LOG",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"sqlReaderStoredProcedureName": "[[CNTL].[PROC_CNTL_START_PCS]",
-								"storedProcedureParameters": {
-									"P_PCS_NM": {
-										"type": "String",
-										"value": {
-											"value": "@pipeline().parameters.P_PROCESS_NM",
-											"type": "Expression"
-										}
-									},
-									"P_RUN_MODE": {
-										"type": "String",
-										"value": {
-											"value": "@pipeline().parameters.P_RUN_MODE",
-											"type": "Expression"
-										}
-									},
-									"P_STREAM_SEQ_ID": {
-										"type": "String",
-										"value": {
-											"value": "@pipeline().parameters.P_STREAM_SEQ_ID",
-											"type": "Expression"
-										}
-									}
-								},
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "controltable",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": true
-						}
-					},
-					{
-						"name": "GET SKIP FLAG",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "INSERT PROCESS LOG",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "V_SKIP_PROCESS",
-							"value": {
-								"value": "@activity('INSERT PROCESS LOG').output.FIRSTROW.SKIP_PROCESS",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "GET LOAD ID",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "INSERT PROCESS LOG",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "V_LOAD_ID",
-							"value": {
-								"value": "@activity('INSERT PROCESS LOG').output.FIRSTROW.LOAD_ID",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "CHECK SKIP FLAG",
-						"type": "IfCondition",
-						"dependsOn": [
-							{
-								"activity": "GET SKIP FLAG",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "GET LOAD ID",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"expression": {
-								"value": "@equals(variables('V_SKIP_PROCESS'),'0')",
-								"type": "Expression"
-							},
-							"ifFalseActivities": [
-								{
-									"name": "SKIP PROCESS",
-									"type": "Lookup",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "SqlServerSource",
-											"sqlReaderQuery": "SELECT 1",
-											"queryTimeout": "02:00:00",
-											"partitionOption": "None"
-										},
-										"dataset": {
-											"referenceName": "controltable",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									}
-								}
-							],
-							"ifTrueActivities": [
-								{
-									"name": "RUN_PCS_10_COMMON",
-									"type": "ExecutePipeline",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"pipeline": {
-											"referenceName": "10_COMMON_POC",
-											"type": "PipelineReference"
-										},
-										"waitOnCompletion": true,
-										"parameters": {
-											"P_PCS_NM": {
-												"value": "@pipeline().parameters.P_PROCESS_NM",
-												"type": "Expression"
-											},
-											"P_RUN_MODE": {
-												"value": "@pipeline().parameters.P_RUN_MODE",
-												"type": "Expression"
-											},
-											"P_LOAD_ID": {
-												"value": "@variables('V_LOAD_ID')",
-												"type": "Expression"
-											},
-											"P_AS_AT_DT": {
-												"value": "@pipeline().parameters.P_AS_AT_DT",
-												"type": "Expression"
-											}
-										}
-									}
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"P_PROCESS_NM": {
-						"type": "string",
-						"defaultValue": "SINGHAARM_SINGHAARM_AGENT"
-					},
-					"P_RUN_MODE": {
-						"type": "string",
-						"defaultValue": "R"
-					},
-					"P_STREAM_SEQ_ID": {
-						"type": "string",
-						"defaultValue": "-999"
-					},
-					"P_AS_AT_DT": {
-						"type": "string"
-					}
-				},
-				"variables": {
-					"V_SKIP_PROCESS": {
-						"type": "String",
-						"defaultValue": "999"
-					},
-					"V_LOAD_ID": {
-						"type": "String",
-						"defaultValue": "999"
-					},
-					"STREAM_FLAG": {
-						"type": "String"
-					},
-					"PRCS_NM": {
-						"type": "String"
-					},
-					"PRCS_TYPE": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "COMMON JOB"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/controltable')]",
-				"[concat(variables('factoryId'), '/pipelines/10_COMMON_POC')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/00_STREAM_COMMON_POC')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "GET PROCESS LIST",
-						"type": "Lookup",
-						"dependsOn": [
-							{
-								"activity": "START STREAM",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"sqlReaderStoredProcedureName": "[[CNTL].[PROC_GET_PCS_STREAM]",
-								"storedProcedureParameters": {
-									"P_STREAM_NM": {
-										"type": "String",
-										"value": {
-											"value": "@pipeline().parameters.P_STREAM_NM",
-											"type": "Expression"
-										}
-									}
-								},
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "controltable",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "SET AS_AT_DT",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "START STREAM",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "V_AS_AT_DT",
-							"value": {
-								"value": "@activity('START STREAM').output.FIRSTROW.AS_AT_DT",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "SET STREAM_SEQ_ID",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "START STREAM",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "V_STREAM_SEQ_ID",
-							"value": {
-								"value": "@activity('START STREAM').output.FIRSTROW.STREAM_SEQ_ID",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "START STREAM",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"sqlReaderStoredProcedureName": "[[CNTL].[PROC_CNTL_ACTV_STREAM]",
-								"storedProcedureParameters": {
-									"P_RUN_MODE": {
-										"type": "String",
-										"value": {
-											"value": "@pipeline().parameters.P_RUN_MODE",
-											"type": "Expression"
-										}
-									},
-									"P_STREAM_NM": {
-										"type": "String",
-										"value": {
-											"value": "@pipeline().parameters.P_STREAM_NM",
-											"type": "Expression"
-										}
-									}
-								},
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "controltable",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "SET PROCESS LIST",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "GET PROCESS LIST",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "SET AS_AT_DT",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "SET STREAM_SEQ_ID",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "V_PCS_NM_LIST",
-							"value": {
-								"value": "@activity('GET PROCESS LIST').output.value",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "FOR EACH PROCESS",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "SET PROCESS LIST",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@variables('V_PCS_NM_LIST')",
-								"type": "Expression"
-							},
-							"isSequential": true,
-							"activities": [
-								{
-									"name": "RUN_PCS_05_COMMON",
-									"type": "ExecutePipeline",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"pipeline": {
-											"referenceName": "05_COMMON_POC",
-											"type": "PipelineReference"
-										},
-										"waitOnCompletion": true,
-										"parameters": {
-											"P_PROCESS_NM": {
-												"value": "@item().PCS_NM",
-												"type": "Expression"
-											},
-											"P_RUN_MODE": {
-												"value": "@pipeline().parameters.P_RUN_MODE",
-												"type": "Expression"
-											},
-											"P_STREAM_SEQ_ID": {
-												"value": "@variables('V_STREAM_SEQ_ID')",
-												"type": "Expression"
-											},
-											"P_AS_AT_DT": {
-												"value": "@variables('V_AS_AT_DT')",
-												"type": "Expression"
-											}
-										}
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "FINAL STREAM",
-						"type": "Lookup",
-						"dependsOn": [
-							{
-								"activity": "FOR EACH PROCESS",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"sqlReaderStoredProcedureName": "[[CNTL].[PROC_FINAL_STREAM]",
-								"storedProcedureParameters": {
-									"P_AS_AT_DT": {
-										"type": "String",
-										"value": {
-											"value": "@variables('V_AS_AT_DT')",
-											"type": "Expression"
-										}
-									},
-									"P_STREAM_NM": {
-										"type": "String",
-										"value": {
-											"value": "@pipeline().parameters.P_STREAM_NM",
-											"type": "Expression"
-										}
-									},
-									"P_STREAM_SEQ_ID": {
-										"type": "String",
-										"value": {
-											"value": "@variables('V_STREAM_SEQ_ID')",
-											"type": "Expression"
-										}
-									}
-								},
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "controltable",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "UPDATE STREAM",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "FINAL STREAM",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[CNTL].[PROC_UDT_STREAM]",
-							"storedProcedureParameters": {
-								"P_STREAM_NM": {
-									"value": {
-										"value": "@pipeline().parameters.P_STREAM_NM",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"P_STREAM_RESULT": {
-									"value": {
-										"value": "@activity('FINAL STREAM').output.firstrow.STREAM_RESULT",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"P_STREAM_SEQ_ID": {
-									"value": {
-										"value": "@variables('V_STREAM_SEQ_ID')",
-										"type": "Expression"
-									},
-									"type": "String"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "SqlServer1",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"P_STREAM_NM": {
-						"type": "string",
-						"defaultValue": "STREAM_1_LOAD"
-					},
-					"P_RUN_MODE": {
-						"type": "string",
-						"defaultValue": "R"
-					}
-				},
-				"variables": {
-					"V_STREAM_RESULT": {
-						"type": "String",
-						"defaultValue": "-999"
-					},
-					"V_PCS_NM_LIST": {
-						"type": "Array",
-						"defaultValue": [
-							999
-						]
-					},
-					"V_AS_AT_DT": {
-						"type": "String",
-						"defaultValue": "19000101"
-					},
-					"V_STREAM_SEQ_ID": {
-						"type": "String",
-						"defaultValue": "-999"
-					},
-					"STREAM_FLAG": {
-						"type": "String"
-					},
-					"PRCS_NM": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "COMMON JOB"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/controltable')]",
-				"[concat(variables('factoryId'), '/pipelines/05_COMMON_POC')]"
 			]
 		}
 	]
