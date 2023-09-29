@@ -58,8 +58,11 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "DS_PARQUET_SOURCE",
-						"type": "DatasetReference"
+						"referenceName": "Compress_PARQUET",
+						"type": "DatasetReference",
+						"parameters": {
+							"FOLDER_NM": "ACDOCA_COMPRESS"
+						}
 					}
 				]
 			}
