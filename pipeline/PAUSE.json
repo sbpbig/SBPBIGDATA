@@ -3,8 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Script1",
-				"type": "Script",
+				"name": "Copy data1",
+				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -14,19 +14,54 @@
 					"secureInput": false
 				},
 				"userProperties": [],
-				"linkedServiceName": {
-					"referenceName": "AzureSynapseAnalytics",
-					"type": "LinkedServiceReference"
-				},
 				"typeProperties": {
-					"scripts": [
-						{
-							"type": "Query",
-							"text": "UPDATE dbo.BSEG_CDC_SCD2\nSET END_DATE = '9000-12-31 00:00:00'\nWHERE END_DATE IS NULL;"
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": "ACDOCA_PART_CDC2_ARCHIVE",
+							"wildcardFileName": "*.parquet",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "ParquetReadSettings"
 						}
-					],
-					"scriptBlockExecutionTimeout": "02:00:00"
-				}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_PARQUET_SOURCE",
+						"type": "DatasetReference",
+						"parameters": {
+							"FOLDER_NM": "ACDOCA_PART_CDC2_ARCHIVE"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DS_PARQUET_SOURCE",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"folder": {

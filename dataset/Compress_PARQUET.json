@@ -1,0 +1,1773 @@
+{
+	"name": "Compress_PARQUET",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adls",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"FOLDER_NM": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@dataset().FOLDER_NM",
+					"type": "Expression"
+				},
+				"fileSystem": "synapse-povtug"
+			},
+			"compressionCodec": "gzip"
+		},
+		"schema": [
+			{
+				"name": "AERUNID",
+				"type": "INT_32"
+			},
+			{
+				"name": "AERECNO",
+				"type": "INT_32"
+			},
+			{
+				"name": "AEDATTM",
+				"type": "UTF8"
+			},
+			{
+				"name": "RCLNT",
+				"type": "UTF8"
+			},
+			{
+				"name": "RLDNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "RBUKRS",
+				"type": "UTF8"
+			},
+			{
+				"name": "GJAHR",
+				"type": "UTF8"
+			},
+			{
+				"name": "BELNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "DOCLN",
+				"type": "UTF8"
+			},
+			{
+				"name": "RYEAR",
+				"type": "UTF8"
+			},
+			{
+				"name": "RRCTY",
+				"type": "UTF8"
+			},
+			{
+				"name": "RMVCT",
+				"type": "UTF8"
+			},
+			{
+				"name": "VORGN",
+				"type": "UTF8"
+			},
+			{
+				"name": "VRGNG",
+				"type": "UTF8"
+			},
+			{
+				"name": "BTTYPE",
+				"type": "UTF8"
+			},
+			{
+				"name": "AWTYP",
+				"type": "UTF8"
+			},
+			{
+				"name": "AWSYS",
+				"type": "UTF8"
+			},
+			{
+				"name": "AWORG",
+				"type": "UTF8"
+			},
+			{
+				"name": "AWREF",
+				"type": "UTF8"
+			},
+			{
+				"name": "AWITEM",
+				"type": "UTF8"
+			},
+			{
+				"name": "AWITGRP",
+				"type": "UTF8"
+			},
+			{
+				"name": "SUBTA",
+				"type": "UTF8"
+			},
+			{
+				"name": "XREVERSING",
+				"type": "UTF8"
+			},
+			{
+				"name": "XREVERSED",
+				"type": "UTF8"
+			},
+			{
+				"name": "XTRUEREV",
+				"type": "UTF8"
+			},
+			{
+				"name": "AWTYP_REV",
+				"type": "UTF8"
+			},
+			{
+				"name": "AWORG_REV",
+				"type": "UTF8"
+			},
+			{
+				"name": "AWREF_REV",
+				"type": "UTF8"
+			},
+			{
+				"name": "SUBTA_REV",
+				"type": "UTF8"
+			},
+			{
+				"name": "XSETTLING",
+				"type": "UTF8"
+			},
+			{
+				"name": "XSETTLED",
+				"type": "UTF8"
+			},
+			{
+				"name": "PREC_AWTYP",
+				"type": "UTF8"
+			},
+			{
+				"name": "PREC_AWORG",
+				"type": "UTF8"
+			},
+			{
+				"name": "PREC_AWREF",
+				"type": "UTF8"
+			},
+			{
+				"name": "PREC_AWITEM",
+				"type": "UTF8"
+			},
+			{
+				"name": "PREC_SUBTA",
+				"type": "UTF8"
+			},
+			{
+				"name": "PREC_AWMULT",
+				"type": "UTF8"
+			},
+			{
+				"name": "XSECONDARY",
+				"type": "UTF8"
+			},
+			{
+				"name": "RTCUR",
+				"type": "UTF8"
+			},
+			{
+				"name": "RWCUR",
+				"type": "UTF8"
+			},
+			{
+				"name": "RHCUR",
+				"type": "UTF8"
+			},
+			{
+				"name": "RKCUR",
+				"type": "UTF8"
+			},
+			{
+				"name": "ROCUR",
+				"type": "UTF8"
+			},
+			{
+				"name": "RVCUR",
+				"type": "UTF8"
+			},
+			{
+				"name": "RBCUR",
+				"type": "UTF8"
+			},
+			{
+				"name": "RCCUR",
+				"type": "UTF8"
+			},
+			{
+				"name": "RDCUR",
+				"type": "UTF8"
+			},
+			{
+				"name": "RECUR",
+				"type": "UTF8"
+			},
+			{
+				"name": "RFCUR",
+				"type": "UTF8"
+			},
+			{
+				"name": "RGCUR",
+				"type": "UTF8"
+			},
+			{
+				"name": "RCO_OCUR",
+				"type": "UTF8"
+			},
+			{
+				"name": "RUNIT",
+				"type": "UTF8"
+			},
+			{
+				"name": "RVUNIT",
+				"type": "UTF8"
+			},
+			{
+				"name": "RRUNIT",
+				"type": "UTF8"
+			},
+			{
+				"name": "QUNIT1",
+				"type": "UTF8"
+			},
+			{
+				"name": "QUNIT2",
+				"type": "UTF8"
+			},
+			{
+				"name": "QUNIT3",
+				"type": "UTF8"
+			},
+			{
+				"name": "RACCT",
+				"type": "UTF8"
+			},
+			{
+				"name": "RCNTR",
+				"type": "UTF8"
+			},
+			{
+				"name": "PRCTR",
+				"type": "UTF8"
+			},
+			{
+				"name": "RFAREA",
+				"type": "UTF8"
+			},
+			{
+				"name": "RBUSA",
+				"type": "UTF8"
+			},
+			{
+				"name": "KOKRS",
+				"type": "UTF8"
+			},
+			{
+				"name": "SEGMENT",
+				"type": "UTF8"
+			},
+			{
+				"name": "SCNTR",
+				"type": "UTF8"
+			},
+			{
+				"name": "PPRCTR",
+				"type": "UTF8"
+			},
+			{
+				"name": "SFAREA",
+				"type": "UTF8"
+			},
+			{
+				"name": "SBUSA",
+				"type": "UTF8"
+			},
+			{
+				"name": "RASSC",
+				"type": "UTF8"
+			},
+			{
+				"name": "PSEGMENT",
+				"type": "UTF8"
+			},
+			{
+				"name": "TSL",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "WSL",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "WSL2",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "WSL3",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "HSL",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "KSL",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "OSL",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "VSL",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "BSL",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "CSL",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "DSL",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "ESL",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "FSL",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "GSL",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "KFSL",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "KFSL2",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "KFSL3",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "PSL",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "PSL2",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "PSL3",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "PFSL",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "PFSL2",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "PFSL3",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "CO_OSL",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "HSALK3",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "KSALK3",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "OSALK3",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "VSALK3",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "HSALKV",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "KSALKV",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "OSALKV",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "VSALKV",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "HPVPRS",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "KPVPRS",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "OPVPRS",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "VPVPRS",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "HSTPRS",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "KSTPRS",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "OSTPRS",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "VSTPRS",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "HSLALT",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "KSLALT",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "OSLALT",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "VSLALT",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "HSLEXT",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "KSLEXT",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "OSLEXT",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "VSLEXT",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "HVKWRT",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "HVKSAL",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "MSL",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 3
+			},
+			{
+				"name": "MFSL",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 3
+			},
+			{
+				"name": "VMSL",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 3
+			},
+			{
+				"name": "VMFSL",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 3
+			},
+			{
+				"name": "RMSL",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 3
+			},
+			{
+				"name": "QUANT1",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 3
+			},
+			{
+				"name": "QUANT2",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 3
+			},
+			{
+				"name": "QUANT3",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 3
+			},
+			{
+				"name": "LBKUM",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 3
+			},
+			{
+				"name": "DRCRK",
+				"type": "UTF8"
+			},
+			{
+				"name": "POPER",
+				"type": "UTF8"
+			},
+			{
+				"name": "PERIV",
+				"type": "UTF8"
+			},
+			{
+				"name": "FISCYEARPER",
+				"type": "UTF8"
+			},
+			{
+				"name": "BUDAT",
+				"type": "UTF8"
+			},
+			{
+				"name": "BLDAT",
+				"type": "UTF8"
+			},
+			{
+				"name": "BLART",
+				"type": "UTF8"
+			},
+			{
+				"name": "BUZEI",
+				"type": "UTF8"
+			},
+			{
+				"name": "ZUONR",
+				"type": "UTF8"
+			},
+			{
+				"name": "BSCHL",
+				"type": "UTF8"
+			},
+			{
+				"name": "BSTAT",
+				"type": "UTF8"
+			},
+			{
+				"name": "LINETYPE",
+				"type": "UTF8"
+			},
+			{
+				"name": "KTOSL",
+				"type": "UTF8"
+			},
+			{
+				"name": "SLALITTYPE",
+				"type": "UTF8"
+			},
+			{
+				"name": "XSPLITMOD",
+				"type": "UTF8"
+			},
+			{
+				"name": "USNAM",
+				"type": "UTF8"
+			},
+			{
+				"name": "TIMESTAMP",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 0
+			},
+			{
+				"name": "EPRCTR",
+				"type": "UTF8"
+			},
+			{
+				"name": "RHOART",
+				"type": "UTF8"
+			},
+			{
+				"name": "GLACCOUNT_TYPE",
+				"type": "UTF8"
+			},
+			{
+				"name": "KTOPL",
+				"type": "UTF8"
+			},
+			{
+				"name": "LOKKT",
+				"type": "UTF8"
+			},
+			{
+				"name": "KTOP2",
+				"type": "UTF8"
+			},
+			{
+				"name": "REBZG",
+				"type": "UTF8"
+			},
+			{
+				"name": "REBZJ",
+				"type": "UTF8"
+			},
+			{
+				"name": "REBZZ",
+				"type": "UTF8"
+			},
+			{
+				"name": "REBZT",
+				"type": "UTF8"
+			},
+			{
+				"name": "RBEST",
+				"type": "UTF8"
+			},
+			{
+				"name": "EBELN",
+				"type": "UTF8"
+			},
+			{
+				"name": "EBELP",
+				"type": "UTF8"
+			},
+			{
+				"name": "ZEKKN",
+				"type": "UTF8"
+			},
+			{
+				"name": "SGTXT",
+				"type": "UTF8"
+			},
+			{
+				"name": "KDAUF",
+				"type": "UTF8"
+			},
+			{
+				"name": "KDPOS",
+				"type": "UTF8"
+			},
+			{
+				"name": "MATNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "WERKS",
+				"type": "UTF8"
+			},
+			{
+				"name": "LIFNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "KUNNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "FBUDA",
+				"type": "UTF8"
+			},
+			{
+				"name": "KOART",
+				"type": "UTF8"
+			},
+			{
+				"name": "UMSKZ",
+				"type": "UTF8"
+			},
+			{
+				"name": "MWSKZ",
+				"type": "UTF8"
+			},
+			{
+				"name": "HBKID",
+				"type": "UTF8"
+			},
+			{
+				"name": "HKTID",
+				"type": "UTF8"
+			},
+			{
+				"name": "XOPVW",
+				"type": "UTF8"
+			},
+			{
+				"name": "AUGDT",
+				"type": "UTF8"
+			},
+			{
+				"name": "AUGBL",
+				"type": "UTF8"
+			},
+			{
+				"name": "AUGGJ",
+				"type": "UTF8"
+			},
+			{
+				"name": "AFABE",
+				"type": "UTF8"
+			},
+			{
+				"name": "ANLN1",
+				"type": "UTF8"
+			},
+			{
+				"name": "ANLN2",
+				"type": "UTF8"
+			},
+			{
+				"name": "BZDAT",
+				"type": "UTF8"
+			},
+			{
+				"name": "ANBWA",
+				"type": "UTF8"
+			},
+			{
+				"name": "MOVCAT",
+				"type": "UTF8"
+			},
+			{
+				"name": "DEPR_PERIOD",
+				"type": "UTF8"
+			},
+			{
+				"name": "ANLGR",
+				"type": "UTF8"
+			},
+			{
+				"name": "ANLGR2",
+				"type": "UTF8"
+			},
+			{
+				"name": "SETTLEMENT_RULE",
+				"type": "UTF8"
+			},
+			{
+				"name": "UBZDT_PN",
+				"type": "UTF8"
+			},
+			{
+				"name": "XVABG_PN",
+				"type": "UTF8"
+			},
+			{
+				"name": "PROZS_PN",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 2
+			},
+			{
+				"name": "XMANPROPVAL_PN",
+				"type": "UTF8"
+			},
+			{
+				"name": "KALNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "VPRSV",
+				"type": "UTF8"
+			},
+			{
+				"name": "MLAST",
+				"type": "UTF8"
+			},
+			{
+				"name": "KZBWS",
+				"type": "UTF8"
+			},
+			{
+				"name": "XOBEW",
+				"type": "UTF8"
+			},
+			{
+				"name": "SOBKZ",
+				"type": "UTF8"
+			},
+			{
+				"name": "VTSTAMP",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 7
+			},
+			{
+				"name": "MAT_KDAUF",
+				"type": "UTF8"
+			},
+			{
+				"name": "MAT_KDPOS",
+				"type": "UTF8"
+			},
+			{
+				"name": "MAT_PSPNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "MAT_PS_POSID",
+				"type": "UTF8"
+			},
+			{
+				"name": "MAT_LIFNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "BWTAR",
+				"type": "UTF8"
+			},
+			{
+				"name": "BWKEY",
+				"type": "UTF8"
+			},
+			{
+				"name": "HPEINH",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 0
+			},
+			{
+				"name": "KPEINH",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 0
+			},
+			{
+				"name": "OPEINH",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 0
+			},
+			{
+				"name": "VPEINH",
+				"type": "DECIMAL",
+				"precision": 29,
+				"scale": 0
+			},
+			{
+				"name": "MLPTYP",
+				"type": "UTF8"
+			},
+			{
+				"name": "MLCATEG",
+				"type": "UTF8"
+			},
+			{
+				"name": "QSBVALT",
+				"type": "UTF8"
+			},
+			{
+				"name": "QSPROCESS",
+				"type": "UTF8"
+			},
+			{
+				"name": "PERART",
+				"type": "UTF8"
+			},
+			{
+				"name": "MLPOSNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "BUKRS_SENDER",
+				"type": "UTF8"
+			},
+			{
+				"name": "RACCT_SENDER",
+				"type": "UTF8"
+			},
+			{
+				"name": "ACCAS_SENDER",
+				"type": "UTF8"
+			},
+			{
+				"name": "ACCASTY_SENDER",
+				"type": "UTF8"
+			},
+			{
+				"name": "OBJNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "HRKFT",
+				"type": "UTF8"
+			},
+			{
+				"name": "HKGRP",
+				"type": "UTF8"
+			},
+			{
+				"name": "PAROB1",
+				"type": "UTF8"
+			},
+			{
+				"name": "PAROBSRC",
+				"type": "UTF8"
+			},
+			{
+				"name": "USPOB",
+				"type": "UTF8"
+			},
+			{
+				"name": "CO_BELKZ",
+				"type": "UTF8"
+			},
+			{
+				"name": "CO_BEKNZ",
+				"type": "UTF8"
+			},
+			{
+				"name": "BELTP",
+				"type": "UTF8"
+			},
+			{
+				"name": "MUVFLG",
+				"type": "UTF8"
+			},
+			{
+				"name": "GKONT",
+				"type": "UTF8"
+			},
+			{
+				"name": "GKOAR",
+				"type": "UTF8"
+			},
+			{
+				"name": "ERLKZ",
+				"type": "UTF8"
+			},
+			{
+				"name": "PERNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "PAOBJNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "XPAOBJNR_CO_REL",
+				"type": "UTF8"
+			},
+			{
+				"name": "SCOPE",
+				"type": "UTF8"
+			},
+			{
+				"name": "LOGSYSO",
+				"type": "UTF8"
+			},
+			{
+				"name": "PBUKRS",
+				"type": "UTF8"
+			},
+			{
+				"name": "PSCOPE",
+				"type": "UTF8"
+			},
+			{
+				"name": "LOGSYSP",
+				"type": "UTF8"
+			},
+			{
+				"name": "BWSTRAT",
+				"type": "UTF8"
+			},
+			{
+				"name": "OBJNR_HK",
+				"type": "UTF8"
+			},
+			{
+				"name": "AUFNR_ORG",
+				"type": "UTF8"
+			},
+			{
+				"name": "UKOSTL",
+				"type": "UTF8"
+			},
+			{
+				"name": "ULSTAR",
+				"type": "UTF8"
+			},
+			{
+				"name": "UPRZNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "ACCAS",
+				"type": "UTF8"
+			},
+			{
+				"name": "ACCASTY",
+				"type": "UTF8"
+			},
+			{
+				"name": "LSTAR",
+				"type": "UTF8"
+			},
+			{
+				"name": "AUFNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "AUTYP",
+				"type": "UTF8"
+			},
+			{
+				"name": "PS_PSP_PNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "PS_POSID",
+				"type": "UTF8"
+			},
+			{
+				"name": "PS_PSPID",
+				"type": "UTF8"
+			},
+			{
+				"name": "NPLNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "NPLNR_VORGN",
+				"type": "UTF8"
+			},
+			{
+				"name": "PRZNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "KSTRG",
+				"type": "UTF8"
+			},
+			{
+				"name": "BEMOT",
+				"type": "UTF8"
+			},
+			{
+				"name": "RSRCE",
+				"type": "UTF8"
+			},
+			{
+				"name": "QMNUM",
+				"type": "UTF8"
+			},
+			{
+				"name": "ERKRS",
+				"type": "UTF8"
+			},
+			{
+				"name": "PACCAS",
+				"type": "UTF8"
+			},
+			{
+				"name": "PACCASTY",
+				"type": "UTF8"
+			},
+			{
+				"name": "PLSTAR",
+				"type": "UTF8"
+			},
+			{
+				"name": "PAUFNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "PAUTYP",
+				"type": "UTF8"
+			},
+			{
+				"name": "PPS_POSID",
+				"type": "UTF8"
+			},
+			{
+				"name": "PPS_PSPID",
+				"type": "UTF8"
+			},
+			{
+				"name": "PKDAUF",
+				"type": "UTF8"
+			},
+			{
+				"name": "PKDPOS",
+				"type": "UTF8"
+			},
+			{
+				"name": "PPAOBJNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "PNPLNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "PNPLNR_VORGN",
+				"type": "UTF8"
+			},
+			{
+				"name": "PPRZNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "PKSTRG",
+				"type": "UTF8"
+			},
+			{
+				"name": "CO_ACCASTY_N1",
+				"type": "UTF8"
+			},
+			{
+				"name": "CO_ACCASTY_N2",
+				"type": "UTF8"
+			},
+			{
+				"name": "CO_ACCASTY_N3",
+				"type": "UTF8"
+			},
+			{
+				"name": "CO_ZLENR",
+				"type": "UTF8"
+			},
+			{
+				"name": "CO_BELNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "CO_BUZEI",
+				"type": "UTF8"
+			},
+			{
+				"name": "CO_BUZEI1",
+				"type": "UTF8"
+			},
+			{
+				"name": "CO_BUZEI2",
+				"type": "UTF8"
+			},
+			{
+				"name": "CO_BUZEI5",
+				"type": "UTF8"
+			},
+			{
+				"name": "CO_BUZEI6",
+				"type": "UTF8"
+			},
+			{
+				"name": "CO_BUZEI7",
+				"type": "UTF8"
+			},
+			{
+				"name": "CO_REFBZ",
+				"type": "UTF8"
+			},
+			{
+				"name": "CO_REFBZ1",
+				"type": "UTF8"
+			},
+			{
+				"name": "CO_REFBZ2",
+				"type": "UTF8"
+			},
+			{
+				"name": "CO_REFBZ5",
+				"type": "UTF8"
+			},
+			{
+				"name": "CO_REFBZ6",
+				"type": "UTF8"
+			},
+			{
+				"name": "CO_REFBZ7",
+				"type": "UTF8"
+			},
+			{
+				"name": "WORK_ITEM_ID",
+				"type": "UTF8"
+			},
+			{
+				"name": "FKART",
+				"type": "UTF8"
+			},
+			{
+				"name": "VKORG",
+				"type": "UTF8"
+			},
+			{
+				"name": "VTWEG",
+				"type": "UTF8"
+			},
+			{
+				"name": "SPART",
+				"type": "UTF8"
+			},
+			{
+				"name": "MATNR_COPA",
+				"type": "UTF8"
+			},
+			{
+				"name": "MATKL",
+				"type": "UTF8"
+			},
+			{
+				"name": "KDGRP",
+				"type": "UTF8"
+			},
+			{
+				"name": "LAND1",
+				"type": "UTF8"
+			},
+			{
+				"name": "BRSCH",
+				"type": "UTF8"
+			},
+			{
+				"name": "BZIRK",
+				"type": "UTF8"
+			},
+			{
+				"name": "KUNRE",
+				"type": "UTF8"
+			},
+			{
+				"name": "KUNWE",
+				"type": "UTF8"
+			},
+			{
+				"name": "KONZS",
+				"type": "UTF8"
+			},
+			{
+				"name": "ACDOC_COPA_EEW_DUMMY_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "WWSOR_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "WWPRD_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "WWCOU_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "ROUTE_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "WWPH1_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "WWPH2_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "WWPH3_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "AUART_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "AUGRU_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "VKBUR_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "BWTAR_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "CHARG_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "INCO1_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "KTGRD_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "KTGRM_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "KVGR1_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "KVGR2_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "KVGR3_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "KVGR4_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "KVGR5_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "MVGR1_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "MVGR2_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "MVGR3_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "MVGR4_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "MVGR5_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "PAPH1_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "PAPH2_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "PAPH3_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "VBUND_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "HIE04_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "KMHI01_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "KMHI02_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "KMHI03_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "WWRCU_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "WWEMP_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "WWSTC_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "WWCHN_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "TEMPB_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "WWVDR_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "WWVLC_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "KMLAND_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "KMVKBU_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "KMVKGR_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "WWMTC_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "WWMP1_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "WWMP2_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "WWMP3_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "WWMPL_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "WWSCT_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "KONDM_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "WWBOF_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "WWBRK_PA",
+				"type": "UTF8"
+			},
+			{
+				"name": "RE_BUKRS",
+				"type": "UTF8"
+			},
+			{
+				"name": "RE_ACCOUNT",
+				"type": "UTF8"
+			},
+			{
+				"name": "FIKRS",
+				"type": "UTF8"
+			},
+			{
+				"name": "FISTL",
+				"type": "UTF8"
+			},
+			{
+				"name": "MEASURE",
+				"type": "UTF8"
+			},
+			{
+				"name": "RFUND",
+				"type": "UTF8"
+			},
+			{
+				"name": "RGRANT_NBR",
+				"type": "UTF8"
+			},
+			{
+				"name": "RBUDGET_PD",
+				"type": "UTF8"
+			},
+			{
+				"name": "SFUND",
+				"type": "UTF8"
+			},
+			{
+				"name": "SGRANT_NBR",
+				"type": "UTF8"
+			},
+			{
+				"name": "SBUDGET_PD",
+				"type": "UTF8"
+			},
+			{
+				"name": "VNAME",
+				"type": "UTF8"
+			},
+			{
+				"name": "EGRUP",
+				"type": "UTF8"
+			},
+			{
+				"name": "RECID",
+				"type": "UTF8"
+			},
+			{
+				"name": "VPTNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "BTYPE",
+				"type": "UTF8"
+			},
+			{
+				"name": "ETYPE",
+				"type": "UTF8"
+			},
+			{
+				"name": "PRODPER",
+				"type": "UTF8"
+			},
+			{
+				"name": "SWENR",
+				"type": "UTF8"
+			},
+			{
+				"name": "SGENR",
+				"type": "UTF8"
+			},
+			{
+				"name": "SGRNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "SMENR",
+				"type": "UTF8"
+			},
+			{
+				"name": "RECNNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "SNKSL",
+				"type": "UTF8"
+			},
+			{
+				"name": "SEMPSL",
+				"type": "UTF8"
+			},
+			{
+				"name": "DABRZ",
+				"type": "UTF8"
+			},
+			{
+				"name": "PSWENR",
+				"type": "UTF8"
+			},
+			{
+				"name": "PSGENR",
+				"type": "UTF8"
+			},
+			{
+				"name": "PSGRNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "PSMENR",
+				"type": "UTF8"
+			},
+			{
+				"name": "PRECNNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "PSNKSL",
+				"type": "UTF8"
+			},
+			{
+				"name": "PSEMPSL",
+				"type": "UTF8"
+			},
+			{
+				"name": "PDABRZ",
+				"type": "UTF8"
+			},
+			{
+				"name": "ACDOC_EEW_DUMMY",
+				"type": "UTF8"
+			},
+			{
+				"name": "ZZHRKFT",
+				"type": "UTF8"
+			},
+			{
+				"name": "ZZHRKTX",
+				"type": "UTF8"
+			},
+			{
+				"name": "DUMMY_INCL_EEW_COBL",
+				"type": "UTF8"
+			},
+			{
+				"name": "FUP_ACTION",
+				"type": "UTF8"
+			},
+			{
+				"name": "MIG_SOURCE",
+				"type": "UTF8"
+			},
+			{
+				"name": "MIG_DOCLN",
+				"type": "UTF8"
+			},
+			{
+				"name": "_DATAAGING",
+				"type": "UTF8"
+			},
+			{
+				"name": "OPFLAG",
+				"type": "UTF8"
+			}
+		]
+	}
+}
