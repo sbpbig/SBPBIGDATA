@@ -2582,6 +2582,87 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/PAUSE')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ParquetSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": "ACDOCA_PART_CDC2_ARCHIVE",
+									"wildcardFileName": "*.parquet",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "ParquetReadSettings"
+								}
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DS_PARQUET_SOURCE",
+								"type": "DatasetReference",
+								"parameters": {
+									"FOLDER_NM": "ACDOCA_PART_CDC2_ARCHIVE"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Compress_PARQUET",
+								"type": "DatasetReference",
+								"parameters": {
+									"FOLDER_NM": "ACDOCA_COMPRESS"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "TEST"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/final')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -8650,92 +8731,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/CDC_SNAP_CHANGE')]",
 				"[concat(variables('factoryId'), '/datasets/controltable')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/02_CDC_SNAPSHOT_SCD_BAK2')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "CDC SNAPSHOT",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "CDC_SNAP_CHANGE",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"CDC": {
-										"FOLDER_NM": {
-											"value": "@pipeline().parameters.FOLDER_NM",
-											"type": "Expression"
-										}
-									},
-									"TMPCDC": {
-										"SynapseTableName": {
-											"value": "@concat('TMP_CDC_', pipeline().parameters.TGT_TBL_NM)",
-											"type": "Expression"
-										},
-										"SynapseSchema": {
-											"value": "@pipeline().parameters.TGT_DB_NM",
-											"type": "Expression"
-										}
-									}
-								}
-							},
-							"staging": {
-								"linkedService": {
-									"referenceName": "adls",
-									"type": "LinkedServiceReference"
-								},
-								"folderPath": "synapse-povtug/TMP_STAGING"
-							},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine",
-							"continuationSettings": {
-								"customizedCheckpointKey": "55de936d-2a87-4248-8cdf-6fd70b2812c4"
-							}
-						}
-					}
-				],
-				"concurrency": 1,
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"TGT_TBL_NM": {
-						"type": "string",
-						"defaultValue": "BSEG"
-					},
-					"TGT_DB_NM": {
-						"type": "string",
-						"defaultValue": "dbo"
-					},
-					"FOLDER_NM": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "TEST"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/CDC_SNAP_CHANGE')]"
 			]
 		}
 	]
