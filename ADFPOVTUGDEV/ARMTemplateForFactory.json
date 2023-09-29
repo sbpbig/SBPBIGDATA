@@ -2336,7 +2336,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC_TEST",
+								"referenceName": "DYNAMIC_TEST",
 								"type": "DatasetReference",
 								"parameters": {
 									"SynapseTableName": {
@@ -2542,7 +2542,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DS_PARQUET_SOURCE')]",
-				"[concat(variables('factoryId'), '/datasets/DIRECT_SYNAPSE_DATASET_DYNAMIC_TEST')]",
+				"[concat(variables('factoryId'), '/datasets/DYNAMIC_TEST')]",
 				"[concat(variables('factoryId'), '/datasets/DS_SRC_PROCESS')]",
 				"[concat(variables('factoryId'), '/linkedServices/AzureSynapseAnalytics_test')]"
 			]
@@ -9155,7 +9155,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
+								"referenceName": "DYNAMIC_TEST",
 								"type": "DatasetReference",
 								"parameters": {
 									"SynapseTableName": "VBAP_CDC_SCD2_RB",
@@ -9184,7 +9184,7 @@
 						},
 						"userProperties": [],
 						"linkedServiceName": {
-							"referenceName": "AzureSynapseAnalytics",
+							"referenceName": "AzureSynapseAnalytics_test",
 							"type": "LinkedServiceReference"
 						},
 						"typeProperties": {
@@ -9208,8 +9208,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/PARQUET_DATASET_DYNAMIC')]",
-				"[concat(variables('factoryId'), '/datasets/DIRECT_SYNAPSE_DATASET_DYNAMIC')]",
-				"[concat(variables('factoryId'), '/linkedServices/AzureSynapseAnalytics')]"
+				"[concat(variables('factoryId'), '/datasets/DYNAMIC_TEST')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureSynapseAnalytics_test')]"
 			]
 		},
 		{
@@ -9351,7 +9351,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC_TEST",
+								"referenceName": "DYNAMIC_TEST",
 								"type": "DatasetReference",
 								"parameters": {
 									"SynapseTableName": "tbl_tmp_test",
@@ -9392,7 +9392,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DIRECT_SYNAPSE_DATASET_DYNAMIC_TEST')]",
+				"[concat(variables('factoryId'), '/datasets/DYNAMIC_TEST')]",
 				"[concat(variables('factoryId'), '/datasets/PARQUET_DATASET_DYNAMIC')]"
 			]
 		},
@@ -9509,41 +9509,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DIRECT_SYNAPSE_DATASET_DYNAMIC_TEST')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSynapseAnalytics_test",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"SynapseTableName": {
-						"type": "string"
-					},
-					"SynapseSchema": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": {
-						"value": "@dataset().SynapseSchema",
-						"type": "Expression"
-					},
-					"table": {
-						"value": "@dataset().SynapseTableName",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSynapseAnalytics_test')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/DS_PARQUET_SOURCE')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -9605,6 +9570,41 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/adls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DYNAMIC_TEST')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseAnalytics_test",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SynapseTableName": {
+						"type": "string"
+					},
+					"SynapseSchema": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().SynapseSchema",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().SynapseTableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSynapseAnalytics_test')]"
 			]
 		},
 		{

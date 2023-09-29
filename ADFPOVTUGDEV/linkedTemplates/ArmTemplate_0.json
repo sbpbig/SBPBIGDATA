@@ -521,41 +521,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DIRECT_SYNAPSE_DATASET_DYNAMIC_TEST')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSynapseAnalytics_test",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"SynapseTableName": {
-						"type": "string"
-					},
-					"SynapseSchema": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": {
-						"value": "@dataset().SynapseSchema",
-						"type": "Expression"
-					},
-					"table": {
-						"value": "@dataset().SynapseTableName",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSynapseAnalytics_test')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/DS_PARQUET_SOURCE')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -617,6 +582,41 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/adls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DYNAMIC_TEST')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseAnalytics_test",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SynapseTableName": {
+						"type": "string"
+					},
+					"SynapseSchema": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().SynapseSchema",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().SynapseTableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSynapseAnalytics_test')]"
 			]
 		},
 		{

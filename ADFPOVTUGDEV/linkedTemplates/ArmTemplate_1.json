@@ -2096,7 +2096,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC_TEST",
+								"referenceName": "DYNAMIC_TEST",
 								"type": "DatasetReference",
 								"parameters": {
 									"SynapseTableName": {
@@ -7175,7 +7175,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC",
+								"referenceName": "DYNAMIC_TEST",
 								"type": "DatasetReference",
 								"parameters": {
 									"SynapseTableName": "VBAP_CDC_SCD2_RB",
@@ -7204,7 +7204,7 @@
 						},
 						"userProperties": [],
 						"linkedServiceName": {
-							"referenceName": "AzureSynapseAnalytics",
+							"referenceName": "AzureSynapseAnalytics_test",
 							"type": "LinkedServiceReference"
 						},
 						"typeProperties": {
@@ -7364,7 +7364,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC_TEST",
+								"referenceName": "DYNAMIC_TEST",
 								"type": "DatasetReference",
 								"parameters": {
 									"SynapseTableName": "tbl_tmp_test",
