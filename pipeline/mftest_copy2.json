@@ -43,7 +43,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "DIRECT_SYNAPSE_DATASET_DYNAMIC_TEST",
+						"referenceName": "DYNAMIC_TEST",
 						"type": "DatasetReference",
 						"parameters": {
 							"SynapseTableName": "tbl_tmp_test",

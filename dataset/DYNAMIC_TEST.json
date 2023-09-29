@@ -1,5 +1,5 @@
 {
-	"name": "DIRECT_SYNAPSE_DATASET_DYNAMIC_TEST",
+	"name": "DYNAMIC_TEST",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureSynapseAnalytics_test",
