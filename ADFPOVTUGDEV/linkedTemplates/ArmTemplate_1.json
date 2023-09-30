@@ -2582,7 +2582,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/PAUSE')]",
+			"name": "[concat(parameters('factoryName'), '/PARQUET_COMPRESSION')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -2667,11 +2667,11 @@
 				"parameters": {
 					"SRC_FOLDER_NM": {
 						"type": "string",
-						"defaultValue": "ACDOCA_PART_CDC2_ARCHIVE/2023"
+						"defaultValue": "ACDOCA_PART_CDC2_ARCHIVE/20"
 					},
 					"TGT_FOLDER_NM": {
 						"type": "string",
-						"defaultValue": "ACDOCA_COMPRESS"
+						"defaultValue": "ACDOCA_COMPRESS/20"
 					}
 				},
 				"folder": {
