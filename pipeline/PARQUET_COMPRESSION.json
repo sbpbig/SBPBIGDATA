@@ -21,7 +21,7 @@
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
 							"wildcardFolderPath": {
-								"value": "@pipeline().parameters.SRC_FOLDER_NM",
+								"value": "@concat(pipeline().parameters.SRC_FOLDER_NM,pipeline().parameters.PART)",
 								"type": "Expression"
 							},
 							"wildcardFileName": "*.parquet",
@@ -56,7 +56,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"FOLDER_NM": {
-								"value": "@pipeline().parameters.SRC_FOLDER_NM",
+								"value": "@concat(pipeline().parameters.SRC_FOLDER_NM,pipeline().parameters.PART)",
 								"type": "Expression"
 							}
 						}
@@ -68,7 +68,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"FOLDER_NM": {
-								"value": "@concat(pipeline().parameters.TGT_FOLDER_NM,'/',pipeline().parameters.YEAR)",
+								"value": "@concat(pipeline().parameters.TGT_FOLDER_NM,'/',pipeline().parameters.PART)",
 								"type": "Expression"
 							}
 						}
@@ -84,6 +84,9 @@
 			"TGT_FOLDER_NM": {
 				"type": "string",
 				"defaultValue": "BSEG_COMPRESS"
+			},
+			"PART": {
+				"type": "string"
 			}
 		},
 		"folder": {
