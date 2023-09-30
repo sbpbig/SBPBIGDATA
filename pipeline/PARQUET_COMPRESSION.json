@@ -1,5 +1,5 @@
 {
-	"name": "PAUSE",
+	"name": "PARQUET_COMPRESSION",
 	"properties": {
 		"activities": [
 			{
@@ -79,11 +79,11 @@
 		"parameters": {
 			"SRC_FOLDER_NM": {
 				"type": "string",
-				"defaultValue": "ACDOCA_PART_CDC2_ARCHIVE/2023"
+				"defaultValue": "ACDOCA_PART_CDC2_ARCHIVE/20"
 			},
 			"TGT_FOLDER_NM": {
 				"type": "string",
-				"defaultValue": "ACDOCA_COMPRESS"
+				"defaultValue": "ACDOCA_COMPRESS/20"
 			}
 		},
 		"folder": {
