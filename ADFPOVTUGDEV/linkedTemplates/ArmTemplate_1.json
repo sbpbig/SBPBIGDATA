@@ -2606,7 +2606,7 @@
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
 									"wildcardFolderPath": {
-										"value": "@concat(pipeline().parameters.SRC_FOLDER_NM,'/',pipeline().parameters.YEAR)",
+										"value": "@concat(pipeline().parameters.SRC_FOLDER_NM,pipeline().parameters.PART)",
 										"type": "Expression"
 									},
 									"wildcardFileName": "*.parquet",
@@ -2641,7 +2641,7 @@
 								"type": "DatasetReference",
 								"parameters": {
 									"FOLDER_NM": {
-										"value": "@concat(pipeline().parameters.SRC_FOLDER_NM,'/',pipeline().parameters.YEAR)",
+										"value": "@concat(pipeline().parameters.SRC_FOLDER_NM,pipeline().parameters.PART)",
 										"type": "Expression"
 									}
 								}
@@ -2653,7 +2653,7 @@
 								"type": "DatasetReference",
 								"parameters": {
 									"FOLDER_NM": {
-										"value": "@concat(pipeline().parameters.TGT_FOLDER_NM,'/',pipeline().parameters.YEAR)",
+										"value": "@concat(pipeline().parameters.TGT_FOLDER_NM,'/',pipeline().parameters.PART)",
 										"type": "Expression"
 									}
 								}
@@ -2665,17 +2665,16 @@
 					"elapsedTimeMetric": {}
 				},
 				"parameters": {
-					"YEAR": {
-						"type": "string",
-						"defaultValue": "20"
-					},
 					"SRC_FOLDER_NM": {
 						"type": "string",
-						"defaultValue": "ACDOCA_PART_CDC2_ARCHIVE"
+						"defaultValue": "BSEG_"
 					},
 					"TGT_FOLDER_NM": {
 						"type": "string",
-						"defaultValue": "ACDOCA_COMPRESS"
+						"defaultValue": "BSEG_COMPRESS"
+					},
+					"PART": {
+						"type": "string"
 					}
 				},
 				"folder": {
