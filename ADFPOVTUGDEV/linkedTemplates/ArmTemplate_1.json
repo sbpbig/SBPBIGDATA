@@ -2605,7 +2605,7 @@
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
-									"wildcardFolderPath": "ACDOCA_PART_CDC2_ARCHIVE",
+									"wildcardFolderPath": "test_cdc_stream_ACDOCA/2023",
 									"wildcardFileName": "*.parquet",
 									"enablePartitionDiscovery": false
 								},
@@ -2637,7 +2637,7 @@
 								"referenceName": "DS_PARQUET_SOURCE",
 								"type": "DatasetReference",
 								"parameters": {
-									"FOLDER_NM": "ACDOCA_PART_CDC2_ARCHIVE"
+									"FOLDER_NM": "test_cdc_stream_ACDOCA/2023"
 								}
 							}
 						],
@@ -2646,7 +2646,7 @@
 								"referenceName": "Compress_PARQUET",
 								"type": "DatasetReference",
 								"parameters": {
-									"FOLDER_NM": "ACDOCA_COMPRESS"
+									"FOLDER_NM": "ACDOCA_COMPRESS/2023"
 								}
 							}
 						]
