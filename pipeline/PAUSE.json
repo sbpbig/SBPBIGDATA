@@ -78,10 +78,12 @@
 		],
 		"parameters": {
 			"SRC_FOLDER_NM": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "ACDOCA_PART_CDC2_ARCHIVE/2023"
 			},
 			"TGT_FOLDER_NM": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "ACDOCA_COMPRESS"
 			}
 		},
 		"folder": {
