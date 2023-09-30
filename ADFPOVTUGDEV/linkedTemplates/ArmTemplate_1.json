@@ -2605,7 +2605,10 @@
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
-									"wildcardFolderPath": "test_cdc_stream_ACDOCA/2023",
+									"wildcardFolderPath": {
+										"value": "@pipeline().parameters.SRC_FOLDER_NM",
+										"type": "Expression"
+									},
 									"wildcardFileName": "*.parquet",
 									"enablePartitionDiscovery": false
 								},
@@ -2637,7 +2640,10 @@
 								"referenceName": "DS_PARQUET_SOURCE",
 								"type": "DatasetReference",
 								"parameters": {
-									"FOLDER_NM": "test_cdc_stream_ACDOCA/2023"
+									"FOLDER_NM": {
+										"value": "@pipeline().parameters.SRC_FOLDER_NM",
+										"type": "Expression"
+									}
 								}
 							}
 						],
@@ -2646,7 +2652,10 @@
 								"referenceName": "Compress_PARQUET",
 								"type": "DatasetReference",
 								"parameters": {
-									"FOLDER_NM": "ACDOCA_COMPRESS/2023"
+									"FOLDER_NM": {
+										"value": "@pipeline().parameters.TGT_FOLDER_NM",
+										"type": "Expression"
+									}
 								}
 							}
 						]
@@ -2654,6 +2663,14 @@
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"SRC_FOLDER_NM": {
+						"type": "string"
+					},
+					"TGT_FOLDER_NM": {
+						"type": "string"
+					}
 				},
 				"folder": {
 					"name": "TEST"
