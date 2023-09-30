@@ -4519,7 +4519,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Copy data1",
+						"name": "COMPRESS PARQUET",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
