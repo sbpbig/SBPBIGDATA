@@ -4598,13 +4598,15 @@
 				"parameters": {
 					"YEAR": {
 						"type": "string",
-						"defaultValue": "ACDOCA_PART_CDC2_ARCHIVE/20"
+						"defaultValue": "20"
 					},
 					"SRC_FOLDER_NM": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "ACDOCA_PART_CDC2_ARCHIVE"
 					},
 					"TGT_FOLDER_NM": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "ACDOCA_COMPRESS"
 					}
 				},
 				"folder": {
