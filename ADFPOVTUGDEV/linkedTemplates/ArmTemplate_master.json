@@ -165,11 +165,11 @@
 					"adls_properties_typeProperties_url": {
 						"value": "[parameters('adls_properties_typeProperties_url')]"
 					},
-					"integrationRuntime-ADFPOVTUGDEV_properties_typeProperties_linkedInfo_resourceId": {
-						"value": "[parameters('integrationRuntime-ADFPOVTUGDEV_properties_typeProperties_linkedInfo_resourceId')]"
-					},
 					"StorageEvent_Test_properties_typeProperties_scope": {
 						"value": "[parameters('StorageEvent_Test_properties_typeProperties_scope')]"
+					},
+					"integrationRuntime-ADFPOVTUGDEV_properties_typeProperties_linkedInfo_resourceId": {
+						"value": "[parameters('integrationRuntime-ADFPOVTUGDEV_properties_typeProperties_linkedInfo_resourceId')]"
 					}
 				}
 			},

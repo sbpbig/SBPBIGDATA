@@ -27,71 +27,19 @@
 			"type": "string",
 			"defaultValue": "https://stpovtug.dfs.core.windows.net/"
 		},
-		"integrationRuntime-ADFPOVTUGDEV_properties_typeProperties_linkedInfo_resourceId": {
-			"type": "string",
-			"defaultValue": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourcegroups/POV_TUG/providers/Microsoft.DataFactory/factories/ADF-POV-TUG/integrationruntimes/integrationRuntime-POV-TUG"
-		},
 		"StorageEvent_Test_properties_typeProperties_scope": {
 			"type": "string",
 			"defaultValue": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourceGroups/POV_TUG/providers/Microsoft.Storage/storageAccounts/stpovtug"
+		},
+		"integrationRuntime-ADFPOVTUGDEV_properties_typeProperties_linkedInfo_resourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourcegroups/POV_TUG/providers/Microsoft.DataFactory/factories/ADF-POV-TUG/integrationruntimes/integrationRuntime-POV-TUG"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
-		{
-			"name": "[concat(parameters('factoryName'), '/DUMMY')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Set variable1",
-						"type": "SetVariable",
-						"dependsOn": [],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "INPUT",
-							"value": "1"
-						}
-					},
-					{
-						"name": "Wait1",
-						"type": "Wait",
-						"dependsOn": [
-							{
-								"activity": "Set variable1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"waitTimeInSeconds": 60
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"variables": {
-					"INPUT": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "TEST"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AzureSynapseAnalytics')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -136,6 +84,26 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/StorageEvent_Test')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/synapse-povtug/blobs/CDC_TEMP/",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('StorageEvent_Test_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/integrationRuntime-ADFPOVTUGDEV')]",
 			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
 			"apiVersion": "2018-06-01",
@@ -149,84 +117,6 @@
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/00_TESTSCRIPT')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "SCD2_SCD2TEST",
-						"type": "Script",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzureSynapseAnalytics",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "INSERT INTO dbo.BSEG_CDC_SCD2_TEST (MANDT,BUKRS,BELNR,GJAHR,BUZEI,BUZID,AUGDT,AUGCP,AUGBL,BSCHL,KOART,UMSKZ,UMSKS,ZUMSK,SHKZG,GSBER,PARGB,MWSKZ,QSSKZ,DMBTR,WRBTR,KZBTR,PSWBT,PSWSL,TXBHW,TXBFW,MWSTS,WMWST,HWBAS,FWBAS,HWZUZ,FWZUZ,SHZUZ,STEKZ,MWART,TXGRP,KTOSL,QSSHB,KURSR,GBETR,BDIFF,BDIF2,VALUT,ZUONR,SGTXT,ZINKZ,VBUND,BEWAR,ALTKT,VORGN,FDLEV,FDGRP,FDWBT,FDTAG,FKONT,KOKRS,KOSTL,PROJN,AUFNR,VBELN,VBEL2,POSN2,ETEN2,ANLN1,ANLN2,ANBWA,BZDAT,PERNR,XUMSW,XHRES,XKRES,XOPVW,XCPDD,XSKST,XSAUF,XSPRO,XSERG,XFAKT,XUMAN,XANET,XSKRL,XINVE,XPANZ,XAUTO,XNCOP,XZAHL,SAKNR,HKONT,KUNNR,LIFNR,FILKD,XBILK,GVTYP,HZUON,ZFBDT,ZTERM,ZBD1T,ZBD2T,ZBD3T,ZBD1P,ZBD2P,SKFBT,SKNTO,WSKTO,ZLSCH,ZLSPR,ZBFIX,HBKID,BVTYP,NEBTR,MWSK1,DMBT1,WRBT1,MWSK2,DMBT2,WRBT2,MWSK3,DMBT3,WRBT3,REBZG,REBZJ,REBZZ,REBZT,ZOLLT,ZOLLD,LZBKZ,LANDL,DIEKZ,SAMNR,ABPER,VRSKZ,VRSDT,DISBN,DISBJ,DISBZ,WVERW,ANFBN,ANFBJ,ANFBU,ANFAE,BLNBT,BLNKZ,BLNPZ,MSCHL,MANSP,MADAT,MANST,MABER,ESRNR,ESRRE,ESRPZ,KLIBT,QSZNR,QBSHB,QSFBT,NAVHW,NAVFW,MATNR,WERKS,MENGE,MEINS,ERFMG,ERFME,BPMNG,BPRME,EBELN,EBELP,ZEKKN,ELIKZ,VPRSV,PEINH,BWKEY,BWTAR,BUSTW,REWRT,REWWR,BONFB,BUALT,PSALT,NPREI,TBTKZ,SPGRP,SPGRM,SPGRT,SPGRG,SPGRV,SPGRQ,STCEG,EGBLD,EGLLD,RSTGR,RYACQ,RPACQ,RDIFF,RDIF2,PRCTR,XHKOM,VNAME,RECID,EGRUP,VPTNR,VERTT,VERTN,VBEWA,DEPOT,TXJCD,IMKEY,DABRZ,POPTS,FIPOS,KSTRG,NPLNR,AUFPL,APLZL,PROJK,PAOBJNR,PASUBNR,SPGRS,SPGRC,BTYPE,ETYPE,XEGDR,LNRAN,HRKFT,DMBE2,DMBE3,DMB21,DMB22,DMB23,DMB31,DMB32,DMB33,MWST2,MWST3,NAVH2,NAVH3,SKNT2,SKNT3,BDIF3,RDIF3,HWMET,GLUPM,XRAGL,UZAWE,LOKKT,FISTL,GEBER,STBUK,TXBH2,TXBH3,PPRCT,XREF1,XREF2,KBLNR,KBLPOS,STTAX,FKBER,OBZEI,XNEGP,RFZEI,CCBTC,KKBER,EMPFB,XREF3,DTWS1,DTWS2,DTWS3,DTWS4,GRICD,GRIRG,GITYP,XPYPR,KIDNO,ABSBT,IDXSP,LINFV,KONTT,KONTL,UEBGDAT,TXDAT,AGZEI,PYCUR,PYAMT,BUPLA,SECCO,LSTAR,CESSION_KZ,PRZNR,PPDIFF,PPDIF2,PPDIF3,PENLC1,PENLC2,PENLC3,PENFC,PENDAYS,PENRC,GRANT_NBR,SCTAX,FKBER_LONG,GMVKZ,SRTYPE,INTRENO,MEASURE,AUGGJ,PPA_EX_IND,DOCLN,SEGMENT,PSEGMENT,PFKBER,HKTID,KSTAR,XLGCLR,TAXPS,PAYS_PROV,PAYS_TRAN,MNDID,XFRGE_BSEG,AWTYP,AWKEY,AWSYS,POSNR,BUZEI_SENDER,H_MONAT,H_BSTAT,H_BUDAT,H_BLDAT,H_WAERS,H_BLART,H_HWAER,H_HWAE2,H_HWAE3,NETDT,SK1DT,SK2DT,_DATAAGING,FQFTYPE,LQITEM,GKONT,GKART,GHKON,SQUAN,ANLN2_PN,BWASL_PN,BZDAT_PN,XVABG_PN,ANBTR_PN,PROZS_PN,ZZHRKFT,ZZHRKTX,DUMMY_INCL_EEW_COBL,RE_BUKRS,RE_ACCOUNT,PGEBER,PGRANT_NBR,BUDGET_PD,PBUDGET_PD,J_1TPBUPL,PEROP_BEG,PEROP_END,FASTPAY,IGNR_IVREF,FMFGUS_KEY,FMXDOCNR,FMXYEAR,FMXDOCLN,FMXZEKKN,PRODPER,GST_PART,PLC_SUP,HSN_SAC,RECRF,INWARD_NO,INWARD_DT,GROUND_NO,GROUND_DT,GROUND_TYP,PYMTKEY,START_DATE,ACTIVE_FLAG,DELETE_FLAG)\nSELECT MANDT,BUKRS,BELNR,GJAHR,BUZEI,BUZID,AUGDT,AUGCP,AUGBL,BSCHL,KOART,UMSKZ,UMSKS,ZUMSK,SHKZG,GSBER,PARGB,MWSKZ,QSSKZ,DMBTR,WRBTR,KZBTR,PSWBT,PSWSL,TXBHW,TXBFW,MWSTS,WMWST,HWBAS,FWBAS,HWZUZ,FWZUZ,SHZUZ,STEKZ,MWART,TXGRP,KTOSL,QSSHB,KURSR,GBETR,BDIFF,BDIF2,VALUT,ZUONR,SGTXT,ZINKZ,VBUND,BEWAR,ALTKT,VORGN,FDLEV,FDGRP,FDWBT,FDTAG,FKONT,KOKRS,KOSTL,PROJN,AUFNR,VBELN,VBEL2,POSN2,ETEN2,ANLN1,ANLN2,ANBWA,BZDAT,PERNR,XUMSW,XHRES,XKRES,XOPVW,XCPDD,XSKST,XSAUF,XSPRO,XSERG,XFAKT,XUMAN,XANET,XSKRL,XINVE,XPANZ,XAUTO,XNCOP,XZAHL,SAKNR,HKONT,KUNNR,LIFNR,FILKD,XBILK,GVTYP,HZUON,ZFBDT,ZTERM,ZBD1T,ZBD2T,ZBD3T,ZBD1P,ZBD2P,SKFBT,SKNTO,WSKTO,ZLSCH,ZLSPR,ZBFIX,HBKID,BVTYP,NEBTR,MWSK1,DMBT1,WRBT1,MWSK2,DMBT2,WRBT2,MWSK3,DMBT3,WRBT3,REBZG,REBZJ,REBZZ,REBZT,ZOLLT,ZOLLD,LZBKZ,LANDL,DIEKZ,SAMNR,ABPER,VRSKZ,VRSDT,DISBN,DISBJ,DISBZ,WVERW,ANFBN,ANFBJ,ANFBU,ANFAE,BLNBT,BLNKZ,BLNPZ,MSCHL,MANSP,MADAT,MANST,MABER,ESRNR,ESRRE,ESRPZ,KLIBT,QSZNR,QBSHB,QSFBT,NAVHW,NAVFW,MATNR,WERKS,MENGE,MEINS,ERFMG,ERFME,BPMNG,BPRME,EBELN,EBELP,ZEKKN,ELIKZ,VPRSV,PEINH,BWKEY,BWTAR,BUSTW,REWRT,REWWR,BONFB,BUALT,PSALT,NPREI,TBTKZ,SPGRP,SPGRM,SPGRT,SPGRG,SPGRV,SPGRQ,STCEG,EGBLD,EGLLD,RSTGR,RYACQ,RPACQ,RDIFF,RDIF2,PRCTR,XHKOM,VNAME,RECID,EGRUP,VPTNR,VERTT,VERTN,VBEWA,DEPOT,TXJCD,IMKEY,DABRZ,POPTS,FIPOS,KSTRG,NPLNR,AUFPL,APLZL,PROJK,PAOBJNR,PASUBNR,SPGRS,SPGRC,BTYPE,ETYPE,XEGDR,LNRAN,HRKFT,DMBE2,DMBE3,DMB21,DMB22,DMB23,DMB31,DMB32,DMB33,MWST2,MWST3,NAVH2,NAVH3,SKNT2,SKNT3,BDIF3,RDIF3,HWMET,GLUPM,XRAGL,UZAWE,LOKKT,FISTL,GEBER,STBUK,TXBH2,TXBH3,PPRCT,XREF1,XREF2,KBLNR,KBLPOS,STTAX,FKBER,OBZEI,XNEGP,RFZEI,CCBTC,KKBER,EMPFB,XREF3,DTWS1,DTWS2,DTWS3,DTWS4,GRICD,GRIRG,GITYP,XPYPR,KIDNO,ABSBT,IDXSP,LINFV,KONTT,KONTL,UEBGDAT,TXDAT,AGZEI,PYCUR,PYAMT,BUPLA,SECCO,LSTAR,CESSION_KZ,PRZNR,PPDIFF,PPDIF2,PPDIF3,PENLC1,PENLC2,PENLC3,PENFC,PENDAYS,PENRC,GRANT_NBR,SCTAX,FKBER_LONG,GMVKZ,SRTYPE,INTRENO,MEASURE,AUGGJ,PPA_EX_IND,DOCLN,SEGMENT,PSEGMENT,PFKBER,HKTID,KSTAR,XLGCLR,TAXPS,PAYS_PROV,PAYS_TRAN,MNDID,XFRGE_BSEG,AWTYP,AWKEY,AWSYS,POSNR,BUZEI_SENDER,H_MONAT,H_BSTAT,H_BUDAT,H_BLDAT,H_WAERS,H_BLART,H_HWAER,H_HWAE2,H_HWAE3,NETDT,SK1DT,SK2DT,_DATAAGING,FQFTYPE,LQITEM,GKONT,GKART,GHKON,SQUAN,ANLN2_PN,BWASL_PN,BZDAT_PN,XVABG_PN,ANBTR_PN,PROZS_PN,ZZHRKFT,ZZHRKTX,DUMMY_INCL_EEW_COBL,RE_BUKRS,RE_ACCOUNT,PGEBER,PGRANT_NBR,BUDGET_PD,PBUDGET_PD,J_1TPBUPL,PEROP_BEG,PEROP_END,FASTPAY,IGNR_IVREF,FMFGUS_KEY,FMXDOCNR,FMXYEAR,FMXDOCLN,FMXZEKKN,PRODPER,GST_PART,PLC_SUP,HSN_SAC,RECRF,INWARD_NO,INWARD_DT,GROUND_NO,GROUND_DT,GROUND_TYP,PYMTKEY,START_DATE,ACTIVE_FLAG,DELETE_FLAG\nFROM dbo.BSEG_CDC_SCD2;"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "TEMP_SCD2TEST2",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "SCD2_SCD2TEST",
-								"dependencyConditions": [
-									"Completed"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzureSynapseAnalytics",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "INSERT INTO dbo.BSEG_CDC_SCD2_TEST2 (MANDT,BUKRS,BELNR,GJAHR,BUZEI,BUZID,AUGDT,AUGCP,AUGBL,BSCHL,KOART,UMSKZ,UMSKS,ZUMSK,SHKZG,GSBER,PARGB,MWSKZ,QSSKZ,DMBTR,WRBTR,KZBTR,PSWBT,PSWSL,TXBHW,TXBFW,MWSTS,WMWST,HWBAS,FWBAS,HWZUZ,FWZUZ,SHZUZ,STEKZ,MWART,TXGRP,KTOSL,QSSHB,KURSR,GBETR,BDIFF,BDIF2,VALUT,ZUONR,SGTXT,ZINKZ,VBUND,BEWAR,ALTKT,VORGN,FDLEV,FDGRP,FDWBT,FDTAG,FKONT,KOKRS,KOSTL,PROJN,AUFNR,VBELN,VBEL2,POSN2,ETEN2,ANLN1,ANLN2,ANBWA,BZDAT,PERNR,XUMSW,XHRES,XKRES,XOPVW,XCPDD,XSKST,XSAUF,XSPRO,XSERG,XFAKT,XUMAN,XANET,XSKRL,XINVE,XPANZ,XAUTO,XNCOP,XZAHL,SAKNR,HKONT,KUNNR,LIFNR,FILKD,XBILK,GVTYP,HZUON,ZFBDT,ZTERM,ZBD1T,ZBD2T,ZBD3T,ZBD1P,ZBD2P,SKFBT,SKNTO,WSKTO,ZLSCH,ZLSPR,ZBFIX,HBKID,BVTYP,NEBTR,MWSK1,DMBT1,WRBT1,MWSK2,DMBT2,WRBT2,MWSK3,DMBT3,WRBT3,REBZG,REBZJ,REBZZ,REBZT,ZOLLT,ZOLLD,LZBKZ,LANDL,DIEKZ,SAMNR,ABPER,VRSKZ,VRSDT,DISBN,DISBJ,DISBZ,WVERW,ANFBN,ANFBJ,ANFBU,ANFAE,BLNBT,BLNKZ,BLNPZ,MSCHL,MANSP,MADAT,MANST,MABER,ESRNR,ESRRE,ESRPZ,KLIBT,QSZNR,QBSHB,QSFBT,NAVHW,NAVFW,MATNR,WERKS,MENGE,MEINS,ERFMG,ERFME,BPMNG,BPRME,EBELN,EBELP,ZEKKN,ELIKZ,VPRSV,PEINH,BWKEY,BWTAR,BUSTW,REWRT,REWWR,BONFB,BUALT,PSALT,NPREI,TBTKZ,SPGRP,SPGRM,SPGRT,SPGRG,SPGRV,SPGRQ,STCEG,EGBLD,EGLLD,RSTGR,RYACQ,RPACQ,RDIFF,RDIF2,PRCTR,XHKOM,VNAME,RECID,EGRUP,VPTNR,VERTT,VERTN,VBEWA,DEPOT,TXJCD,IMKEY,DABRZ,POPTS,FIPOS,KSTRG,NPLNR,AUFPL,APLZL,PROJK,PAOBJNR,PASUBNR,SPGRS,SPGRC,BTYPE,ETYPE,XEGDR,LNRAN,HRKFT,DMBE2,DMBE3,DMB21,DMB22,DMB23,DMB31,DMB32,DMB33,MWST2,MWST3,NAVH2,NAVH3,SKNT2,SKNT3,BDIF3,RDIF3,HWMET,GLUPM,XRAGL,UZAWE,LOKKT,FISTL,GEBER,STBUK,TXBH2,TXBH3,PPRCT,XREF1,XREF2,KBLNR,KBLPOS,STTAX,FKBER,OBZEI,XNEGP,RFZEI,CCBTC,KKBER,EMPFB,XREF3,DTWS1,DTWS2,DTWS3,DTWS4,GRICD,GRIRG,GITYP,XPYPR,KIDNO,ABSBT,IDXSP,LINFV,KONTT,KONTL,UEBGDAT,TXDAT,AGZEI,PYCUR,PYAMT,BUPLA,SECCO,LSTAR,CESSION_KZ,PRZNR,PPDIFF,PPDIF2,PPDIF3,PENLC1,PENLC2,PENLC3,PENFC,PENDAYS,PENRC,GRANT_NBR,SCTAX,FKBER_LONG,GMVKZ,SRTYPE,INTRENO,MEASURE,AUGGJ,PPA_EX_IND,DOCLN,SEGMENT,PSEGMENT,PFKBER,HKTID,KSTAR,XLGCLR,TAXPS,PAYS_PROV,PAYS_TRAN,MNDID,XFRGE_BSEG,AWTYP,AWKEY,AWSYS,POSNR,BUZEI_SENDER,H_MONAT,H_BSTAT,H_BUDAT,H_BLDAT,H_WAERS,H_BLART,H_HWAER,H_HWAE2,H_HWAE3,NETDT,SK1DT,SK2DT,_DATAAGING,FQFTYPE,LQITEM,GKONT,GKART,GHKON,SQUAN,ANLN2_PN,BWASL_PN,BZDAT_PN,XVABG_PN,ANBTR_PN,PROZS_PN,ZZHRKFT,ZZHRKTX,DUMMY_INCL_EEW_COBL,RE_BUKRS,RE_ACCOUNT,PGEBER,PGRANT_NBR,BUDGET_PD,PBUDGET_PD,J_1TPBUPL,PEROP_BEG,PEROP_END,FASTPAY,IGNR_IVREF,FMFGUS_KEY,FMXDOCNR,FMXYEAR,FMXDOCLN,FMXZEKKN,PRODPER,GST_PART,PLC_SUP,HSN_SAC,RECRF,INWARD_NO,INWARD_DT,GROUND_NO,GROUND_DT,GROUND_TYP,PYMTKEY,START_DATE,ACTIVE_FLAG,DELETE_FLAG)\nSELECT MANDT,BUKRS,BELNR,GJAHR,BUZEI,BUZID,AUGDT,AUGCP,AUGBL,BSCHL,KOART,UMSKZ,UMSKS,ZUMSK,SHKZG,GSBER,PARGB,MWSKZ,QSSKZ,DMBTR,WRBTR,KZBTR,PSWBT,PSWSL,TXBHW,TXBFW,MWSTS,WMWST,HWBAS,FWBAS,HWZUZ,FWZUZ,SHZUZ,STEKZ,MWART,TXGRP,KTOSL,QSSHB,KURSR,GBETR,BDIFF,BDIF2,VALUT,ZUONR,SGTXT,ZINKZ,VBUND,BEWAR,ALTKT,VORGN,FDLEV,FDGRP,FDWBT,FDTAG,FKONT,KOKRS,KOSTL,PROJN,AUFNR,VBELN,VBEL2,POSN2,ETEN2,ANLN1,ANLN2,ANBWA,BZDAT,PERNR,XUMSW,XHRES,XKRES,XOPVW,XCPDD,XSKST,XSAUF,XSPRO,XSERG,XFAKT,XUMAN,XANET,XSKRL,XINVE,XPANZ,XAUTO,XNCOP,XZAHL,SAKNR,HKONT,KUNNR,LIFNR,FILKD,XBILK,GVTYP,HZUON,ZFBDT,ZTERM,ZBD1T,ZBD2T,ZBD3T,ZBD1P,ZBD2P,SKFBT,SKNTO,WSKTO,ZLSCH,ZLSPR,ZBFIX,HBKID,BVTYP,NEBTR,MWSK1,DMBT1,WRBT1,MWSK2,DMBT2,WRBT2,MWSK3,DMBT3,WRBT3,REBZG,REBZJ,REBZZ,REBZT,ZOLLT,ZOLLD,LZBKZ,LANDL,DIEKZ,SAMNR,ABPER,VRSKZ,VRSDT,DISBN,DISBJ,DISBZ,WVERW,ANFBN,ANFBJ,ANFBU,ANFAE,BLNBT,BLNKZ,BLNPZ,MSCHL,MANSP,MADAT,MANST,MABER,ESRNR,ESRRE,ESRPZ,KLIBT,QSZNR,QBSHB,QSFBT,NAVHW,NAVFW,MATNR,WERKS,MENGE,MEINS,ERFMG,ERFME,BPMNG,BPRME,EBELN,EBELP,ZEKKN,ELIKZ,VPRSV,PEINH,BWKEY,BWTAR,BUSTW,REWRT,REWWR,BONFB,BUALT,PSALT,NPREI,TBTKZ,SPGRP,SPGRM,SPGRT,SPGRG,SPGRV,SPGRQ,STCEG,EGBLD,EGLLD,RSTGR,RYACQ,RPACQ,RDIFF,RDIF2,PRCTR,XHKOM,VNAME,RECID,EGRUP,VPTNR,VERTT,VERTN,VBEWA,DEPOT,TXJCD,IMKEY,DABRZ,POPTS,FIPOS,KSTRG,NPLNR,AUFPL,APLZL,PROJK,PAOBJNR,PASUBNR,SPGRS,SPGRC,BTYPE,ETYPE,XEGDR,LNRAN,HRKFT,DMBE2,DMBE3,DMB21,DMB22,DMB23,DMB31,DMB32,DMB33,MWST2,MWST3,NAVH2,NAVH3,SKNT2,SKNT3,BDIF3,RDIF3,HWMET,GLUPM,XRAGL,UZAWE,LOKKT,FISTL,GEBER,STBUK,TXBH2,TXBH3,PPRCT,XREF1,XREF2,KBLNR,KBLPOS,STTAX,FKBER,OBZEI,XNEGP,RFZEI,CCBTC,KKBER,EMPFB,XREF3,DTWS1,DTWS2,DTWS3,DTWS4,GRICD,GRIRG,GITYP,XPYPR,KIDNO,ABSBT,IDXSP,LINFV,KONTT,KONTL,UEBGDAT,TXDAT,AGZEI,PYCUR,PYAMT,BUPLA,SECCO,LSTAR,CESSION_KZ,PRZNR,PPDIFF,PPDIF2,PPDIF3,PENLC1,PENLC2,PENLC3,PENFC,PENDAYS,PENRC,GRANT_NBR,SCTAX,FKBER_LONG,GMVKZ,SRTYPE,INTRENO,MEASURE,AUGGJ,PPA_EX_IND,DOCLN,SEGMENT,PSEGMENT,PFKBER,HKTID,KSTAR,XLGCLR,TAXPS,PAYS_PROV,PAYS_TRAN,MNDID,XFRGE_BSEG,AWTYP,AWKEY,AWSYS,POSNR,BUZEI_SENDER,H_MONAT,H_BSTAT,H_BUDAT,H_BLDAT,H_WAERS,H_BLART,H_HWAER,H_HWAE2,H_HWAE3,NETDT,SK1DT,SK2DT,_DATAAGING,FQFTYPE,LQITEM,GKONT,GKART,GHKON,SQUAN,ANLN2_PN,BWASL_PN,BZDAT_PN,XVABG_PN,ANBTR_PN,PROZS_PN,ZZHRKFT,ZZHRKTX,DUMMY_INCL_EEW_COBL,RE_BUKRS,RE_ACCOUNT,PGEBER,PGRANT_NBR,BUDGET_PD,PBUDGET_PD,J_1TPBUPL,PEROP_BEG,PEROP_END,FASTPAY,IGNR_IVREF,FMFGUS_KEY,FMXDOCNR,FMXYEAR,FMXDOCLN,FMXZEKKN,PRODPER,GST_PART,PLC_SUP,HSN_SAC,RECRF,INWARD_NO,INWARD_DT,GROUND_NO,GROUND_DT,GROUND_TYP,PYMTKEY,GETDATE(),ACTIVE_FLAG,DELETE_FLAG\nFROM dbo.BSEG_CDC_TEMP;"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "TEST"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSynapseAnalytics')]"
-			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/01_LOAD_INITIAL_LOAD_TO_BACKUP')]",
@@ -300,51 +190,6 @@
 								{
 									"type": "Query",
 									"text": "INSERT INTO dbo.BSEG_CDC_TEMP (AEDATTM,MANDT,BUKRS,BELNR,GJAHR,BUZEI,BUZID,AUGDT,AUGCP,AUGBL,BSCHL,KOART,UMSKZ,UMSKS,ZUMSK,SHKZG,GSBER,PARGB,MWSKZ,QSSKZ,DMBTR,WRBTR,KZBTR,PSWBT,PSWSL,TXBHW,TXBFW,MWSTS,WMWST,HWBAS,FWBAS,HWZUZ,FWZUZ,SHZUZ,STEKZ,MWART,TXGRP,KTOSL,QSSHB,KURSR,GBETR,BDIFF,BDIF2,VALUT,ZUONR,SGTXT,ZINKZ,VBUND,BEWAR,ALTKT,VORGN,FDLEV,FDGRP,FDWBT,FDTAG,FKONT,KOKRS,KOSTL,PROJN,AUFNR,VBELN,VBEL2,POSN2,ETEN2,ANLN1,ANLN2,ANBWA,BZDAT,PERNR,XUMSW,XHRES,XKRES,XOPVW,XCPDD,XSKST,XSAUF,XSPRO,XSERG,XFAKT,XUMAN,XANET,XSKRL,XINVE,XPANZ,XAUTO,XNCOP,XZAHL,SAKNR,HKONT,KUNNR,LIFNR,FILKD,XBILK,GVTYP,HZUON,ZFBDT,ZTERM,ZBD1T,ZBD2T,ZBD3T,ZBD1P,ZBD2P,SKFBT,SKNTO,WSKTO,ZLSCH,ZLSPR,ZBFIX,HBKID,BVTYP,NEBTR,MWSK1,DMBT1,WRBT1,MWSK2,DMBT2,WRBT2,MWSK3,DMBT3,WRBT3,REBZG,REBZJ,REBZZ,REBZT,ZOLLT,ZOLLD,LZBKZ,LANDL,DIEKZ,SAMNR,ABPER,VRSKZ,VRSDT,DISBN,DISBJ,DISBZ,WVERW,ANFBN,ANFBJ,ANFBU,ANFAE,BLNBT,BLNKZ,BLNPZ,MSCHL,MANSP,MADAT,MANST,MABER,ESRNR,ESRRE,ESRPZ,KLIBT,QSZNR,QBSHB,QSFBT,NAVHW,NAVFW,MATNR,WERKS,MENGE,MEINS,ERFMG,ERFME,BPMNG,BPRME,EBELN,EBELP,ZEKKN,ELIKZ,VPRSV,PEINH,BWKEY,BWTAR,BUSTW,REWRT,REWWR,BONFB,BUALT,PSALT,NPREI,TBTKZ,SPGRP,SPGRM,SPGRT,SPGRG,SPGRV,SPGRQ,STCEG,EGBLD,EGLLD,RSTGR,RYACQ,RPACQ,RDIFF,RDIF2,PRCTR,XHKOM,VNAME,RECID,EGRUP,VPTNR,VERTT,VERTN,VBEWA,DEPOT,TXJCD,IMKEY,DABRZ,POPTS,FIPOS,KSTRG,NPLNR,AUFPL,APLZL,PROJK,PAOBJNR,PASUBNR,SPGRS,SPGRC,BTYPE,ETYPE,XEGDR,LNRAN,HRKFT,DMBE2,DMBE3,DMB21,DMB22,DMB23,DMB31,DMB32,DMB33,MWST2,MWST3,NAVH2,NAVH3,SKNT2,SKNT3,BDIF3,RDIF3,HWMET,GLUPM,XRAGL,UZAWE,LOKKT,FISTL,GEBER,STBUK,TXBH2,TXBH3,PPRCT,XREF1,XREF2,KBLNR,KBLPOS,STTAX,FKBER,OBZEI,XNEGP,RFZEI,CCBTC,KKBER,EMPFB,XREF3,DTWS1,DTWS2,DTWS3,DTWS4,GRICD,GRIRG,GITYP,XPYPR,KIDNO,ABSBT,IDXSP,LINFV,KONTT,KONTL,UEBGDAT,TXDAT,AGZEI,PYCUR,PYAMT,BUPLA,SECCO,LSTAR,CESSION_KZ,PRZNR,PPDIFF,PPDIF2,PPDIF3,PENLC1,PENLC2,PENLC3,PENFC,PENDAYS,PENRC,GRANT_NBR,SCTAX,FKBER_LONG,GMVKZ,SRTYPE,INTRENO,MEASURE,AUGGJ,PPA_EX_IND,DOCLN,SEGMENT,PSEGMENT,PFKBER,HKTID,KSTAR,XLGCLR,TAXPS,PAYS_PROV,PAYS_TRAN,MNDID,XFRGE_BSEG,AWTYP,AWKEY,AWSYS,POSNR,BUZEI_SENDER,H_MONAT,H_BSTAT,H_BUDAT,H_BLDAT,H_WAERS,H_BLART,H_HWAER,H_HWAE2,H_HWAE3,NETDT,SK1DT,SK2DT,_DATAAGING,FQFTYPE,LQITEM,GKONT,GKART,GHKON,SQUAN,ANLN2_PN,BWASL_PN,BZDAT_PN,XVABG_PN,ANBTR_PN,PROZS_PN,ZZHRKFT,ZZHRKTX,DUMMY_INCL_EEW_COBL,RE_BUKRS,RE_ACCOUNT,PGEBER,PGRANT_NBR,BUDGET_PD,PBUDGET_PD,J_1TPBUPL,PEROP_BEG,PEROP_END,FASTPAY,IGNR_IVREF,FMFGUS_KEY,FMXDOCNR,FMXYEAR,FMXDOCLN,FMXZEKKN,PRODPER,GST_PART,PLC_SUP,HSN_SAC,RECRF,INWARD_NO,INWARD_DT,GROUND_NO,GROUND_DT,GROUND_TYP,PYMTKEY)\nSELECT GETDATE(),MANDT,BUKRS,BELNR,GJAHR,BUZEI,BUZID,AUGDT,AUGCP,AUGBL,BSCHL,KOART,UMSKZ,UMSKS,ZUMSK,SHKZG,GSBER,PARGB,MWSKZ,QSSKZ,DMBTR,WRBTR,KZBTR,PSWBT,PSWSL,TXBHW,TXBFW,MWSTS,WMWST,HWBAS,FWBAS,HWZUZ,FWZUZ,SHZUZ,STEKZ,MWART,TXGRP,KTOSL,QSSHB,KURSR,GBETR,BDIFF,BDIF2,VALUT,ZUONR,SGTXT,ZINKZ,VBUND,BEWAR,ALTKT,VORGN,FDLEV,FDGRP,FDWBT,FDTAG,FKONT,KOKRS,KOSTL,PROJN,AUFNR,VBELN,VBEL2,POSN2,ETEN2,ANLN1,ANLN2,ANBWA,BZDAT,PERNR,XUMSW,XHRES,XKRES,XOPVW,XCPDD,XSKST,XSAUF,XSPRO,XSERG,XFAKT,XUMAN,XANET,XSKRL,XINVE,XPANZ,XAUTO,XNCOP,XZAHL,SAKNR,HKONT,KUNNR,LIFNR,FILKD,XBILK,GVTYP,HZUON,ZFBDT,ZTERM,ZBD1T,ZBD2T,ZBD3T,ZBD1P,ZBD2P,SKFBT,SKNTO,WSKTO,ZLSCH,ZLSPR,ZBFIX,HBKID,BVTYP,NEBTR,MWSK1,DMBT1,WRBT1,MWSK2,DMBT2,WRBT2,MWSK3,DMBT3,WRBT3,REBZG,REBZJ,REBZZ,REBZT,ZOLLT,ZOLLD,LZBKZ,LANDL,DIEKZ,SAMNR,ABPER,VRSKZ,VRSDT,DISBN,DISBJ,DISBZ,WVERW,ANFBN,ANFBJ,ANFBU,ANFAE,BLNBT,BLNKZ,BLNPZ,MSCHL,MANSP,MADAT,MANST,MABER,ESRNR,ESRRE,ESRPZ,KLIBT,QSZNR,QBSHB,QSFBT,NAVHW,NAVFW,MATNR,WERKS,MENGE,MEINS,ERFMG,ERFME,BPMNG,BPRME,EBELN,EBELP,ZEKKN,ELIKZ,VPRSV,PEINH,BWKEY,BWTAR,BUSTW,REWRT,REWWR,BONFB,BUALT,PSALT,NPREI,TBTKZ,SPGRP,SPGRM,SPGRT,SPGRG,SPGRV,SPGRQ,STCEG,EGBLD,EGLLD,RSTGR,RYACQ,RPACQ,RDIFF,RDIF2,PRCTR,XHKOM,VNAME,RECID,EGRUP,VPTNR,VERTT,VERTN,VBEWA,DEPOT,TXJCD,IMKEY,DABRZ,POPTS,FIPOS,KSTRG,NPLNR,AUFPL,APLZL,PROJK,PAOBJNR,PASUBNR,SPGRS,SPGRC,BTYPE,ETYPE,XEGDR,LNRAN,HRKFT,DMBE2,DMBE3,DMB21,DMB22,DMB23,DMB31,DMB32,DMB33,MWST2,MWST3,NAVH2,NAVH3,SKNT2,SKNT3,BDIF3,RDIF3,HWMET,GLUPM,XRAGL,UZAWE,LOKKT,FISTL,GEBER,STBUK,TXBH2,TXBH3,PPRCT,XREF1,XREF2,KBLNR,KBLPOS,STTAX,FKBER,OBZEI,XNEGP,RFZEI,CCBTC,KKBER,EMPFB,XREF3,DTWS1,DTWS2,DTWS3,DTWS4,GRICD,GRIRG,GITYP,XPYPR,KIDNO,ABSBT,IDXSP,LINFV,KONTT,KONTL,UEBGDAT,TXDAT,AGZEI,PYCUR,PYAMT,BUPLA,SECCO,LSTAR,CESSION_KZ,PRZNR,PPDIFF,PPDIF2,PPDIF3,PENLC1,PENLC2,PENLC3,PENFC,PENDAYS,PENRC,GRANT_NBR,SCTAX,FKBER_LONG,GMVKZ,SRTYPE,INTRENO,MEASURE,AUGGJ,PPA_EX_IND,DOCLN,SEGMENT,PSEGMENT,PFKBER,HKTID,KSTAR,XLGCLR,TAXPS,PAYS_PROV,PAYS_TRAN,MNDID,XFRGE_BSEG,AWTYP,AWKEY,AWSYS,POSNR,BUZEI_SENDER,H_MONAT,H_BSTAT,H_BUDAT,H_BLDAT,H_WAERS,H_BLART,H_HWAER,H_HWAE2,H_HWAE3,NETDT,SK1DT,SK2DT,_DATAAGING,FQFTYPE,LQITEM,GKONT,GKART,GHKON,SQUAN,ANLN2_PN,BWASL_PN,BZDAT_PN,XVABG_PN,ANBTR_PN,PROZS_PN,ZZHRKFT,ZZHRKTX,DUMMY_INCL_EEW_COBL,RE_BUKRS,RE_ACCOUNT,PGEBER,PGRANT_NBR,BUDGET_PD,PBUDGET_PD,J_1TPBUPL,PEROP_BEG,PEROP_END,FASTPAY,IGNR_IVREF,FMFGUS_KEY,FMXDOCNR,FMXYEAR,FMXDOCLN,FMXZEKKN,PRODPER,GST_PART,PLC_SUP,HSN_SAC,RECRF,INWARD_NO,INWARD_DT,GROUND_NO,GROUND_DT,GROUND_TYP,PYMTKEY\nFROM dbo.BSEG\n;"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "TEST"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSynapseAnalytics')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/CTAS')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Script1",
-						"type": "Script",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzureSynapseAnalytics",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "INSERT INTO dbo.ACDOCA_CDC_SCD2 (RCLNT,RLDNR,RBUKRS,GJAHR,BELNR,DOCLN,RYEAR,RRCTY,RMVCT,VORGN,VRGNG,BTTYPE,AWTYP,AWSYS,AWORG,AWREF,AWITEM,AWITGRP,SUBTA,XREVERSING,XREVERSED,XTRUEREV,AWTYP_REV,AWORG_REV,AWREF_REV,SUBTA_REV,XSETTLING,XSETTLED,PREC_AWTYP,PREC_AWORG,PREC_AWREF,PREC_AWITEM,PREC_SUBTA,PREC_AWMULT,XSECONDARY,RTCUR,RWCUR,RHCUR,RKCUR,ROCUR,RVCUR,RBCUR,RCCUR,RDCUR,RECUR,RFCUR,RGCUR,RCO_OCUR,RUNIT,RVUNIT,RRUNIT,QUNIT1,QUNIT2,QUNIT3,RACCT,RCNTR,PRCTR,RFAREA,RBUSA,KOKRS,SEGMENT,SCNTR,PPRCTR,SFAREA,SBUSA,RASSC,PSEGMENT,TSL,WSL,WSL2,WSL3,HSL,KSL,OSL,VSL,BSL,CSL,DSL,ESL,FSL,GSL,KFSL,KFSL2,KFSL3,PSL,PSL2,PSL3,PFSL,PFSL2,PFSL3,CO_OSL,HSALK3,KSALK3,OSALK3,VSALK3,HSALKV,KSALKV,OSALKV,VSALKV,HPVPRS,KPVPRS,OPVPRS,VPVPRS,HSTPRS,KSTPRS,OSTPRS,VSTPRS,HSLALT,KSLALT,OSLALT,VSLALT,HSLEXT,KSLEXT,OSLEXT,VSLEXT,HVKWRT,HVKSAL,MSL,MFSL,VMSL,VMFSL,RMSL,QUANT1,QUANT2,QUANT3,LBKUM,DRCRK,POPER,PERIV,FISCYEARPER,BUDAT,BLDAT,BLART,BUZEI,ZUONR,BSCHL,BSTAT,LINETYPE,KTOSL,SLALITTYPE,XSPLITMOD,USNAM,TIMESTAMP,EPRCTR,RHOART,GLACCOUNT_TYPE,KTOPL,LOKKT,KTOP2,REBZG,REBZJ,REBZZ,REBZT,RBEST,EBELN,EBELP,ZEKKN,SGTXT,KDAUF,KDPOS,MATNR,WERKS,LIFNR,KUNNR,FBUDA,KOART,UMSKZ,MWSKZ,HBKID,HKTID,XOPVW,AUGDT,AUGBL,AUGGJ,AFABE,ANLN1,ANLN2,BZDAT,ANBWA,MOVCAT,DEPR_PERIOD,ANLGR,ANLGR2,SETTLEMENT_RULE,UBZDT_PN,XVABG_PN,PROZS_PN,XMANPROPVAL_PN,KALNR,VPRSV,MLAST,KZBWS,XOBEW,SOBKZ,VTSTAMP,MAT_KDAUF,MAT_KDPOS,MAT_PSPNR,MAT_PS_POSID,MAT_LIFNR,BWTAR,BWKEY,HPEINH,KPEINH,OPEINH,VPEINH,MLPTYP,MLCATEG,QSBVALT,QSPROCESS,PERART,MLPOSNR,BUKRS_SENDER,RACCT_SENDER,ACCAS_SENDER,ACCASTY_SENDER,OBJNR,HRKFT,HKGRP,PAROB1,PAROBSRC,USPOB,CO_BELKZ,CO_BEKNZ,BELTP,MUVFLG,GKONT,GKOAR,ERLKZ,PERNR,PAOBJNR,XPAOBJNR_CO_REL,SCOPE,LOGSYSO,PBUKRS,PSCOPE,LOGSYSP,BWSTRAT,OBJNR_HK,AUFNR_ORG,UKOSTL,ULSTAR,UPRZNR,ACCAS,ACCASTY,LSTAR,AUFNR,AUTYP,PS_PSP_PNR,PS_POSID,PS_PSPID,NPLNR,NPLNR_VORGN,PRZNR,KSTRG,BEMOT,RSRCE,QMNUM,ERKRS,PACCAS,PACCASTY,PLSTAR,PAUFNR,PAUTYP,PPS_POSID,PPS_PSPID,PKDAUF,PKDPOS,PPAOBJNR,PNPLNR,PNPLNR_VORGN,PPRZNR,PKSTRG,CO_ACCASTY_N1,CO_ACCASTY_N2,CO_ACCASTY_N3,CO_ZLENR,CO_BELNR,CO_BUZEI,CO_BUZEI1,CO_BUZEI2,CO_BUZEI5,CO_BUZEI6,CO_BUZEI7,CO_REFBZ,CO_REFBZ1,CO_REFBZ2,CO_REFBZ5,CO_REFBZ6,CO_REFBZ7,WORK_ITEM_ID,FKART,VKORG,VTWEG,SPART,MATNR_COPA,MATKL,KDGRP,LAND1,BRSCH,BZIRK,KUNRE,KUNWE,KONZS,ACDOC_COPA_EEW_DUMMY_PA,WWSOR_PA,WWPRD_PA,WWCOU_PA,ROUTE_PA,WWPH1_PA,WWPH2_PA,WWPH3_PA,AUART_PA,AUGRU_PA,VKBUR_PA,BWTAR_PA,CHARG_PA,INCO1_PA,KTGRD_PA,KTGRM_PA,KVGR1_PA,KVGR2_PA,KVGR3_PA,KVGR4_PA,KVGR5_PA,MVGR1_PA,MVGR2_PA,MVGR3_PA,MVGR4_PA,MVGR5_PA,PAPH1_PA,PAPH2_PA,PAPH3_PA,VBUND_PA,HIE04_PA,KMHI01_PA,KMHI02_PA,KMHI03_PA,WWRCU_PA,WWEMP_PA,WWSTC_PA,WWCHN_PA,TEMPB_PA,WWVDR_PA,WWVLC_PA,KMLAND_PA,KMVKBU_PA,KMVKGR_PA,WWMTC_PA,WWMP1_PA,WWMP2_PA,WWMP3_PA,WWMPL_PA,WWSCT_PA,KONDM_PA,WWBOF_PA,WWBRK_PA,RE_BUKRS,RE_ACCOUNT,FIKRS,FISTL,MEASURE,RFUND,RGRANT_NBR,RBUDGET_PD,SFUND,SGRANT_NBR,SBUDGET_PD,VNAME,EGRUP,RECID,VPTNR,BTYPE,ETYPE,PRODPER,SWENR,SGENR,SGRNR,SMENR,RECNNR,SNKSL,SEMPSL,DABRZ,PSWENR,PSGENR,PSGRNR,PSMENR,PRECNNR,PSNKSL,PSEMPSL,PDABRZ,ACDOC_EEW_DUMMY,ZZHRKFT,ZZHRKTX,DUMMY_INCL_EEW_COBL,FUP_ACTION,MIG_SOURCE,MIG_DOCLN,_DATAAGING,START_DATE,END_DATE,ACTIVE_FLAG,DELETE_FLAG)\nSELECT RCLNT,RLDNR,RBUKRS,GJAHR,BELNR,DOCLN,RYEAR,RRCTY,RMVCT,VORGN,VRGNG,BTTYPE,AWTYP,AWSYS,AWORG,AWREF,AWITEM,AWITGRP,SUBTA,XREVERSING,XREVERSED,XTRUEREV,AWTYP_REV,AWORG_REV,AWREF_REV,SUBTA_REV,XSETTLING,XSETTLED,PREC_AWTYP,PREC_AWORG,PREC_AWREF,PREC_AWITEM,PREC_SUBTA,PREC_AWMULT,XSECONDARY,RTCUR,RWCUR,RHCUR,RKCUR,ROCUR,RVCUR,RBCUR,RCCUR,RDCUR,RECUR,RFCUR,RGCUR,RCO_OCUR,RUNIT,RVUNIT,RRUNIT,QUNIT1,QUNIT2,QUNIT3,RACCT,RCNTR,PRCTR,RFAREA,RBUSA,KOKRS,SEGMENT,SCNTR,PPRCTR,SFAREA,SBUSA,RASSC,PSEGMENT,TSL,WSL,WSL2,WSL3,HSL,KSL,OSL,VSL,BSL,CSL,DSL,ESL,FSL,GSL,KFSL,KFSL2,KFSL3,PSL,PSL2,PSL3,PFSL,PFSL2,PFSL3,CO_OSL,HSALK3,KSALK3,OSALK3,VSALK3,HSALKV,KSALKV,OSALKV,VSALKV,HPVPRS,KPVPRS,OPVPRS,VPVPRS,HSTPRS,KSTPRS,OSTPRS,VSTPRS,HSLALT,KSLALT,OSLALT,VSLALT,HSLEXT,KSLEXT,OSLEXT,VSLEXT,HVKWRT,HVKSAL,MSL,MFSL,VMSL,VMFSL,RMSL,QUANT1,QUANT2,QUANT3,LBKUM,DRCRK,POPER,PERIV,FISCYEARPER,BUDAT,BLDAT,BLART,BUZEI,ZUONR,BSCHL,BSTAT,LINETYPE,KTOSL,SLALITTYPE,XSPLITMOD,USNAM,TIMESTAMP,EPRCTR,RHOART,GLACCOUNT_TYPE,KTOPL,LOKKT,KTOP2,REBZG,REBZJ,REBZZ,REBZT,RBEST,EBELN,EBELP,ZEKKN,SGTXT,KDAUF,KDPOS,MATNR,WERKS,LIFNR,KUNNR,FBUDA,KOART,UMSKZ,MWSKZ,HBKID,HKTID,XOPVW,AUGDT,AUGBL,AUGGJ,AFABE,ANLN1,ANLN2,BZDAT,ANBWA,MOVCAT,DEPR_PERIOD,ANLGR,ANLGR2,SETTLEMENT_RULE,UBZDT_PN,XVABG_PN,PROZS_PN,XMANPROPVAL_PN,KALNR,VPRSV,MLAST,KZBWS,XOBEW,SOBKZ,VTSTAMP,MAT_KDAUF,MAT_KDPOS,MAT_PSPNR,MAT_PS_POSID,MAT_LIFNR,BWTAR,BWKEY,HPEINH,KPEINH,OPEINH,VPEINH,MLPTYP,MLCATEG,QSBVALT,QSPROCESS,PERART,MLPOSNR,BUKRS_SENDER,RACCT_SENDER,ACCAS_SENDER,ACCASTY_SENDER,OBJNR,HRKFT,HKGRP,PAROB1,PAROBSRC,USPOB,CO_BELKZ,CO_BEKNZ,BELTP,MUVFLG,GKONT,GKOAR,ERLKZ,PERNR,PAOBJNR,XPAOBJNR_CO_REL,SCOPE,LOGSYSO,PBUKRS,PSCOPE,LOGSYSP,BWSTRAT,OBJNR_HK,AUFNR_ORG,UKOSTL,ULSTAR,UPRZNR,ACCAS,ACCASTY,LSTAR,AUFNR,AUTYP,PS_PSP_PNR,PS_POSID,PS_PSPID,NPLNR,NPLNR_VORGN,PRZNR,KSTRG,BEMOT,RSRCE,QMNUM,ERKRS,PACCAS,PACCASTY,PLSTAR,PAUFNR,PAUTYP,PPS_POSID,PPS_PSPID,PKDAUF,PKDPOS,PPAOBJNR,PNPLNR,PNPLNR_VORGN,PPRZNR,PKSTRG,CO_ACCASTY_N1,CO_ACCASTY_N2,CO_ACCASTY_N3,CO_ZLENR,CO_BELNR,CO_BUZEI,CO_BUZEI1,CO_BUZEI2,CO_BUZEI5,CO_BUZEI6,CO_BUZEI7,CO_REFBZ,CO_REFBZ1,CO_REFBZ2,CO_REFBZ5,CO_REFBZ6,CO_REFBZ7,WORK_ITEM_ID,FKART,VKORG,VTWEG,SPART,MATNR_COPA,MATKL,KDGRP,LAND1,BRSCH,BZIRK,KUNRE,KUNWE,KONZS,ACDOC_COPA_EEW_DUMMY_PA,WWSOR_PA,WWPRD_PA,WWCOU_PA,ROUTE_PA,WWPH1_PA,WWPH2_PA,WWPH3_PA,AUART_PA,AUGRU_PA,VKBUR_PA,BWTAR_PA,CHARG_PA,INCO1_PA,KTGRD_PA,KTGRM_PA,KVGR1_PA,KVGR2_PA,KVGR3_PA,KVGR4_PA,KVGR5_PA,MVGR1_PA,MVGR2_PA,MVGR3_PA,MVGR4_PA,MVGR5_PA,PAPH1_PA,PAPH2_PA,PAPH3_PA,VBUND_PA,HIE04_PA,KMHI01_PA,KMHI02_PA,KMHI03_PA,WWRCU_PA,WWEMP_PA,WWSTC_PA,WWCHN_PA,TEMPB_PA,WWVDR_PA,WWVLC_PA,KMLAND_PA,KMVKBU_PA,KMVKGR_PA,WWMTC_PA,WWMP1_PA,WWMP2_PA,WWMP3_PA,WWMPL_PA,WWSCT_PA,KONDM_PA,WWBOF_PA,WWBRK_PA,RE_BUKRS,RE_ACCOUNT,FIKRS,FISTL,MEASURE,RFUND,RGRANT_NBR,RBUDGET_PD,SFUND,SGRANT_NBR,SBUDGET_PD,VNAME,EGRUP,RECID,VPTNR,BTYPE,ETYPE,PRODPER,SWENR,SGENR,SGRNR,SMENR,RECNNR,SNKSL,SEMPSL,DABRZ,PSWENR,PSGENR,PSGRNR,PSMENR,PRECNNR,PSNKSL,PSEMPSL,PDABRZ,ACDOC_EEW_DUMMY,ZZHRKFT,ZZHRKTX,DUMMY_INCL_EEW_COBL,FUP_ACTION,MIG_SOURCE,MIG_DOCLN,_DATAAGING,START_DATE,END_DATE,ACTIVE_FLAG,DELETE_FLAG \nFROM dbo.ACDOCA_SCD2\nWHERE GJAHR = '2022';"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
@@ -2443,33 +2288,843 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/StorageEvent_Test')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
+			"name": "[concat(parameters('factoryName'), '/ACDOCA')]",
+			"type": "Microsoft.DataFactory/factories/adfcdcs",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipelines": [
+				"SourceConnectionsInfo": [
 					{
-						"pipelineReference": {
-							"referenceName": "DUMMY",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
+						"SourceEntities": [
+							{
+								"name": "synapse-povtug/ACDOCA_INITIAL",
+								"properties": {
+									"schema": [],
+									"dslConnectorProperties": [
+										{
+											"name": "container",
+											"value": "synapse-povtug"
+										},
+										{
+											"name": "fileSystem",
+											"value": "synapse-povtug"
+										},
+										{
+											"name": "folderPath",
+											"value": "ACDOCA_INITIAL"
+										}
+									]
+								}
+							}
+						],
+						"Connection": {
+							"linkedService": {
+								"referenceName": "adls",
+								"type": "LinkedServiceReference"
+							},
+							"linkedServiceType": "AzureBlobFS",
+							"type": "linkedservicetype",
+							"isInlineDataset": true,
+							"commonDslConnectorProperties": [
+								{
+									"name": "allowSchemaDrift",
+									"value": true
+								},
+								{
+									"name": "inferDriftedColumnTypes",
+									"value": true
+								},
+								{
+									"name": "format",
+									"value": "parquet"
+								},
+								{
+									"name": "dateFormats",
+									"value": [
+										"MM/dd/yyyy",
+										"dd/MM/yyyy",
+										"yyyy/MM/dd",
+										"MM-dd-yyyy",
+										"dd-MM-yyyy",
+										"yyyy-MM-dd",
+										"dd.MM.yyyy",
+										"MM.dd.yyyy",
+										"yyyy.MM.dd"
+									]
+								},
+								{
+									"name": "timestampFormats",
+									"value": [
+										"yyyyMMddHHmm",
+										"yyyyMMdd HHmm",
+										"yyyyMMddHHmmss",
+										"yyyyMMdd HHmmss",
+										"dd-MM-yyyy HH:mm:ss",
+										"dd-MM-yyyy HH:mm",
+										"yyyy-M-d H:m:s",
+										"yyyy-MM-dd\\'T\\'HH:mm:ss\\'Z\\'",
+										"yyyy-M-d\\'T\\'H:m:s\\'Z\\'",
+										"yyyy-M-d\\'T\\'H:m:s",
+										"yyyy-MM-dd\\'T\\'HH:mm:ss",
+										"yyyy-MM-dd HH:mm:ss",
+										"yyyy-MM-dd HH:mm",
+										"yyyy.MM.dd HH:mm:ss",
+										"MM/dd/yyyy HH:mm:ss",
+										"M/d/yyyy H:m:s",
+										"yyyy/MM/dd HH:mm:ss",
+										"yyyy/M/d H:m:s",
+										"dd MMM yyyy HH:mm:ss",
+										"dd MMMM yyyy HH:mm:ss",
+										"d MMM yyyy H:m:s",
+										"d MMMM yyyy H:m:s",
+										"d-M-yyyy H:m:s",
+										"d-M-yyyy H:m",
+										"yyyy-M-d H:m",
+										"MM/dd/yyyy HH:mm",
+										"M/d/yyyy H:m",
+										"yyyy/MM/dd HH:mm",
+										"yyyy/M/d H:m",
+										"dd MMMM yyyy HH:mm",
+										"dd MMM yyyy HH:mm",
+										"d MMMM yyyy H:m",
+										"d MMM yyyy H:m",
+										"MM-dd-yyyy hh:mm:ss a",
+										"MM-dd-yyyy HH:mm:ss",
+										"MM/dd/yyyy hh:mm:ss a",
+										"yyyy.MM.dd hh:mm:ss a",
+										"MM/dd/yyyy",
+										"dd/MM/yyyy",
+										"yyyy/MM/dd",
+										"MM-dd-yyyy",
+										"dd-MM-yyyy",
+										"yyyy-MM-dd",
+										"dd.MM.yyyy",
+										"MM.dd.yyyy",
+										"yyyy.MM.dd"
+									]
+								},
+								{
+									"name": "enableCdc",
+									"value": true
+								},
+								{
+									"name": "skipInitialLoad",
+									"value": true
+								}
+							]
+						}
 					}
 				],
-				"type": "BlobEventsTrigger",
+				"TargetConnectionsInfo": [
+					{
+						"TargetEntities": [
+							{
+								"name": "dbo.ACDOCA_CDC_SCD2",
+								"properties": {
+									"schema": [],
+									"dslConnectorProperties": [
+										{
+											"name": "schemaName",
+											"value": "dbo"
+										},
+										{
+											"name": "tableName",
+											"value": "ACDOCA_CDC_SCD2"
+										},
+										{
+											"name": "keys",
+											"value": [
+												"RCLNT",
+												"RLDNR",
+												"RBUKRS",
+												"GJAHR",
+												"BELNR",
+												"DOCLN"
+											]
+										},
+										{
+											"name": "deletable",
+											"value": true
+										},
+										{
+											"name": "updateable",
+											"value": true
+										},
+										{
+											"name": "upsertable",
+											"value": true
+										},
+										{
+											"name": "defaultToUpsert",
+											"value": true
+										}
+									]
+								}
+							}
+						],
+						"Connection": {
+							"linkedService": {
+								"referenceName": "AzureSynapseAnalytics",
+								"type": "LinkedServiceReference"
+							},
+							"linkedServiceType": "AzureSqlDW",
+							"type": "linkedservicetype",
+							"isInlineDataset": true,
+							"commonDslConnectorProperties": [
+								{
+									"name": "allowSchemaDrift",
+									"value": true
+								},
+								{
+									"name": "inferDriftedColumnTypes",
+									"value": true
+								},
+								{
+									"name": "format",
+									"value": "table"
+								},
+								{
+									"name": "store",
+									"value": "synapseanalytics"
+								},
+								{
+									"name": "databaseType",
+									"value": "databaseType"
+								},
+								{
+									"name": "database",
+									"value": "database"
+								},
+								{
+									"name": "deletable",
+									"value": false
+								},
+								{
+									"name": "insertable",
+									"value": true
+								},
+								{
+									"name": "updateable",
+									"value": false
+								},
+								{
+									"name": "upsertable",
+									"value": false
+								},
+								{
+									"name": "allowCopyCommand",
+									"value": false
+								},
+								{
+									"name": "staged",
+									"value": true
+								},
+								{
+									"name": "skipDuplicateMapInputs",
+									"value": true
+								},
+								{
+									"name": "skipDuplicateMapOutputs",
+									"value": true
+								}
+							]
+						},
+						"DataMapperMappings": [
+							{
+								"targetEntityName": "dbo.ACDOCA_CDC_SCD2",
+								"sourceEntityName": "synapse-povtug/ACDOCA_INITIAL",
+								"sourceConnectionReference": {
+									"connectionName": "adls",
+									"type": "linkedservicetype"
+								},
+								"attributeMappingInfo": {
+									"attributeMappings": []
+								}
+							}
+						],
+						"Relationships": []
+					}
+				],
+				"Policy": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 1
+					},
+					"mode": "Microbatch"
+				},
+				"allowVNetOverride": false,
 				"typeProperties": {
-					"blobPathBeginsWith": "/synapse-povtug/blobs/CDC_TEMP/",
-					"ignoreEmptyBlobs": true,
-					"scope": "[parameters('StorageEvent_Test_properties_typeProperties_scope')]",
-					"events": [
-						"Microsoft.Storage.BlobCreated"
-					]
+					"staging": {
+						"linkedService": {
+							"referenceName": "adls",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "synapse-povtug/TMP_ACDOCA_INIT"
+					},
+					"linkedServiceType": "AzureBlobFS"
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/DUMMY')]"
+				"[concat(variables('factoryId'), '/linkedServices/adls')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureSynapseAnalytics')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BSEGCDC')]",
+			"type": "Microsoft.DataFactory/factories/adfcdcs",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"SourceConnectionsInfo": [
+					{
+						"SourceEntities": [
+							{
+								"name": "synapse-povtug/BSEG_DELTA_CHANGES",
+								"properties": {
+									"schema": [],
+									"dslConnectorProperties": [
+										{
+											"name": "container",
+											"value": "synapse-povtug"
+										},
+										{
+											"name": "fileSystem",
+											"value": "synapse-povtug"
+										},
+										{
+											"name": "folderPath",
+											"value": "BSEG_DELTA_CHANGES"
+										}
+									]
+								}
+							}
+						],
+						"Connection": {
+							"linkedService": {
+								"referenceName": "adls",
+								"type": "LinkedServiceReference"
+							},
+							"linkedServiceType": "AzureBlobFS",
+							"type": "linkedservicetype",
+							"isInlineDataset": true,
+							"commonDslConnectorProperties": [
+								{
+									"name": "allowSchemaDrift",
+									"value": true
+								},
+								{
+									"name": "inferDriftedColumnTypes",
+									"value": true
+								},
+								{
+									"name": "format",
+									"value": "parquet"
+								},
+								{
+									"name": "dateFormats",
+									"value": [
+										"MM/dd/yyyy",
+										"dd/MM/yyyy",
+										"yyyy/MM/dd",
+										"MM-dd-yyyy",
+										"dd-MM-yyyy",
+										"yyyy-MM-dd",
+										"dd.MM.yyyy",
+										"MM.dd.yyyy",
+										"yyyy.MM.dd"
+									]
+								},
+								{
+									"name": "timestampFormats",
+									"value": [
+										"yyyyMMddHHmm",
+										"yyyyMMdd HHmm",
+										"yyyyMMddHHmmss",
+										"yyyyMMdd HHmmss",
+										"dd-MM-yyyy HH:mm:ss",
+										"dd-MM-yyyy HH:mm",
+										"yyyy-M-d H:m:s",
+										"yyyy-MM-dd\\'T\\'HH:mm:ss\\'Z\\'",
+										"yyyy-M-d\\'T\\'H:m:s\\'Z\\'",
+										"yyyy-M-d\\'T\\'H:m:s",
+										"yyyy-MM-dd\\'T\\'HH:mm:ss",
+										"yyyy-MM-dd HH:mm:ss",
+										"yyyy-MM-dd HH:mm",
+										"yyyy.MM.dd HH:mm:ss",
+										"MM/dd/yyyy HH:mm:ss",
+										"M/d/yyyy H:m:s",
+										"yyyy/MM/dd HH:mm:ss",
+										"yyyy/M/d H:m:s",
+										"dd MMM yyyy HH:mm:ss",
+										"dd MMMM yyyy HH:mm:ss",
+										"d MMM yyyy H:m:s",
+										"d MMMM yyyy H:m:s",
+										"d-M-yyyy H:m:s",
+										"d-M-yyyy H:m",
+										"yyyy-M-d H:m",
+										"MM/dd/yyyy HH:mm",
+										"M/d/yyyy H:m",
+										"yyyy/MM/dd HH:mm",
+										"yyyy/M/d H:m",
+										"dd MMMM yyyy HH:mm",
+										"dd MMM yyyy HH:mm",
+										"d MMMM yyyy H:m",
+										"d MMM yyyy H:m",
+										"MM-dd-yyyy hh:mm:ss a",
+										"MM-dd-yyyy HH:mm:ss",
+										"MM/dd/yyyy hh:mm:ss a",
+										"yyyy.MM.dd hh:mm:ss a",
+										"MM/dd/yyyy",
+										"dd/MM/yyyy",
+										"yyyy/MM/dd",
+										"MM-dd-yyyy",
+										"dd-MM-yyyy",
+										"yyyy-MM-dd",
+										"dd.MM.yyyy",
+										"MM.dd.yyyy",
+										"yyyy.MM.dd"
+									]
+								},
+								{
+									"name": "enableCdc",
+									"value": true
+								},
+								{
+									"name": "skipInitialLoad",
+									"value": true
+								}
+							]
+						}
+					}
+				],
+				"TargetConnectionsInfo": [
+					{
+						"TargetEntities": [
+							{
+								"name": "dbo.TMP_BSEG_CDC_IN",
+								"properties": {
+									"schema": [],
+									"dslConnectorProperties": [
+										{
+											"name": "schemaName",
+											"value": "dbo"
+										},
+										{
+											"name": "tableName",
+											"value": "TMP_BSEG_CDC_IN"
+										},
+										{
+											"name": "deletable",
+											"value": true
+										},
+										{
+											"name": "updateable",
+											"value": true
+										},
+										{
+											"name": "upsertable",
+											"value": true
+										},
+										{
+											"name": "defaultToUpsert",
+											"value": true
+										},
+										{
+											"name": "keys",
+											"value": [
+												"AERECNO",
+												"AERUNID"
+											]
+										}
+									]
+								}
+							}
+						],
+						"Connection": {
+							"linkedService": {
+								"referenceName": "AzureSynapseAnalytics",
+								"type": "LinkedServiceReference"
+							},
+							"linkedServiceType": "AzureSqlDW",
+							"type": "linkedservicetype",
+							"isInlineDataset": true,
+							"commonDslConnectorProperties": [
+								{
+									"name": "allowSchemaDrift",
+									"value": true
+								},
+								{
+									"name": "inferDriftedColumnTypes",
+									"value": true
+								},
+								{
+									"name": "format",
+									"value": "table"
+								},
+								{
+									"name": "store",
+									"value": "synapseanalytics"
+								},
+								{
+									"name": "databaseType",
+									"value": "databaseType"
+								},
+								{
+									"name": "database",
+									"value": "database"
+								},
+								{
+									"name": "deletable",
+									"value": false
+								},
+								{
+									"name": "insertable",
+									"value": true
+								},
+								{
+									"name": "updateable",
+									"value": false
+								},
+								{
+									"name": "upsertable",
+									"value": false
+								},
+								{
+									"name": "allowCopyCommand",
+									"value": false
+								},
+								{
+									"name": "staged",
+									"value": true
+								},
+								{
+									"name": "skipDuplicateMapInputs",
+									"value": true
+								},
+								{
+									"name": "skipDuplicateMapOutputs",
+									"value": true
+								}
+							]
+						},
+						"DataMapperMappings": [
+							{
+								"targetEntityName": "dbo.TMP_BSEG_CDC_IN",
+								"sourceEntityName": "synapse-povtug/BSEG_DELTA_CHANGES",
+								"sourceConnectionReference": {
+									"connectionName": "adls",
+									"type": "linkedservicetype"
+								},
+								"attributeMappingInfo": {
+									"attributeMappings": []
+								}
+							}
+						],
+						"Relationships": []
+					}
+				],
+				"Policy": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 1
+					},
+					"mode": "Microbatch"
+				},
+				"status": "Stopped",
+				"allowVNetOverride": false,
+				"typeProperties": {
+					"staging": {
+						"linkedService": {
+							"referenceName": "adls",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "synapse-povtug/TMP_STAGING"
+					},
+					"linkedServiceType": "AzureBlobFS"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/adls')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureSynapseAnalytics')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BSEGINIT')]",
+			"type": "Microsoft.DataFactory/factories/adfcdcs",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"SourceConnectionsInfo": [
+					{
+						"SourceEntities": [
+							{
+								"name": "synapse-povtug/BSEG_INIT",
+								"properties": {
+									"schema": [],
+									"dslConnectorProperties": [
+										{
+											"name": "container",
+											"value": "synapse-povtug"
+										},
+										{
+											"name": "fileSystem",
+											"value": "synapse-povtug"
+										},
+										{
+											"name": "folderPath",
+											"value": "BSEG_INIT"
+										}
+									]
+								}
+							}
+						],
+						"Connection": {
+							"linkedService": {
+								"referenceName": "adls",
+								"type": "LinkedServiceReference"
+							},
+							"linkedServiceType": "AzureBlobFS",
+							"type": "linkedservicetype",
+							"isInlineDataset": true,
+							"commonDslConnectorProperties": [
+								{
+									"name": "allowSchemaDrift",
+									"value": true
+								},
+								{
+									"name": "inferDriftedColumnTypes",
+									"value": true
+								},
+								{
+									"name": "format",
+									"value": "parquet"
+								},
+								{
+									"name": "dateFormats",
+									"value": [
+										"MM/dd/yyyy",
+										"dd/MM/yyyy",
+										"yyyy/MM/dd",
+										"MM-dd-yyyy",
+										"dd-MM-yyyy",
+										"yyyy-MM-dd",
+										"dd.MM.yyyy",
+										"MM.dd.yyyy",
+										"yyyy.MM.dd"
+									]
+								},
+								{
+									"name": "timestampFormats",
+									"value": [
+										"yyyyMMddHHmm",
+										"yyyyMMdd HHmm",
+										"yyyyMMddHHmmss",
+										"yyyyMMdd HHmmss",
+										"dd-MM-yyyy HH:mm:ss",
+										"dd-MM-yyyy HH:mm",
+										"yyyy-M-d H:m:s",
+										"yyyy-MM-dd\\'T\\'HH:mm:ss\\'Z\\'",
+										"yyyy-M-d\\'T\\'H:m:s\\'Z\\'",
+										"yyyy-M-d\\'T\\'H:m:s",
+										"yyyy-MM-dd\\'T\\'HH:mm:ss",
+										"yyyy-MM-dd HH:mm:ss",
+										"yyyy-MM-dd HH:mm",
+										"yyyy.MM.dd HH:mm:ss",
+										"MM/dd/yyyy HH:mm:ss",
+										"M/d/yyyy H:m:s",
+										"yyyy/MM/dd HH:mm:ss",
+										"yyyy/M/d H:m:s",
+										"dd MMM yyyy HH:mm:ss",
+										"dd MMMM yyyy HH:mm:ss",
+										"d MMM yyyy H:m:s",
+										"d MMMM yyyy H:m:s",
+										"d-M-yyyy H:m:s",
+										"d-M-yyyy H:m",
+										"yyyy-M-d H:m",
+										"MM/dd/yyyy HH:mm",
+										"M/d/yyyy H:m",
+										"yyyy/MM/dd HH:mm",
+										"yyyy/M/d H:m",
+										"dd MMMM yyyy HH:mm",
+										"dd MMM yyyy HH:mm",
+										"d MMMM yyyy H:m",
+										"d MMM yyyy H:m",
+										"MM-dd-yyyy hh:mm:ss a",
+										"MM-dd-yyyy HH:mm:ss",
+										"MM/dd/yyyy hh:mm:ss a",
+										"yyyy.MM.dd hh:mm:ss a",
+										"MM/dd/yyyy",
+										"dd/MM/yyyy",
+										"yyyy/MM/dd",
+										"MM-dd-yyyy",
+										"dd-MM-yyyy",
+										"yyyy-MM-dd",
+										"dd.MM.yyyy",
+										"MM.dd.yyyy",
+										"yyyy.MM.dd"
+									]
+								},
+								{
+									"name": "enableCdc",
+									"value": true
+								},
+								{
+									"name": "skipInitialLoad",
+									"value": true
+								}
+							]
+						}
+					}
+				],
+				"TargetConnectionsInfo": [
+					{
+						"TargetEntities": [
+							{
+								"name": "dbo.BSEG_TGT",
+								"properties": {
+									"schema": [],
+									"dslConnectorProperties": [
+										{
+											"name": "schemaName",
+											"value": "dbo"
+										},
+										{
+											"name": "tableName",
+											"value": "BSEG_TGT"
+										},
+										{
+											"name": "keys",
+											"value": [
+												"MANDT",
+												"BUKRS",
+												"BELNR",
+												"GJAHR",
+												"BUZEI"
+											]
+										},
+										{
+											"name": "deletable",
+											"value": true
+										},
+										{
+											"name": "updateable",
+											"value": true
+										},
+										{
+											"name": "upsertable",
+											"value": true
+										},
+										{
+											"name": "defaultToUpsert",
+											"value": true
+										}
+									]
+								}
+							}
+						],
+						"Connection": {
+							"linkedService": {
+								"referenceName": "AzureSynapseAnalytics",
+								"type": "LinkedServiceReference"
+							},
+							"linkedServiceType": "AzureSqlDW",
+							"type": "linkedservicetype",
+							"isInlineDataset": true,
+							"commonDslConnectorProperties": [
+								{
+									"name": "allowSchemaDrift",
+									"value": true
+								},
+								{
+									"name": "inferDriftedColumnTypes",
+									"value": true
+								},
+								{
+									"name": "format",
+									"value": "table"
+								},
+								{
+									"name": "store",
+									"value": "synapseanalytics"
+								},
+								{
+									"name": "databaseType",
+									"value": "databaseType"
+								},
+								{
+									"name": "database",
+									"value": "database"
+								},
+								{
+									"name": "deletable",
+									"value": false
+								},
+								{
+									"name": "insertable",
+									"value": true
+								},
+								{
+									"name": "updateable",
+									"value": false
+								},
+								{
+									"name": "upsertable",
+									"value": false
+								},
+								{
+									"name": "allowCopyCommand",
+									"value": false
+								},
+								{
+									"name": "staged",
+									"value": true
+								},
+								{
+									"name": "skipDuplicateMapInputs",
+									"value": true
+								},
+								{
+									"name": "skipDuplicateMapOutputs",
+									"value": true
+								}
+							]
+						},
+						"DataMapperMappings": [
+							{
+								"targetEntityName": "dbo.BSEG_TGT",
+								"sourceEntityName": "synapse-povtug/BSEG_INIT",
+								"sourceConnectionReference": {
+									"connectionName": "adls",
+									"type": "linkedservicetype"
+								},
+								"attributeMappingInfo": {
+									"attributeMappings": []
+								}
+							}
+						],
+						"Relationships": []
+					}
+				],
+				"Policy": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 1
+					},
+					"mode": "Microbatch"
+				},
+				"status": "Started",
+				"allowVNetOverride": false,
+				"typeProperties": {
+					"staging": {
+						"linkedService": {
+							"referenceName": "adls",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "synapse-povtug/TMP_STAGING"
+					},
+					"linkedServiceType": "AzureBlobFS"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/adls')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureSynapseAnalytics')]"
 			]
 		}
 	]
