@@ -7,10 +7,6 @@
 		"typeProperties": {
 			"connectionString": "integrated security=False;data source=pov-tug-server-control-framework.database.windows.net;initial catalog=pov-tug-database-control-framework;user id=Azureadmin",
 			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIwNDNjMzg5Ny1iMDVhLTQ5MDktOGIzMy0zOGNkOTkyZjNlOGYiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
-		},
-		"connectVia": {
-			"referenceName": "integrationRuntime-ADFPOVTUGDEV",
-			"type": "IntegrationRuntimeReference"
 		}
 	}
 }
