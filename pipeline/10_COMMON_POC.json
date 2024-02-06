@@ -599,7 +599,13 @@
 											"referenceName": "20_PROCESS_TYPE6_COPY_TBL",
 											"type": "PipelineReference"
 										},
-										"waitOnCompletion": true
+										"waitOnCompletion": true,
+										"parameters": {
+											"P_Object": {
+												"value": "@activity('GET PROCESS INFORMATION').output.firstRow",
+												"type": "Expression"
+											}
+										}
 									}
 								}
 							]

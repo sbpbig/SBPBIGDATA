@@ -53,10 +53,7 @@
 		],
 		"parameters": {
 			"P_Object": {
-				"type": "string"
-			},
-			"P_TABLE_NAME": {
-				"type": "string"
+				"type": "object"
 			}
 		},
 		"folder": {
