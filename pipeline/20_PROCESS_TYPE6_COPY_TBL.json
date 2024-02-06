@@ -52,7 +52,7 @@
 			}
 		],
 		"parameters": {
-			"P_SCHEMA_NAME": {
+			"P_Object": {
 				"type": "string"
 			},
 			"P_TABLE_NAME": {
