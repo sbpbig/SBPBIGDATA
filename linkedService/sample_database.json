@@ -1,0 +1,12 @@
+{
+	"name": "sample_database",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": "integrated security=False;encrypt=True;connection timeout=30;data source=sql-sample-oak-database-server.database.windows.net;initial catalog=sample-sql-database;user id=azureadmin",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQEU4MzNBQjZELTA2RkQtNEQ0RC1BNUJFLTY5ODY4NTAzQTFEQV9hNjRkZmQ1Ni0yM2Y4LTQwMzAtOTRhNC1kMzk1NTA2MTU1NDIiDQp9"
+		}
+	}
+}
