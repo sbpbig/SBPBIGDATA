@@ -334,7 +334,7 @@
 		"parameters": {
 			"P_STREAM_NM": {
 				"type": "string",
-				"defaultValue": "EDP_FILE"
+				"defaultValue": "STM_EDP_FILE"
 			},
 			"P_RUN_MODE": {
 				"type": "string",
