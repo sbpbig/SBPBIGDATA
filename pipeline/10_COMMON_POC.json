@@ -770,7 +770,7 @@
 		"parameters": {
 			"P_PCS_NM": {
 				"type": "string",
-				"defaultValue": "T1_TEST_D_99"
+				"defaultValue": "STM_EDP_T1"
 			},
 			"P_RUN_MODE": {
 				"type": "string",
