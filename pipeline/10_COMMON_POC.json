@@ -763,16 +763,20 @@
 		],
 		"parameters": {
 			"P_PCS_NM": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "T1_TEST_D_99"
 			},
 			"P_RUN_MODE": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "R"
 			},
 			"P_LOAD_ID": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "1"
 			},
 			"P_AS_AT_DT": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "20230602"
 			}
 		},
 		"variables": {
