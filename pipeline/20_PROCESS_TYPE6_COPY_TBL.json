@@ -28,7 +28,11 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"SCHEMA_NAME": {
-								"value": "@pipeline().parameters.P_Object",
+								"value": "@pipeline().parameters.P_Object.SRC_SCHEMA_NM",
+								"type": "Expression"
+							},
+							"TABLE_NAME": {
+								"value": "@pipeline().parameters.P_Object.SRC_TBL",
 								"type": "Expression"
 							}
 						}
