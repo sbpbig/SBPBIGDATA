@@ -7,14 +7,26 @@
 		},
 		"parameters": {
 			"SCHEMA_NAME": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "dbo"
 			},
 			"TABLE_NAME": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "test"
 			}
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
-		"schema": []
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().SCHEMA_NAME",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().TABLE_NAME",
+				"type": "Expression"
+			}
+		}
 	}
 }
