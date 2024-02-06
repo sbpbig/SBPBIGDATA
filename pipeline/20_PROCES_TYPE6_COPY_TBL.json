@@ -1,5 +1,5 @@
 {
-	"name": "20_PROCESS_TYPE5_CDC_INIT_TEMP_TO_SCD2_copy1",
+	"name": "20_PROCES_TYPE6_COPY_TBL",
 	"properties": {
 		"activities": [
 			{
@@ -70,7 +70,7 @@
 				},
 				"userProperties": [],
 				"linkedServiceName": {
-					"referenceName": "AzureSynapseAnalytics",
+					"referenceName": "SqlServer1",
 					"type": "LinkedServiceReference"
 				},
 				"typeProperties": {
