@@ -1,0 +1,30 @@
+{
+	"name": "sample_azure_sql_table",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sample_database",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"P_SCHEMA_NAME": {
+				"type": "string"
+			},
+			"P_TABLE_NAME": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().P_SCHEMA_NAME",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().P_TABLE_NAME",
+				"type": "Expression"
+			}
+		}
+	}
+}
