@@ -57,7 +57,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "Parquet1",
+						"referenceName": "adls_parquet",
 						"type": "DatasetReference"
 					}
 				]
