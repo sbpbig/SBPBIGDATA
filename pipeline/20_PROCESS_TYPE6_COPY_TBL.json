@@ -52,10 +52,10 @@
 			}
 		],
 		"parameters": {
-			"P_Object": {
+			"P_SCHEMA_NAME": {
 				"type": "object"
 			},
-			"P_DataDT": {
+			"P_TABLE": {
 				"type": "string"
 			}
 		},
