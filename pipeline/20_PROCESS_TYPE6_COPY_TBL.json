@@ -63,7 +63,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"P_FILE_NAME": {
-								"value": "@concat(@pipeline().parameters.P_Object.SRC_TBL, '.csv')",
+								"value": "@concat(pipeline().parameters.P_Object.SRC_TBL, '.csv')",
 								"type": "Expression"
 							}
 						}
