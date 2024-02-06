@@ -1,0 +1,285 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "oak-adf"
+		},
+		"AzureSynapseAnalytics_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSynapseAnalytics'"
+		},
+		"AzureSynapseAnalytics_test_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSynapseAnalytics_test'"
+		},
+		"SqlServer1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SqlServer1'"
+		},
+		"adls_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'adls'"
+		},
+		"adls_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://stpovtug.dfs.core.windows.net/"
+		},
+		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM": {
+			"type": "string",
+			"defaultValue": "ACDOCA_CDC_SCD2"
+		},
+		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_DB_NM": {
+			"type": "string",
+			"defaultValue": "dbo"
+		},
+		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_FOLDER_NM": {
+			"type": "string",
+			"defaultValue": "ACDOCA_CDC"
+		},
+		"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TMP_TBL_NM": {
+			"type": "string",
+			"defaultValue": "ACDOCA_CDC_TEMP"
+		},
+		"ACDOCA_CDC_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourceGroups/POV_TUG/providers/Microsoft.Storage/storageAccounts/stpovtug"
+		},
+		"ACDOCA_CDC2_properties_pipeline_parameters_FOLDER_NM": {
+			"type": "string",
+			"defaultValue": "ACDOCA_PART_CDC2"
+		},
+		"ACDOCA_CDC2_properties_pipeline_parameters_TGT_DB_NM": {
+			"type": "string",
+			"defaultValue": "dbo"
+		},
+		"ACDOCA_CDC2_properties_pipeline_parameters_TGT_TBL_NM": {
+			"type": "string",
+			"defaultValue": "ACDOCA_CDC_SCD2_PART"
+		},
+		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_BSEG_parameters_TGT_TBL_NM": {
+			"type": "string",
+			"defaultValue": "BSEG_CDC_SCD2"
+		},
+		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_BSEG_parameters_TGT_DB_NM": {
+			"type": "string",
+			"defaultValue": "dbo"
+		},
+		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_BSEG_parameters_FOLDER_NM": {
+			"type": "string",
+			"defaultValue": "BSEG_CDC"
+		},
+		"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_BSEG_parameters_TMP_TBL_NM": {
+			"type": "string",
+			"defaultValue": "BSEG_CDC_TEMP"
+		},
+		"BSEG_CDC_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourceGroups/POV_TUG/providers/Microsoft.Storage/storageAccounts/stpovtug"
+		},
+		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM": {
+			"type": "string",
+			"defaultValue": "BSEG"
+		},
+		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_DB_NM": {
+			"type": "string",
+			"defaultValue": "dbo"
+		},
+		"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_FOLDER_NM": {
+			"type": "string",
+			"defaultValue": "BSEG_DELTA_CHANGES"
+		},
+		"CDC_File_Trigger_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourceGroups/POV_TUG/providers/Microsoft.Storage/storageAccounts/stpovtug"
+		},
+		"StorageEvent_Test_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourceGroups/POV_TUG/providers/Microsoft.Storage/storageAccounts/stpovtug"
+		},
+		"VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TGT_TBL_NM": {
+			"type": "string",
+			"defaultValue": "VBAP_CDC_SCD2"
+		},
+		"VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TGT_DB_NM": {
+			"type": "string",
+			"defaultValue": "dbo"
+		},
+		"VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_FOLDER_NM": {
+			"type": "string",
+			"defaultValue": "VBAP_CDC"
+		},
+		"VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TMP_TBL_NM": {
+			"type": "string",
+			"defaultValue": "VBAP_CDC_TEMP"
+		},
+		"VBAP_CDC_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourceGroups/POV_TUG/providers/Microsoft.Storage/storageAccounts/stpovtug"
+		},
+		"integrationRuntime-ADFPOVTUGDEV_properties_typeProperties_linkedInfo_resourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/179dc394-2676-4356-b9ef-c93874f2f4a7/resourcegroups/POV_TUG/providers/Microsoft.DataFactory/factories/ADF-POV-TUG/integrationruntimes/integrationRuntime-POV-TUG"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "oak-adf_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureSynapseAnalytics_connectionString": {
+						"value": "[parameters('AzureSynapseAnalytics_connectionString')]"
+					},
+					"AzureSynapseAnalytics_test_connectionString": {
+						"value": "[parameters('AzureSynapseAnalytics_test_connectionString')]"
+					},
+					"adls_accountKey": {
+						"value": "[parameters('adls_accountKey')]"
+					},
+					"SqlServer1_connectionString": {
+						"value": "[parameters('SqlServer1_connectionString')]"
+					},
+					"adls_properties_typeProperties_url": {
+						"value": "[parameters('adls_properties_typeProperties_url')]"
+					},
+					"StorageEvent_Test_properties_typeProperties_scope": {
+						"value": "[parameters('StorageEvent_Test_properties_typeProperties_scope')]"
+					},
+					"integrationRuntime-ADFPOVTUGDEV_properties_typeProperties_linkedInfo_resourceId": {
+						"value": "[parameters('integrationRuntime-ADFPOVTUGDEV_properties_typeProperties_linkedInfo_resourceId')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "oak-adf_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'oak-adf_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "oak-adf_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM": {
+						"value": "[parameters('ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM')]"
+					},
+					"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_DB_NM": {
+						"value": "[parameters('ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_DB_NM')]"
+					},
+					"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_FOLDER_NM": {
+						"value": "[parameters('ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_FOLDER_NM')]"
+					},
+					"ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TMP_TBL_NM": {
+						"value": "[parameters('ACDOCA_CDC_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TMP_TBL_NM')]"
+					},
+					"ACDOCA_CDC_properties_typeProperties_scope": {
+						"value": "[parameters('ACDOCA_CDC_properties_typeProperties_scope')]"
+					},
+					"ACDOCA_CDC2_properties_pipeline_parameters_FOLDER_NM": {
+						"value": "[parameters('ACDOCA_CDC2_properties_pipeline_parameters_FOLDER_NM')]"
+					},
+					"ACDOCA_CDC2_properties_pipeline_parameters_TGT_DB_NM": {
+						"value": "[parameters('ACDOCA_CDC2_properties_pipeline_parameters_TGT_DB_NM')]"
+					},
+					"ACDOCA_CDC2_properties_pipeline_parameters_TGT_TBL_NM": {
+						"value": "[parameters('ACDOCA_CDC2_properties_pipeline_parameters_TGT_TBL_NM')]"
+					},
+					"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_BSEG_parameters_TGT_TBL_NM": {
+						"value": "[parameters('BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_BSEG_parameters_TGT_TBL_NM')]"
+					},
+					"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_BSEG_parameters_TGT_DB_NM": {
+						"value": "[parameters('BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_BSEG_parameters_TGT_DB_NM')]"
+					},
+					"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_BSEG_parameters_FOLDER_NM": {
+						"value": "[parameters('BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_BSEG_parameters_FOLDER_NM')]"
+					},
+					"BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_BSEG_parameters_TMP_TBL_NM": {
+						"value": "[parameters('BSEG_CDC_properties_02_CDC_SNAPSHOT_SCD_BSEG_parameters_TMP_TBL_NM')]"
+					},
+					"BSEG_CDC_properties_typeProperties_scope": {
+						"value": "[parameters('BSEG_CDC_properties_typeProperties_scope')]"
+					},
+					"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM": {
+						"value": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_TBL_NM')]"
+					},
+					"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_DB_NM": {
+						"value": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_TGT_DB_NM')]"
+					},
+					"CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_FOLDER_NM": {
+						"value": "[parameters('CDC_File_Trigger_properties_02_CDC_SNAPSHOT_SCD_ACDOCA_parameters_FOLDER_NM')]"
+					},
+					"CDC_File_Trigger_properties_typeProperties_scope": {
+						"value": "[parameters('CDC_File_Trigger_properties_typeProperties_scope')]"
+					},
+					"VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TGT_TBL_NM": {
+						"value": "[parameters('VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TGT_TBL_NM')]"
+					},
+					"VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TGT_DB_NM": {
+						"value": "[parameters('VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TGT_DB_NM')]"
+					},
+					"VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_FOLDER_NM": {
+						"value": "[parameters('VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_FOLDER_NM')]"
+					},
+					"VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TMP_TBL_NM": {
+						"value": "[parameters('VBAP_CDC_properties_02_CDC_SNAPSHOT_SCD_VBAP_parameters_TMP_TBL_NM')]"
+					},
+					"VBAP_CDC_properties_typeProperties_scope": {
+						"value": "[parameters('VBAP_CDC_properties_typeProperties_scope')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'oak-adf_ArmTemplate_1')]"
+			]
+		}
+	]
+}
