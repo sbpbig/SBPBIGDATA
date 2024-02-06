@@ -43,14 +43,14 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "AzureSqlTable1",
+						"referenceName": "sample_azure_sql_table",
 						"type": "DatasetReference",
 						"parameters": {
-							"SCHEMA_NAME": {
+							"P_SCHEMA_NAME": {
 								"value": "@pipeline().parameters.P_Object.SRC_SCHEMA_NM",
 								"type": "Expression"
 							},
-							"TABLE_NAME": {
+							"P_TABLE_NAME": {
 								"value": "@pipeline().parameters.P_Object.SRC_TBL",
 								"type": "Expression"
 							}
