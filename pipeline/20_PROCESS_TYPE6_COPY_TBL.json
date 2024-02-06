@@ -53,9 +53,9 @@
 		],
 		"parameters": {
 			"P_SCHEMA_NAME": {
-				"type": "object"
+				"type": "string"
 			},
-			"P_TABLE": {
+			"P_TABLE_NAME": {
 				"type": "string"
 			}
 		},
